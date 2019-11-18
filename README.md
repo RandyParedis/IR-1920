@@ -1,2 +1,2 @@
 # juicy-watermelon
-Watermelons are juicy. What did you expect?
+Watermelons are juicy. What did you expect? They are juicy ;)

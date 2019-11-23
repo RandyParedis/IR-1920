@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>How do I sync the SVN revision number with my ASP.NET web site?</Title>
+<Body>&lt;p&gt;Stack Overflow has a subversion version number at the bottom:&lt;/p&gt;&lt;blockquote&gt;  &lt;p&gt;svn revision: 679&lt;/p&gt;&lt;/blockquote&gt;&lt;p&gt;I want to use such automatic versioning with my &lt;code&gt;.NET Web Site/Application&lt;/code&gt;, Windows Forms, WPD projects/solutions.&lt;/p&gt;&lt;p&gt;How do I implement this?&lt;/p&gt;</Body>
+<Tags>.net,asp.net,svn,versioning</Tags>
+</question>
+</qroot>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>How do I track file downloads</Title>
+<Body>&lt;p&gt;I have a website that plays mp3s in a flash player. If a user clicks &#x27;play&#x27; the flash player automatically downloads an mp3 and starts playing it. &lt;/p&gt;&lt;p&gt;Is there an easy way to track how many times a particular song clip (or any binary file) has been downloaded?&lt;/p&gt;&lt;hr&gt;&lt;blockquote&gt;  &lt;p&gt;Is the play link a link to the actual  mp3 file or to some javascript code  that pops up a player?&lt;/p&gt;    &lt;p&gt;If the latter, you can easily add your  own logging code in there to track the  number of hits to it.&lt;/p&gt;    &lt;p&gt;If the former, you&#x27;ll need something  that can track the web server log  itself and make that distinction. My  hosting plan comes with Webalizer,  which does this nicely.&lt;/p&gt;&lt;/blockquote&gt;&lt;p&gt;It&#x27;s a javascript code so that answers that. &lt;/p&gt;&lt;p&gt;However, it would be nice to know how to track downloads using the other method (without switching hosts).&lt;/p&gt;</Body>
+<Tags>php,apache,logging,download,analytics</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Is the play link a link to the actual mp3 file or to some javascript code that pops up a player? &lt;/p&gt;&lt;p&gt;If the latter, you can easily add your own logging code in there to track the number of hits to it.&lt;/p&gt;&lt;p&gt;If the former, you&#x27;ll need something that can track the web server log itself and make that distinction. My hosting plan comes with webalizer, which does this nicely.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;The funny thing is I wrote a php media gallery for all my music 2 days ago. I had a similar problem.  I&#x27;m using &lt;a href=&quot;http://musicplayer.sourceforge.net/&quot; rel=&quot;nofollow noreferrer&quot;&gt;http://musicplayer.sourceforge.net/&lt;/a&gt; for the player. And the playlist are built via php. All music request go there a script called xfer.php?file=WHATEVER&lt;/p&gt;&lt;pre&gt;&lt;code&gt;$filename = base64_url_decode($_REQUEST[&#x27;file&#x27;]);header(&quot;Cache-Control: public&quot;);header(&#x27;Content-disposition: attachment; filename=&#x27;.basename($filename));header(&quot;Content-Transfer-Encoding: binary&quot;);header(&#x27;Content-Length: &#x27;. filesize($filename));//  Put either file counting code here. either a db or static files//readfile($filename);  //and spit the user the filefunction base64_url_decode($input) {    return base64_decode(strtr($input, &#x27;-_,&#x27;, &#x27;+/=&#x27;));}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;And when you call files use something like:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;function base64_url_encode($input) {     return strtr(base64_encode($input), &#x27;+/=&#x27;, &#x27;-_,&#x27;);}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;a href=&quot;http://us.php.net/manual/en/function.base64-encode.php&quot; rel=&quot;nofollow noreferrer&quot;&gt;http://us.php.net/manual/en/function.base64-encode.php&lt;/a&gt;&lt;/p&gt;&lt;p&gt;If you are using some javascript or a flash player (JW player for example) that requires the actual link to be an mp3 file or whatever, you can append the text &quot;&amp;amp;type=.mp3&quot; so the final linke becomes something like:&quot;www.example.com/xfer.php?file=34842ffjfjxfh&amp;amp;type=.mp3&quot;. That way it looks like it ends with an mp3 extension without affecting the file link.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;You could even set up an Apache .htaccess directive that converts *.mp3 requests into the querystring dubayou is working with.  It might be an elegant way to keep the direct request and still be able to slipstream log function into the response.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;Use your httpd log files. Install &lt;a href=&quot;http://awstats.sourceforge.net/&quot; rel=&quot;noreferrer&quot;&gt;http://awstats.sourceforge.net/&lt;/a&gt;&lt;/p&gt;</Body>
+</answer>
+</qroot>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Difference between Math.Floor() and Math.Truncate()</Title>
+<Body>&lt;p&gt;What is the difference between &lt;a href=&quot;http://msdn.microsoft.com/en-us/library/9a6a2sxy.aspx&quot; rel=&quot;noreferrer&quot;&gt;&lt;code&gt;Math.Floor()&lt;/code&gt;&lt;/a&gt; and &lt;a href=&quot;http://msdn.microsoft.com/en-us/library/system.math.truncate.aspx&quot; rel=&quot;noreferrer&quot;&gt;&lt;code&gt;Math.Truncate()&lt;/code&gt;&lt;/a&gt; in .NET?&lt;/p&gt;</Body>
+<Tags>.net,math</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;&lt;code&gt;Math.Floor&lt;/code&gt; rounds down, &lt;code&gt;Math.Ceiling&lt;/code&gt; rounds up, and &lt;code&gt;Math.Truncate&lt;/code&gt; rounds towards zero. Thus, &lt;code&gt;Math.Truncate&lt;/code&gt; is like &lt;code&gt;Math.Floor&lt;/code&gt; for positive numbers, and like &lt;code&gt;Math.Ceiling&lt;/code&gt; for negative numbers. Here&#x27;s the &lt;a href=&quot;http://msdn.microsoft.com/en-us/library/system.math.truncate.aspx&quot; rel=&quot;noreferrer&quot;&gt;reference&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;For completeness, &lt;code&gt;Math.Round&lt;/code&gt; rounds to the nearest integer. If the number is exactly midway between two integers, then it rounds towards the even one. &lt;a href=&quot;http://msdn.microsoft.com/en-us/library/system.math.round.aspx&quot; rel=&quot;noreferrer&quot;&gt;Reference.&lt;/a&gt;&lt;/p&gt;&lt;p&gt;See also: &lt;a href=&quot;https://stackoverflow.com/questions/14/whats-the-difference-between-math-floor-and-math-truncate-in-c/580252#580252&quot;&gt;Pax Diablo&#x27;s answer&lt;/a&gt;. Highly recommended!&lt;/p&gt;</Body>
+</answer>
+</qroot>

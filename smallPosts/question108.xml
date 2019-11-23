@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Best Subversion clients for Windows Vista (64bit)</Title>
+<Body>&lt;p&gt;I&#x27;ve been using &lt;a href=&quot;http://tortoisesvn.tigris.org/&quot; rel=&quot;noreferrer&quot;&gt;TortoiseSVN &lt;/a&gt; in a Windows environment for quite some time.  It seems very feature-complete and nicely integrated into the Windows shell, and more importantly, it&#x27;s fairly painless to teach to colleagues with little or no experience with source control.  &lt;strong&gt;However&lt;/strong&gt;, since we have moved to Windows Vista 64bit, Tortoise has been very buggy and has seemed to cause lots of explorer.exe abnormalities and crashes.  This has happened both with older versions of the software and the latest version (1.5.1 build 13563).&lt;/p&gt;&lt;p&gt;I was curious if anyone has suggestions for other Subversion clients that will run on Windows (specifically Vista 64bit).  Developers here use a variety of text editors so using Visual Studio or Dreamweaver for SVN is not ideal.&lt;/p&gt;&lt;p&gt;I have heard great things about &lt;a href=&quot;http://www.zennaware.com/cornerstone/&quot; rel=&quot;noreferrer&quot;&gt;Cornerstone&lt;/a&gt;, and would love something similar for Windows if it exists.&lt;/p&gt;&lt;hr&gt;&lt;p&gt;I&#x27;m correlating the Vista/explorer problems with Tortoise because they normally occur when I&#x27;m using the functionality in Tortoise.  Sometimes bringing up the &quot;merge&quot; screen will cause the GUI to start acting very strange and eventually hang or crash.&lt;/p&gt;&lt;p&gt;I did not see 1.5.2 -- I&#x27;m installing now, maybe that will fix some of my issues.&lt;/p&gt;</Body>
+<Tags>windows,svn,64-bit</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;I have been using the 64Bit version of TortoiseSVN for ages and I have never had issues with it on Windows 64Bit or Vista 64Bit. I am currently not aware of any other similiar SVN clients that do work on Vista. Is it possible the problem could lie within the configuration of TortoiseSVN or even the installation of Vista? Is the problem occurring on Vista native or SP 1?&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;I&#x27;ll second Diago&#x27;s answer.  I use TortoiseSVN on Vista x64 pretty heavily.&lt;/p&gt;&lt;p&gt;I did upgrade directly from an older version to 1.5.2 though, and never used 1.5.1.  Have you tried 1.5.2?&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;TortoiseSVN in combination with VisualSVN for Visual Studio.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;I too get explorer crashes in Vista (I&#x27;m not in the 64Bit version though). I&#x27;m using Vista Super Saijen (or whatever they are calling the most expensive version). I&#x27;m not having any bugs with Tortoise.&lt;/p&gt;&lt;p&gt;My explorer does, however, crash about every other day (sometimes multiple times a day if it&#x27;s having an &quot;off&quot; day). I&#x27;m not positive it&#x27;s being caused by TortoiseSVN though. From what I hear, the explorer just crashes a lot in Vista...&lt;/p&gt;&lt;p&gt;Have you tried uninstalling Tortoise and using Windows for a day or two and seeing if it still crashes? Do you restart your computer at least once a day (It seems the longer I go between restarts, the worse the crashes get)?&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;I used to have lots of Explorer crashes (on 32-bit) caused by Tortoise. They seem to have gone away since I used the Include/Exclude path settings in the &quot;Icon Overlays&quot; configuration of TSVN. Constraining icon overlays to specific directories where I keep my source made this much more stable.&lt;/p&gt;</Body>
+</answer>
+</qroot>

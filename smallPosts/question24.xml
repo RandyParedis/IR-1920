@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Throw an error in a MySQL trigger</Title>
+<Body>&lt;p&gt;If I have a &lt;code&gt;trigger&lt;/code&gt; &lt;code&gt;before the update&lt;/code&gt; on a table, how can I throw an error that prevents the update on that table?&lt;/p&gt;</Body>
+<Tags>mysql,database,triggers</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;&lt;a href=&quot;https://web.archive.org/web/20180330233216/http://www.brokenbuild.com/blog/2006/08/15/mysql-triggers-how-do-you-abort-an-insert-update-or-delete-with-a-trigger/&quot; rel=&quot;nofollow noreferrer&quot;&gt;Here is one hack&lt;/a&gt; that may work. It isn&#x27;t clean, but it looks like it might work:&lt;/p&gt;&lt;p&gt;Essentially, you just try to update a column that doesn&#x27;t exist.&lt;/p&gt;</Body>
+</answer>
+</qroot>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Flat file databases</Title>
+<Body>&lt;p&gt;What are the best practices around creating flat file database structures in PHP?&lt;/p&gt;&lt;p&gt;A lot of the more mature PHP flat file frameworks I see out there attempt to implement SQL-like query syntax, which is over the top for my purposes in most cases (I would just use a database at that point).&lt;/p&gt;&lt;p&gt;Are there any elegant tricks out there to get good performance and features with a small code overhead?&lt;/p&gt;</Body>
+<Tags>php,sql,database,flat-file</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;One framework I&#x27;m considering would be for a blogging platform. Since just about any possible view of data you would want would be sorted by date, I was thinking about this structure:&lt;/p&gt;&lt;p&gt;One directory per content node:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;./content/YYYYMMDDHHMMSS/&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Subdirectories of each node including  &lt;/p&gt;&lt;pre&gt;&lt;code&gt;/tags  /authors  /comments  &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;As well as simple text files in the node directory for pre- and post-rendered content and the like.&lt;/p&gt;&lt;p&gt;This would allow a simple PHP &lt;a href=&quot;http://us3.php.net/glob&quot; rel=&quot;noreferrer&quot;&gt;&lt;code&gt;glob()&lt;/code&gt;&lt;/a&gt; call (and probably a reversal of the result array) to query on just about anything within the content structure:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;glob(&quot;content/*/tags/funny&quot;);  &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Would return paths including all articles tagged &quot;funny&quot;.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;Well, what is the nature of the flat databases.  Are they large or small.  Is it simple arrays with arrays in them?  if its something simple say userprofiles built as such:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;$user = array(&quot;name&quot; =&amp;gt; &quot;dubayou&quot;,               &quot;age&quot; =&amp;gt; 20,              &quot;websites&quot; =&amp;gt; array(&quot;dubayou.com&quot;,&quot;willwharton.com&quot;,&quot;codecream.com&quot;),              &quot;and_one&quot; =&amp;gt; &quot;more&quot;);&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;and to save or update the &lt;em&gt;db record&lt;/em&gt; for that user.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;$dir = &quot;../userdata/&quot;;  //make sure to put it bellow what the server can reach.file_put_contents($dir.$user[&#x27;name&#x27;],serialize($user));&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;and to load the &lt;em&gt;record&lt;/em&gt; for the user&lt;/p&gt;&lt;pre&gt;&lt;code&gt;function &amp;amp;get_user($name){    return unserialize(file_get_contents(&quot;../userdata/&quot;.$name));}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;but again this implementation will vary on the application and nature of the database you need.&lt;/p&gt;</Body>
+</answer>
+</qroot>

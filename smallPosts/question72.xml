@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>How do I add existing comments to RDoc in Ruby?</Title>
+<Body>&lt;p&gt;I want to format my existing comments as &#x27;RDoc comments&#x27; so they can be viewed using &lt;code&gt;ri&lt;/code&gt;.&lt;/p&gt;&lt;p&gt;What are some recommended resources for starting out using RDoc?&lt;/p&gt;</Body>
+<Tags>ruby,rdoc</Tags>
+</question>
+</qroot>

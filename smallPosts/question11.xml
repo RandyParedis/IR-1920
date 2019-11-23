@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Calculate relative time in C#</Title>
+<Body>&lt;p&gt;Given a specific &lt;code&gt;DateTime&lt;/code&gt; value, how do I display relative time, like:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;2 hours ago&lt;/li&gt;&lt;li&gt;3 days ago&lt;/li&gt;&lt;li&gt;a month ago&lt;/li&gt;&lt;/ul&gt;</Body>
+<Tags>c#,datetime,time,datediff,relative-time-span</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Here&#x27;s how I do it&lt;/p&gt;&lt;pre class=&quot;lang-csharp prettyprint-override&quot;&gt;&lt;code&gt;var ts = new TimeSpan(DateTime.UtcNow.Ticks - dt.Ticks);double delta = Math.Abs(ts.TotalSeconds);if (delta &amp;lt; 60){  return ts.Seconds == 1 ? &quot;one second ago&quot; : ts.Seconds + &quot; seconds ago&quot;;}if (delta &amp;lt; 120){  return &quot;a minute ago&quot;;}if (delta &amp;lt; 2700) // 45 * 60{  return ts.Minutes + &quot; minutes ago&quot;;}if (delta &amp;lt; 5400) // 90 * 60{  return &quot;an hour ago&quot;;}if (delta &amp;lt; 86400) // 24 * 60 * 60{  return ts.Hours + &quot; hours ago&quot;;}if (delta &amp;lt; 172800) // 48 * 60 * 60{  return &quot;yesterday&quot;;}if (delta &amp;lt; 2592000) // 30 * 24 * 60 * 60{  return ts.Days + &quot; days ago&quot;;}if (delta &amp;lt; 31104000) // 12 * 30 * 24 * 60 * 60{  int months = Convert.ToInt32(Math.Floor((double)ts.Days / 30));  return months &amp;lt;= 1 ? &quot;one month ago&quot; : months + &quot; months ago&quot;;}int years = Convert.ToInt32(Math.Floor((double)ts.Days / 365));return years &amp;lt;= 1 ? &quot;one year ago&quot; : years + &quot; years ago&quot;;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Suggestions? Comments? Ways to improve this algorithm?&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;@jeff&lt;/p&gt;&lt;p&gt;IMHO yours seems a little long.  However it does seem a little more robust with support for &quot;yesterday&quot; and &quot;years&quot;.  But in my experience when this is used the person is most likely to view the content in the first 30 days.  It is only the really hardcore people that come after that.  So that is why I usually elect to keep this short and simple.&lt;/p&gt;&lt;p&gt;This is the method I am currently using on one of my websites.  This only returns a relative day, hour, time.  And then the user has to slap on &quot;ago&quot; in the output.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;public static string ToLongString(this TimeSpan time){    string output = String.Empty;    if (time.Days &amp;gt; 0)        output += time.Days + &quot; days &quot;;    if ((time.Days == 0 || time.Days == 1) &amp;amp;&amp;amp; time.Hours &amp;gt; 0)        output += time.Hours + &quot; hr &quot;;    if (time.Days == 0 &amp;amp;&amp;amp; time.Minutes &amp;gt; 0)        output += time.Minutes + &quot; min &quot;;    if (output.Length == 0)        output += time.Seconds + &quot; sec&quot;;    return output.Trim();}&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

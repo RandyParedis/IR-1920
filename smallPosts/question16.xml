@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Filling a DataSet or DataTable from a LINQ query result set</Title>
+<Body>&lt;p&gt;How do you expose a LINQ query as an ASMX web service? Usually, from the business tier, I can return a typed &lt;code&gt;DataSet&lt;/code&gt; or &lt;code&gt;DataTable&lt;/code&gt; which can be serialized for transport over ASMX.&lt;/p&gt;&lt;p&gt;How can I do the same for a LINQ query? Is there a way to populate a typed &lt;code&gt;DataSet&lt;/code&gt; or &lt;code&gt;DataTable&lt;/code&gt; via a LINQ query?&lt;/p&gt;&lt;pre&gt;&lt;code&gt;public static MyDataTable CallMySproc(){    string conn = &quot;...&quot;;    MyDatabaseDataContext db = new MyDatabaseDataContext(conn);    MyDataTable dt = new MyDataTable();    // execute a sproc via LINQ    var query = from dr                in db.MySproc().AsEnumerable                select dr;    // copy LINQ query resultset into a DataTable -this does not work !        dt = query.CopyToDataTable();    return dt;}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;How can I get the result set of a LINQ query into a &lt;code&gt;DataSet&lt;/code&gt; or &lt;code&gt;DataTable&lt;/code&gt;? Alternatively, is the LINQ query serializable so that I can expose it as an ASMX web service?&lt;/p&gt;</Body>
+<Tags>c#,linq,web-services,.net-3.5</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;If you use a return type of &lt;code&gt;IEnumerable&lt;/code&gt;, you can return your &lt;strong&gt;query&lt;/strong&gt; variable directly.&lt;/p&gt;</Body>
+</answer>
+</qroot>

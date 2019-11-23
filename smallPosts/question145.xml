@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Compressing / Decompressing Folders & Files</Title>
+<Body>&lt;p&gt;Does anyone know of a good way to compress or decompress files and folders in C# quickly? Handling large files might be necessary.&lt;/p&gt;</Body>
+<Tags>c#,.net,file,compression</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;As of .Net 1.1 the only available method is reaching into the java libraries.&lt;br&gt;&lt;a href=&quot;http://msdn.microsoft.com/en-ca/magazine/cc164129.aspx&quot; rel=&quot;noreferrer&quot;&gt;Using the Zip Classes in the J# Class Libraries to Compress Files and Data with C#&lt;/a&gt;&lt;br&gt;Not sure if this has changed in recent versions.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;I&#x27;ve always used the SharpZip Library.&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;http://sharpdevelop.net/OpenSource/SharpZipLib/Download.aspx&quot; rel=&quot;noreferrer&quot;&gt;Here&#x27;s a link&lt;/a&gt;&lt;/p&gt;</Body>
+</answer>
+</qroot>

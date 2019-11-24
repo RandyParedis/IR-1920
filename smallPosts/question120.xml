@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>ASP.NET Site Maps</Title>
+<Body>&lt;p&gt;Does anyone have experience creating &lt;strong&gt;SQL-based ASP.NET&lt;/strong&gt; site-map providers?&lt;/p&gt;&lt;p&gt;I have the default XML file &lt;code&gt;web.sitemap&lt;/code&gt; working properly with my Menu and &lt;strong&gt;SiteMapPath&lt;/strong&gt; controls, but I&#x27;ll need a way for the users of my site to create and modify pages dynamically.&lt;/p&gt;&lt;p&gt;I need to tie page viewing permissions into the standard &lt;code&gt;ASP.NET&lt;/code&gt; membership system as well.&lt;/p&gt;</Body>
+<Tags>sql,asp.net,xml,sitemap</Tags>
+</question>
+</qroot>

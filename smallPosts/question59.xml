@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>How do I get a distinct, ordered list of names from a DataTable using LINQ?</Title>
+<Body>&lt;p&gt;I have a &lt;code&gt;DataTable&lt;/code&gt; with a &lt;code&gt;Name&lt;/code&gt; column. I want to generate a collection of the unique names ordered alphabetically. The following query ignores the &lt;em&gt;order by&lt;/em&gt; clause.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;var names =    (from DataRow dr in dataTable.Rows    orderby (string)dr[&quot;Name&quot;]    select (string)dr[&quot;Name&quot;]).Distinct();&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Why does the &lt;code&gt;orderby&lt;/code&gt; not get enforced?&lt;/p&gt;</Body>
+<Tags>c#,linq,.net-3.5</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;&lt;strong&gt;The problem is that the Distinct operator does not grant that it will maintain the original order of values.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;So your query will need to work like this&lt;/p&gt;&lt;pre&gt;&lt;code&gt;var names = (from DataRow dr in dataTable.Rows             select (string)dr[&quot;Name&quot;]).Distinct().OrderBy( name =&amp;gt; name );&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

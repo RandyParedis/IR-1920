@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>How do you branch and merge with TortoiseSVN?</Title>
+<Body>&lt;p&gt;How do you &lt;a href=&quot;http://svnbook.red-bean.com/en/1.8/svn.branchmerge.html&quot; rel=&quot;noreferrer&quot;&gt;branch and merge&lt;/a&gt; with Apache Subversion using the TortoiseSVN client? &lt;/p&gt;</Body>
+<Tags>svn,tortoisesvn,branch,branching-and-merging</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;&lt;a href=&quot;http://svnbook.red-bean.com/&quot; rel=&quot;noreferrer&quot;&gt;Version Control with Subversion&lt;/a&gt;&lt;/p&gt;&lt;p&gt;A very good resource for source control in general. Not really TortoiseSVN specific, though.&lt;/p&gt;</Body>
+</answer>
+</qroot>

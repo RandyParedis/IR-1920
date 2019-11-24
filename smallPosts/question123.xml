@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Java lib or app to convert CSV to XML file?</Title>
+<Body>&lt;p&gt;Is there an existing application or library in &lt;em&gt;Java&lt;/em&gt; which will allow me to convert a &lt;code&gt;CSV&lt;/code&gt; data file to &lt;code&gt;XML&lt;/code&gt; file?  &lt;/p&gt;&lt;p&gt;The &lt;code&gt;XML&lt;/code&gt; tags would be provided through possibly the first row containing column headings.&lt;/p&gt;</Body>
+<Tags>java,xml,csv,data-conversion</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;This may be too basic or limited of a solution, but couldn&#x27;t you do a &lt;a href=&quot;http://java.sun.com/j2se/7/docs/api/java/lang/String.html#split(java.lang.String)&quot; rel=&quot;nofollow noreferrer&quot;&gt;&lt;code&gt;String.split()&lt;/code&gt;&lt;/a&gt; on each line of the file, remembering the result array of the first line to generate the XML, and just spit each line&#x27;s array data out with the proper XML elements padding each iteration of a loop?&lt;/p&gt;</Body>
+</answer>
+</qroot>

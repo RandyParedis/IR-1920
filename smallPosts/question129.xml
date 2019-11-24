@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>How to export data from SQL Server 2005 to MySQL</Title>
+<Body>&lt;p&gt;I&#x27;ve been banging my head against &lt;code&gt;SQL Server 2005&lt;/code&gt; trying to get a lot of data out.  I&#x27;ve been given a database with nearly 300 tables in it and I need to turn this into a MySQL database.  My first call was to use bcp but unfortunately it doesn&#x27;t produce valid CSV - strings aren&#x27;t encapsulated, so you can&#x27;t deal with any row that has a string with a comma in it (or whatever you use as a delimiter) and I would still have to hand write all of the create table statements, as obviously CSV doesn&#x27;t tell you anything about the data types.&lt;/p&gt;&lt;p&gt;What would be better is if there was some tool that could connect to both SQL Server and MySQL, then do a copy. You lose views, stored procedures, trigger, etc, but it isn&#x27;t hard to copy a table that only uses base types from one DB to another... is it?&lt;/p&gt;&lt;p&gt;Does anybody know of such a tool?  I don&#x27;t mind how many assumptions it makes or what simplifications occur, as long as it supports integer, float, datetime and string. I have to do a lot of pruning, normalising, etc. anyway so I don&#x27;t care about keeping keys, relationships or anything like that, but I need the initial set of data in fast!&lt;/p&gt;</Body>
+<Tags>mysql,sql-server,csv,sql-server-2005,bcp</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Rolling your own PHP solution will certainly work though I&#x27;m not sure if there is a good way to automatically duplicate the schema from one DB to the other (maybe this was your question).&lt;/p&gt;&lt;p&gt;If you are just copying data, and/or you need custom code anyway to convert between modified schemas between the two DB&#x27;s, I would recommend using PHP 5.2+ and the PDO libraries.  You&#x27;ll be able to connect using PDO ODBC (and use MSSQL drivers).  I had a lot of problems getting large text fields and multi-byte characters from MSSQL into PHP using other libraries.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;Another tool to try would be the SQLMaestro suite - &lt;a href=&quot;http://www.sqlmaestro.com&quot; rel=&quot;noreferrer&quot;&gt;http://www.sqlmaestro.com&lt;/a&gt; It is a little tricky nailing down the precise tool, but they have a variety of tools, both free and for purchase that handle a wide variety of tasks for multiple database platforms. I&#x27;d suggest trying the Data Wizard tool first for MySQL, since I believe that will have the proper &quot;import&quot; tool you need.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;The best way that I have found is the &lt;a href=&quot;http://www.mysql.com/products/tools/migration-toolkit/&quot; rel=&quot;noreferrer&quot;&gt;MySQL Migration Toolkit&lt;/a&gt; provided by MySQL.  I have used it successfully for some large migration projects.&lt;/p&gt;</Body>
+</answer>
+</qroot>

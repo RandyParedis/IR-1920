@@ -1,3 +1,13 @@
+"""This file contains the main functionality for having more control over boxplots.
+
+These can be used for custom computation of boxplots, histograms and some other features,
+based upon certain algorithms. This way, it is possible to compute these values in
+situations where you don't have access over the entire dataset, but only over a few values
+thereof.
+There are also some additional helper functions that can be useful in other circumstances
+as well.
+"""
+
 from enum import Enum
 import math
 
@@ -17,7 +27,7 @@ class BoxplotAlgorithm(Enum):
     MINITAB            = 2
     FREUND_PERLES      = 3      # Used in Excel
     MOORE_MCCABE       = 4      # Used in TI-83
-    MENDENHALL_SINCICH = 5
+    MENDENHALL_SINCICH = 5      # Often closest to pure definition
     FAME               = 6      # Fast Algorithm for Median Estimation
 
     # P^2 Algorithm for Dynamic Calculation of Quantiles and Histograms without Scoring Observations
@@ -101,7 +111,6 @@ def compute_boxplot(series: list, algorithm: BoxplotAlgorithm = BoxplotAlgorithm
     return res
 
 
-
 def FAME(series: list, b = 0.1):
     """Do the FAME algorithm based upon a series.
 
@@ -130,7 +139,6 @@ def FAME(series: list, b = 0.1):
             step /= 2
 
     return M
-
 
 
 def histogram(series: list, b: int):
@@ -167,36 +175,51 @@ def histogram(series: list, b: int):
 
     for j in range(len(o)):
         xj = o[j]
-        if xj < q[0]:
-            q[0] = xj
-            k = 0
-        for i in range(b):
-            if q[i] <= xj < q[i+1]:
-                k = i
-                break
-        if q[b] < xj:
-            q[b] = xj
-            k = b-1
-
-        for i in range(k+1, b+1):
-            n[i] += 1
-
-        for i in range(1, b):
-            # Calculate desired marker position
-            N = b + j + 2   # (b+1) observations before loop + currently on (j+1) observation in loop
-            n_ = i * (N - 1) / b
-            di = n_ - n[i]
-            if abs(di) >= 1 and abs(n[i+1] - n[i]) > 1:
-                di = sign(di)
-                qi = PPP(q, n, i, di)
-                if q[i-1] < qi < q[i+1]:
-                    q[i] = qi
-                else:
-                    q[i] += di * (q[i + di] - q[i]) / (n[i + di] - n[i])
-                n[i] += di
+        N = b + j + 2   # (b+1) observations before loop + currently on (j+1) observation in loop
+        histostep(xj, b, q, n, N)
 
     return q, [x/len(series) for x in n]
 
+
+def histostep(xj, b: int, q: list, n: list, N: int):
+    """Helper function for the histogram function.
+
+    This function was extracted to make it easier for the algorithm
+    to be used without knowledge of the entire series.
+
+    Args:
+        xj (numeric):   The new item in the series.
+        b (int):        The amount of cells to compute.
+        q (list):       The datavalues of the bars in the histogram.
+        n (list):       The positions of the bars in the histogram.
+        N (int):        The current observation index.
+    """
+    if xj < q[0]:
+        q[0] = xj
+        k = 0
+    for i in range(b):
+        if q[i] <= xj < q[i+1]:
+            k = i
+            break
+    if q[b] < xj:
+        q[b] = xj
+        k = b-1
+
+    for i in range(k+1, b+1):
+        n[i] += 1
+
+    for i in range(1, b):
+        # Calculate desired marker position
+        n_ = i * (N - 1) / b
+        di = n_ - n[i]
+        if abs(di) >= 1 and abs(n[i+1] - n[i]) > 1:
+            di = sign(di)
+            qi = PPP(q, n, i, di)
+            if q[i-1] < qi < q[i+1]:
+                q[i] = qi
+            else:
+                q[i] += di * (q[i + di] - q[i]) / (n[i + di] - n[i])
+            n[i] += di
 
 
 def PPP(q: list, n: list, i: int, d=1):
@@ -225,10 +248,12 @@ def PPP(q: list, n: list, i: int, d=1):
         return n[j] - n[j-1] + d*f
 
     def int_q(j):
-        return (q[j+1]-q[j]) / (n[j+1] - n[j])
+        nn = n[j+1] - n[j]
+        if nn == 0:
+            return 0
+        return (q[j+1]-q[j]) / nn
 
     return q[i] + (d / (n[i+1] - n[i-1])) * (int_n(i) * int_q(i) + int_n(i+1, -1) * int_q(i-1))
-
 
 
 def linear_interpolation(x, data: list):
@@ -259,7 +284,6 @@ def linear_interpolation(x, data: list):
     return y0 + (x - x0) * (y1 - y0) / (x1 - x0)
 
 
-
 def sign(x):
     """Apply the sign function.
 
@@ -274,19 +298,56 @@ def sign(x):
     return 1 if x > 0 else -1 if x < 0 else 0
 
 
+def binomial(n, k):
+    """The binomial computation.
+
+    The amount of possible ways to choose k out of n.
+    This is the computation of the binomial coefficients.
+
+    Args:
+        n (numeric):    The total number (top number).
+        k (numeric):    The amount to choose (bottom number).
+
+    Returns:
+        n! / (k! * (n - k)!)  where 'x!' stands for 'x factorial'.
+    """
+    fact = math.factorial
+    return float(fact(n)) / float(fact(k) * fact(n-k))
+
+
+def binprob(t, n, p):
+    """Compute the probability w.r.t. a binomial distribution.
+
+    Assume X follows a discrete binomial distribution with size n
+    and probability p:
+                X ~ Bin(n, p)
+
+    Args:
+        t (numeric):    The value to compute.
+        n (numeric):    The size of the distribution.
+        p (float):      The probability of the distribution.
+
+    Returns:
+        The probability that X is less then t:
+                Pr[X <= t]
+    """
+    # print("\tX ~ Bin(%f, %f); Pr[X <= %i]" % (n, p, t))
+    return sum([binomial(n, i)*(p**i)*((1-p)**(n-i)) for i in range(math.ceil(t))])
+
 
 if __name__ == '__main__':
     import numpy.random as rng
 
-    x = rng.uniform(0.0, 100.0, 1000000)
+    x = rng.uniform(1.0, 100.0, 1000)
+    x = [float(n) for n in x]
     algos = [
         BoxplotAlgorithm.MEDIAN,
-        # BoxplotAlgorithm.TUKEY,
-        # BoxplotAlgorithm.MINITAB,
-        # BoxplotAlgorithm.FREUND_PERLES,
-        # BoxplotAlgorithm.MOORE_MCCABE,
-        # BoxplotAlgorithm.MENDENHALL_SINCICH,
-        # BoxplotAlgorithm.FAME,
+        BoxplotAlgorithm.TUKEY,
+        BoxplotAlgorithm.MINITAB,
+        BoxplotAlgorithm.FREUND_PERLES,
+        BoxplotAlgorithm.MOORE_MCCABE,
+        BoxplotAlgorithm.MENDENHALL_SINCICH,
+        BoxplotAlgorithm.FAME,
         BoxplotAlgorithm.P_SQUARE,
     ]
 
@@ -295,7 +356,7 @@ if __name__ == '__main__':
     cols = [a.name for a in algos]
     frame = pd.DataFrame(columns=cols)
 
-    for r in ["Q1", "Q3", "IQR"]:  # ["min", "Q1", "median", "Q3", "max", "IQR"]:
+    for r in ["Q1", "Q3", "IQR"]:    # ["min", "Q1", "median", "Q3", "max", "IQR"]:
         frame.loc[r] = 0
 
     bxdata = {}
@@ -308,12 +369,10 @@ if __name__ == '__main__':
         frame.at["Q3", A.name] = r["Q3"]
         # frame.at["max", A.name] = r["max"]
         frame.at["IQR", A.name] = r["Q3"] - r["Q1"]
-    mean = frame.mean(axis=1)
-    std = frame.std(axis=1)
-    frame["mean"] = mean
-    frame["std"] = std
 
-    # TODO: figure out a way to compare the two
+        # frame.at["Q1 test", A.name] = binprob(frame.at["Q1", A.name], len(x), 0.25)
+        # frame.at["Q3 test", A.name] = binprob(frame.at["Q3", A.name], len(x), 0.75)
+
 
     # print("SERIES:", x)
     print(frame)

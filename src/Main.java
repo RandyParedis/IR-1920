@@ -63,25 +63,27 @@ public class Main {
 
         createDocs(analyzer, index);
 
-        // Build query out of stdin
-        String querystr = args.length > 0 ? args[0] : "h*a*l*l*o*~ i*k*~ b*e*n*~ r*a*n*d*y*~";
-        Query q = new MultiFieldQueryParser(new String[]{"content"}, analyzer).parse(querystr);
-
         // Search with the query
         int hitsPerPage = 10; // Limits the result count
         IndexReader reader = DirectoryReader.open(index);
         IndexSearcher searcher = new IndexSearcher(reader);
+
+        // Build query out of stdin
+        String querystr = args.length > 0 ? args[0] : "hallo ik kan randy zijn!";
+        querystr = Helper.queryTransform(querystr, 1, index, reader, analyzer);
+        System.out.println("TRANSFORMED TO: " + querystr);
+        Query q = new MultiFieldQueryParser(new String[]{"content"}, analyzer).parse(querystr);
+
+        // Get all search results
         TopDocs docs = searcher.search(q, hitsPerPage);
         ScoreDoc[] hits = docs.scoreDocs;
 
         // Spell checking
-//        SpellChecker sc = new SpellChecker(index);
-//        sc.indexDictionary(new LuceneDictionary(reader, "content"), new IndexWriterConfig(analyzer), false);
-//        String[] s = sc.suggestSimilar("There are", 5, reader, "content", SuggestMode.SUGGEST_ALWAYS);
-//        System.out.println("\nSPELL CHECKER:");
-//        for(String st: s) {
-//            System.out.println("\t" + st);
-//        }
+        String[] s = Helper.suggest("There are", 5, index, reader, analyzer);
+        System.out.println("\nSPELL CHECKER:");
+        for(String st: s) {
+            System.out.println("\t" + st);
+        }
 
         // Show results
         System.out.println("\nFound " + hits.length + " hits.");

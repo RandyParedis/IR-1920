@@ -69,7 +69,7 @@ public class Main {
         IndexSearcher searcher = new IndexSearcher(reader);
 
         // Build query out of stdin
-        String querystr = args.length > 0 ? args[0] : "hallo ik kan randy zijn!";
+        String querystr = args.length > 0 ? args[0] : "there";
         querystr = Helper.queryTransform(querystr, 1, index, reader, analyzer);
         System.out.println("TRANSFORMED TO: " + querystr);
         Query q = new MultiFieldQueryParser(new String[]{"content"}, analyzer).parse(querystr);
@@ -79,7 +79,7 @@ public class Main {
         ScoreDoc[] hits = docs.scoreDocs;
 
         // Spell checking
-        String[] s = Helper.suggest("There are", 5, index, reader, analyzer);
+        String[] s = Helper.suggest("There", 5, index, reader, analyzer);
         System.out.println("\nSPELL CHECKER:");
         for(String st: s) {
             System.out.println("\t" + st);

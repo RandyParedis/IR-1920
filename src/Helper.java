@@ -18,7 +18,9 @@ public class Helper {
         List<String> ors = new ArrayList<>();
         for(String word : words) {
             List<String> suggestions = new ArrayList<>(Arrays.asList(suggest(word, sugs, index, reader, analyzer)));
-            suggestions.add(word);
+            if(!suggestions.contains(word)) {
+                suggestions.add(word);
+            }
             ors.add("(" + String.join(" OR ", suggestions) + ")");
         }
         return String.join(" AND ", ors);

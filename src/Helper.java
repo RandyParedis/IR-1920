@@ -35,10 +35,11 @@ public class Helper {
 
     private static String toJSONMap(Map obj, int d) throws NotImplementedException {
         String res = "{";
-        Map<String, Object> m = (Map<String, Object>)(obj);
+        Map<Object, Object> m = (Map<Object, Object>)(obj);
         List<String> s = new ArrayList<>();
-        for(Map.Entry<String, Object> entry: m.entrySet()) {
-            String kv = "\"" + entry.getKey() + "\": " + toJSON(entry.getValue(), d+1);
+        for(Map.Entry<Object, Object> entry: m.entrySet()) {
+            String key = "\"" + entry.getKey().toString() + "\"";
+            String kv = key + ": " + toJSON(entry.getValue(), d+1);
             s.add(kv);
         }
         res += "\n" + ("\t".repeat(d+1)) + String.join(",\n" + ("\t".repeat(d+1)), s);
@@ -48,11 +49,10 @@ public class Helper {
 
     private static String toJSONList(List obj, int d) throws NotImplementedException {
         String res = "[";
-        List l = (List)(obj);
         ArrayList<String> s = new ArrayList<>();
         boolean p = false;
         boolean n = false;
-        for(Object o: l) {
+        for(Object o: obj) {
             if(List.class.isAssignableFrom(o.getClass())) {
                 s.add("\n" + "\t".repeat(d+1) + toJSON(o, d+1));
                 p = n = true;

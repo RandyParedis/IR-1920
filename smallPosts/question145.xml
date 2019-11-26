@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <qroot>
 <question>
-<Title>Compressing / Decompressing Folders & Files</Title>
+<Title>Compressing / Decompressing Folders &amp; Files</Title>
 <Body>&lt;p&gt;Does anyone know of a good way to compress or decompress files and folders in C# quickly? Handling large files might be necessary.&lt;/p&gt;</Body>
 <Tags>c#,.net,file,compression</Tags>
 </question>

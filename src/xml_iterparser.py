@@ -29,7 +29,7 @@ with progressbar.ProgressBar(max_value=lastid) as bar:
             body = html.escape(attr['Body'].replace('\n', ''))
             id = attr['Id']
             if attr['PostTypeId'] == '1':
-                title = attr['Title']
+                title = html.escape(attr['Title'])
                 tags = attr['Tags'].replace('><', ',').replace('<', '').replace('>', '')
                 ids.append(id)
 

@@ -3,3 +3,4 @@ out
 .search
 *.iml
 .DS_Store
+errors.log

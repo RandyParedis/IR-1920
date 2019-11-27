@@ -1,71 +1,91 @@
 import subprocess
 import xml.etree.ElementTree as et
 import html
+import sys
+import json
 import os
 import shutil
 import progressbar
-import json
+import progressbar.widgets as widgets
 
-file = 'smallPosts.xml'
-lastid = int(str(subprocess.check_output('tail -n 2 %s | grep -o " Id=\\"\\([0-9]*\\)\\""' % file, shell=True))[7:-4])
 
-shutil.rmtree('posts', ignore_errors=True)
-os.mkdir('posts')
+def preprocess(file, directory):
+    f = open("errors.log", "w+")
+    f.close()
 
-f = open("errors.txt", "w+")
-f.close()
+    lastid = int(subprocess.check_output('wc -l %s | grep -o "[0-9]*"' % file, shell=True))
+    lastid -= 3
 
-context = et.iterparse(file, events=("end",))
-context = iter(context)
+    ids = []
 
-ids = []
-with progressbar.ProgressBar(max_value=lastid) as bar:
-    for event, elem in context:
-        try:
-            if elem.tag == 'posts':
-                continue
+    def error(msg):
+        with open("errors.txt", "a+") as f:
+            f.write(msg + "\n")
 
-            attr = elem.attrib
-            body = html.escape(attr['Body'].replace('\n', ''))
-            id = attr['Id']
-            if attr['PostTypeId'] == '1':
-                title = html.escape(attr['Title'])
-                tags = attr['Tags'].replace('><', ',').replace('<', '').replace('>', '')
-                ids.append(id)
+    with open(file, 'r') as xml:
+        bar = progressbar.ProgressBar(maxval=lastid, widgets=[
+            ' ', widgets.Percentage(), ' (', widgets.Counter(), ' of %i) ' % lastid,
+            widgets.AdaptiveETA(), ' ', widgets.Bar()
+        ])
+        bar.start()
+        xml.readline()  # Read the XML Info
+        xml.readline()  # Read the root opening tag
+        for linenr in range(lastid):
+            line = xml.readline()
+            try:
+                elem = et.fromstring(line)
 
-                f = open("posts/question" + id + ".xml", "w+")
-                f.write("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n")
-                f.write("<qroot>\n")
-                f.write("<question>\n")
-                f.write("<Title>" + title + "</Title>\n")
-                f.write("<Body>" + body + "</Body>\n")
-                f.write("<Tags>" + tags + "</Tags>\n")
-                f.write("</question>\n")
-                f.close()
+                attr = elem.attrib
+                body = html.escape(attr['Body'].replace('\n', ''))
+                id = attr['Id']
+                if attr['PostTypeId'] == '1':
+                    title = html.escape(attr['Title'])
+                    tags = attr['Tags'].replace('><', ',').replace('<', '').replace('>', '')
+                    ids.append(id)
 
-            elif attr['PostTypeId'] == '2':
-                parentid = attr['ParentId']
+                    with open(directory + "/question" + id + ".xml", "w+") as f:
+                        f.write("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n")
+                        f.write("<qroot>\n")
+                        f.write("<question>\n")
+                        f.write("<Title>" + title + "</Title>\n")
+                        f.write("<Body>" + body + "</Body>\n")
+                        f.write("<Tags>" + tags + "</Tags>\n")
+                        f.write("</question>\n")
+                elif attr['PostTypeId'] == '2':
+                    parentid = attr['ParentId']
 
-                f = open("posts/question" + parentid + ".xml", "a+")
-                f.write("<answer>\n")
-                f.write("<Body>" + body + "</Body>\n")
-                f.write("</answer>\n")
-                f.close()
+                    with open(directory + "/question" + parentid + ".xml", "a+") as f:
+                        f.write("<answer>\n")
+                        f.write("<Body>" + body + "</Body>\n")
+                        f.write("</answer>\n")
+                else:
+                    error("UNKNOWN PostTypeId, id: " + id)
 
-            else:
-                f = open("errors.txt", "a+")
-                f.write("UNKNOWN PostTypeId, id: " + id + "\n")
-                f.close()
+                bar.update(linenr)
+            except Exception as e:
+                error("[ERROR]: %s:%i\t%s\n\t%s %s" % (file, linenr + 2, "%s: %s" % (type(e), str(e)), elem.tag,
+                                                       json.dumps(elem.attrib)))
+        xml.readline()  # Read the root closing tag
 
-            elem.clear()
-            bar.update(int(id))
-
-        except:
-            f = open("errors.txt", "a+")
-            f.write("UNKNOWN ERROR " + elem.tag + " " + json.dumps(elem.attrib) + "\n")
+        for i in ids:
+            f = open(directory + "/question" + i + ".xml", "a+")
+            f.write("</qroot>\n")
             f.close()
 
-for i in ids:
-    f = open("posts/question" + i + ".xml", "a+")
-    f.write("</qroot>\n")
-    f.close()
+        bar.finish()
+
+
+if __name__ == '__main__':
+    args = sys.argv
+    fname = "smallPosts.xml"
+    if len(args) > 1 and os.path.isfile(args[1]):
+        fname = args[1]
+
+    dir = 'posts'
+    shutil.rmtree(dir, ignore_errors=True)
+    if len(args) > 2:
+        dir = args[2]
+        if not os.path.isdir(args[2]):
+            os.mkdir(dir)
+
+    preprocess(fname, dir)

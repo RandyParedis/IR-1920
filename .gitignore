@@ -2,3 +2,4 @@
 out
 .search
 *.iml
+.DS_Store

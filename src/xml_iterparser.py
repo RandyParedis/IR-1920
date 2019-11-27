@@ -13,7 +13,7 @@ def preprocess(file, directory):
     f = open("errors.log", "w+")
     f.close()
 
-    lastid = int(subprocess.check_output('wc -l %s | grep -o "[0-9]*"' % file, shell=True))
+    lastid = int(subprocess.check_output('wc -l %s | grep -o " [0-9]*"' % file, shell=True))
     lastid -= 3
 
     ids = []
@@ -85,7 +85,7 @@ if __name__ == '__main__':
     shutil.rmtree(dir, ignore_errors=True)
     if len(args) > 2:
         dir = args[2]
-        if not os.path.isdir(args[2]):
-            os.mkdir(dir)
+    if not os.path.isdir(dir):
+        os.mkdir(dir)
 
     preprocess(fname, dir)

@@ -123,7 +123,9 @@ public class Main {
      */
     public static void performance(String directory, Analyzer analyzer, Directory index)
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException, ParseException {
+        System.out.println("Adding documents...");
         createDocs(directory, analyzer, index);
+        System.out.println("Added all documents");
 
         // Search with the query
         IndexReader reader = DirectoryReader.open(index);
@@ -133,6 +135,8 @@ public class Main {
         // TreeMap instead of HashMap to make sure keys are sorted
         Map<Integer, Map<Integer, Float>> scores = new TreeMap<>();
         List<Float> time = new ArrayList<>();
+
+        System.out.println("Counting files...");
 
         File dir = new File(directory);
         ArrayList<File> files = new ArrayList<>(Arrays.asList(Objects.requireNonNull(dir.listFiles())));

@@ -1,0 +1,19 @@
+Clearing...
+Cleared!
+Compiling...
+Note: src/Helper.java uses unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+Compiled!
+Adding documents...
+Added all documents
+Loading files...
+Working...
+	Progress: (1095001 of 2010608); 54.46% Done.[Fatal Error] .DS_Store:1:1: Content is not allowed in prolog.
+Exception in thread "main" org.xml.sax.SAXParseException; systemId: file:/home/red/git/LuceneTest/../LuceneData/python_cpp/.DS_Store; lineNumber: 1; columnNumber: 1; Content is not allowed in prolog.
+	at java.xml/com.sun.org.apache.xerces.internal.parsers.DOMParser.parse(DOMParser.java:261)
+	at java.xml/com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderImpl.parse(DocumentBuilderImpl.java:339)
+	at java.xml/javax.xml.parsers.DocumentBuilder.parse(DocumentBuilder.java:206)
+	at XML.parse(XML.java:19)
+	at Main.performance(Main.java:159)
+	at Main.main(Main.java:242)
+

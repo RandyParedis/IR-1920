@@ -4,3 +4,5 @@ out
 *.iml
 .DS_Store
 errors.log
+*.zip
+*.class

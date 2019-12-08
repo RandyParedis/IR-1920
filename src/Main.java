@@ -39,34 +39,37 @@ public class Main {
 
         IndexWriter w = new IndexWriter(index, config);
         File[] files = dir.listFiles();
+        ArrayList<File> directories = new ArrayList<>();
         if(files != null) {
             for(File file: files) {
+                if(file.getName().equals(".DS_Store")) { continue; } // MAC
                 if(file.isFile()) {
-                    org.w3c.dom.Document doc = XML.parse(file);
-                    String title = XML.xpath("/qroot/question/Title", doc).item(0).getTextContent();
-                    String body = XML.xpath("/qroot/question/Body", doc).item(0).getTextContent();
-                    String tags = XML.xpath("/qroot/question/Tags", doc).item(0).getTextContent();
-                    String answers = "";
-                    NodeList items = XML.xpath("/qroot/answer/Body", doc);
-                    for(int i = 0; i < items.getLength(); ++i) {
-                        answers += "\n\n" + items.item(i).getTextContent();
-                    }
-                    addDoc(w, file.getName(), title, body, tags, answers);
+                    addParsedDoc(file, w);
+                } else if(file.isDirectory()) {
+                    directories.add(file);
                 }
             }
         }
         w.close();
+
+        // prevents overwriting
+        for(File d: directories) {
+            createDocs(d.getPath(), analyzer, index);
+        }
     }
 
-    private static String fileContents(File file) throws FileNotFoundException {
-        Scanner input = new Scanner(file);
-        StringBuilder builder = new StringBuilder();
-
-        while(input.hasNext()){
-            builder.append(input.nextLine());
+    private static void addParsedDoc(File file, IndexWriter w) throws
+            ParserConfigurationException, SAXException, IOException, XPathExpressionException {
+        org.w3c.dom.Document doc = XML.parse(file);
+        String title = XML.xpath("/qroot/question/Title", doc).item(0).getTextContent();
+        String body = XML.xpath("/qroot/question/Body", doc).item(0).getTextContent();
+        String tags = XML.xpath("/qroot/question/Tags", doc).item(0).getTextContent();
+        String answers = "";
+        NodeList items = XML.xpath("/qroot/answer/Body", doc);
+        for(int i = 0; i < items.getLength(); ++i) {
+            answers += "\n\n" + items.item(i).getTextContent();
         }
-
-        return builder.toString();
+        addDoc(w, file.getName(), title, body, tags, answers);
     }
 
     private static Query getQuery(String old, Directory index, IndexReader reader, Analyzer analyzer)
@@ -77,13 +80,17 @@ public class Main {
 
     /**
      * Create a matrix concerning the performance on scoring the questions in a directory with its title as
-     * (transformed) query. It does not return anything, but rather generates a JSON-file which contains the time it
+     * (transformed) query. It does not return anything, but rather generates JSON-files which contain the time it
      * took for each question to score and its corresponding scoring matrix, encoded behind two keys, as illustrated
      * below. It also includes a quick reference for each index in the matrix and the corresponding question it refers
      * to. This allows a more flexible and less overhead-heavy file on the whole.
      *
-     * This file can be used as the input in some python script for showing the corresponding plots graphical
+     * These file can be used as the input in some python script for showing the corresponding plots graphical
      * representations.
+     *
+     * In order to prevent file memory explosion (worst case, the scores array is n^2), it writes the matrices during
+     * execution and per 1000 files. The scoring and timing is done on all files, so it's mere the full matrix that's
+     * being split-up. Just join all information in all files for a full result.
      *
      * Example results.json :
      *      {
@@ -136,21 +143,15 @@ public class Main {
         Map<Integer, Map<Integer, Float>> scores = new TreeMap<>();
         List<Float> time = new ArrayList<>();
 
-        System.out.println("Counting files...");
+        System.out.println("Loading files...");
+        ArrayList<File> files = loadFiles(directory);
+        int cnt = files.size();
 
-        File dir = new File(directory);
-        ArrayList<File> files = new ArrayList<>(Arrays.asList(Objects.requireNonNull(dir.listFiles())));
-        int cnt = 0;
-        for(File value : files) {
-            if (value.isFile()) {
-                ++cnt;
-            }
-        }
         System.out.println("Working...");
         for(int i = 0; i < files.size(); ++i) {
             File file = files.get(i);
-            System.out.print("\r\tProgress: (" + (i+1) + " of " + files.size() + "); " +
-                    ((float)(i+1) / (float)files.size() * 100) + "% Done.");
+            System.out.print("\r\tProgress: (" + (i+1) + " of " + cnt + "); " +
+                    String.format("%.2f", ((float)(i+1) / (float)files.size() * 100)) + "% Done.");
             if(file.isFile()) {
                 // Parse File
                 String name = file.getName();
@@ -183,21 +184,38 @@ public class Main {
                 if(!score.isEmpty()) {
                     scores.put(i, score);
                 }
+                if(i != 0 && i % 1000 == 0) {
+                    writeToJson("data/results-" + (i / 1000) + ".json", idxs, scores, time);
+                    idxs.clear();
+                    scores.clear();
+                    time.clear();
+                }
             }
         }
+        writeToJson("data/results-" + Math.ceil((float)cnt / 1000) + ".json", idxs, scores, time);
         System.out.print("\n");
-        writeToJson(idxs, scores, time);
     }
 
-    private static void writeToJson(List<String> idxs, Object scores, List<Float> time)
+    private static ArrayList<File> loadFiles(String directory) {
+        ArrayList<File> res = new ArrayList<>();
+        File dir = new File(directory);
+        File[] fls = dir.listFiles();
+        for(File file: Objects.requireNonNull(fls)) {
+            if(file.getName().equals(".DS_Store")) { continue; } // MAC
+            if(file.isFile()) {
+                res.add(file);
+            } else if(file.isDirectory()) {
+                res.addAll(loadFiles(file.getPath()));
+            }
+        }
+        return res;
+    }
+
+    private static void writeToJson(String filename, List<String> idxs, Object scores, List<Float> time)
             throws IOException {
         // Make sure the json is structured correctly
         HashMap<String, Object> hm = new HashMap<>();
         hm.put("idxs", idxs);
-//        Helper.check(idxs.size(), scores.size());
-//        for(List<Map<String, Float>> lf: scores) {
-//            Helper.check(idxs.size(), lf.size());
-//        }
         hm.put("scores", scores);
         Helper.check(idxs.size(), time.size());
         hm.put("time", time);
@@ -205,7 +223,7 @@ public class Main {
         try {
             String json = Helper.toJSON(hm);
 
-            BufferedWriter writer = new BufferedWriter(new FileWriter("results.json"));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
             writer.write(json);
             writer.close();
         } catch (ExecutionControl.NotImplementedException e) {
@@ -220,7 +238,9 @@ public class Main {
         StandardAnalyzer analyzer = new StandardAnalyzer();
         Directory index = new MMapDirectory(Paths.get(".search")); // Replaces deprecated RAMDirectory
 
-        performance("smallPosts", analyzer, index);
+        String loc = args.length == 0 ? "smallPosts" : args[0];
+
+        performance(loc, analyzer, index);
 //        createDocs("/home/red/Software/lucene-8.3.0", analyzer, index);
 //
 //        // Search with the query

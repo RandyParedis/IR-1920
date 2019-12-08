@@ -150,6 +150,7 @@ public class Main {
         System.out.println("Working...");
         for(int i = 0; i < files.size(); ++i) {
             File file = files.get(i);
+            if(file.getName().equals(".DS_Store")) { continue; } // MAC
             System.out.print("\r\tProgress: (" + (i+1) + " of " + cnt + "); " +
                     String.format("%.2f", ((float)(i+1) / (float)files.size() * 100)) + "% Done.");
             if(file.isFile()) {
@@ -177,7 +178,7 @@ public class Main {
                     int id = hit.doc;
                     Document d = searcher.doc(id);
                     // Get the consistent id from the files ArrayList
-                    int fix = files.indexOf(new File(directory + "/" + d.get("name")));
+                    int fix = indexOfFileByEnd(files, d.get("name"));
 //                    System.out.println("SCORE OF " + d.get("name") + " (" + fix + "): " + hit.score);
                     score.put(fix, hit.score);
                 }
@@ -208,7 +209,18 @@ public class Main {
                 res.addAll(loadFiles(file.getPath()));
             }
         }
+        Collections.sort(res); // Set the order
         return res;
+    }
+
+    private static int indexOfFileByEnd(ArrayList<File> lst, String end) {
+        for(int i = 0; i < lst.size(); ++i) {
+            File file = lst.get(i);
+            if(file.getName().endsWith(end)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     private static void writeToJson(String filename, List<String> idxs, Object scores, List<Float> time)

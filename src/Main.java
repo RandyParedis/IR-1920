@@ -20,6 +20,8 @@ import java.nio.file.Paths;
 import java.util.*;
 
 public class Main {
+    private static ProgressBar spb;
+
     private static void addDoc(IndexWriter w, String name, String title, String body, String tags, String answers)
             throws IOException {
         Document doc = new Document();
@@ -45,6 +47,8 @@ public class Main {
                 if(file.getName().equals(".DS_Store")) { continue; } // MAC
                 if(file.isFile()) {
                     addParsedDoc(file, w);
+                    spb.next();
+                    spb.print();
                 } else if(file.isDirectory()) {
                     directories.add(file);
                 }
@@ -130,9 +134,17 @@ public class Main {
      */
     public static void performance(String directory, Analyzer analyzer, Directory index)
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException, ParseException {
-        System.out.println("Adding documents...");
+        System.out.println("Loading files...");
+        ArrayList<File> files = loadFiles(directory);
+        int cnt = files.size();
+
+        System.out.println("Creating Index...");
+        spb = new ProgressBar(cnt);
+        spb.start();
+        spb.print();
         createDocs(directory, analyzer, index);
-        System.out.println("Added all documents");
+        spb.end();
+        System.out.println("Index Created");
 
         // Search with the query
         IndexReader reader = DirectoryReader.open(index);
@@ -143,16 +155,15 @@ public class Main {
         Map<Integer, Map<Integer, Float>> scores = new TreeMap<>();
         List<Float> time = new ArrayList<>();
 
-        System.out.println("Loading files...");
-        ArrayList<File> files = loadFiles(directory);
-        int cnt = files.size();
-
         System.out.println("Working...");
+        int groupsize = 10000;
+        ProgressBar progressBar = new ProgressBar(files.size());
+        progressBar.start();
         for(int i = 0; i < files.size(); ++i) {
+            progressBar.set(i+1);
             File file = files.get(i);
             if(file.getName().equals(".DS_Store")) { continue; } // MAC
-            System.out.print("\r\tProgress: (" + (i+1) + " of " + cnt + "); " +
-                    String.format("%.2f", ((float)(i+1) / (float)files.size() * 100)) + "% Done.");
+            progressBar.print();
             if(file.isFile()) {
                 // Parse File
                 String name = file.getName();
@@ -185,16 +196,16 @@ public class Main {
                 if(!score.isEmpty()) {
                     scores.put(i, score);
                 }
-                if(i != 0 && i % 1000 == 0) {
-                    writeToJson("data/results-" + (i / 1000) + ".json", idxs, scores, time);
+                if(i != 0 && i % groupsize == 0) {
+                    writeToJson("data/results-" + (i / groupsize) + ".json", idxs, scores, time);
                     idxs.clear();
                     scores.clear();
                     time.clear();
                 }
             }
         }
-        writeToJson("data/results-" + Math.ceil((float)cnt / 1000) + ".json", idxs, scores, time);
-        System.out.print("\n");
+        writeToJson("data/results-" + Math.ceil((float)cnt / groupsize) + ".json", idxs, scores, time);
+        progressBar.end();
     }
 
     private static ArrayList<File> loadFiles(String directory) {

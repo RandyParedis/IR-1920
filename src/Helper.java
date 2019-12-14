@@ -12,7 +12,7 @@ import java.util.*;
 public class Helper {
     public static String queryTransform(String old, int sugs, Directory index, IndexReader reader, Analyzer analyzer)
             throws IOException {
-        String[] words = old.strip().replaceAll("[^A-Za-z0-9 ]", "").toLowerCase().split(" ");
+        String[] words = old.strip().toLowerCase().replaceAll("[^a-z0-9 ]", "").split(" ");
         List<String> ors = new ArrayList<>();
         for(String word : words) {
             if(word.isEmpty()) { continue; }

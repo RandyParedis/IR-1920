@@ -18,9 +18,12 @@ import javax.xml.xpath.XPathExpressionException;
 import java.io.*;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Main {
     private static ProgressBar spb;
+    private static Map<String, Integer> searchCache = new HashMap<>();
 
     private static void addDoc(IndexWriter w, String name, String title, String body, String tags, String answers)
             throws IOException {
@@ -31,6 +34,7 @@ public class Main {
         doc.add(new TextField("tags", tags.replace(",", " "), Field.Store.YES));
         doc.add(new TextField("answers", answers, Field.Store.YES));
         w.addDocument(doc);
+        searchCache.put(name, searchCache.size());
     }
 
     private static void createDocs(String path, Analyzer analyzer, Directory index)
@@ -78,7 +82,7 @@ public class Main {
 
     private static Query getQuery(String old, Directory index, IndexReader reader, Analyzer analyzer)
             throws IOException, ParseException {
-        String querystr = Helper.queryTransform(old, 1, index, reader, analyzer);
+        String querystr = Helper.queryTransform(old, 5, index, reader, analyzer);
         return new MultiFieldQueryParser(new String[]{"body", "tags", "answers"}, analyzer).parse(querystr);
     }
 
@@ -134,6 +138,8 @@ public class Main {
      */
     public static void performance(String directory, Analyzer analyzer, Directory index)
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException, ParseException {
+        ExecutorService executor = Executors.newFixedThreadPool(4);
+
         System.out.println("Loading files...");
         ArrayList<File> files = loadFiles(directory);
         int cnt = files.size();
@@ -151,15 +157,12 @@ public class Main {
         IndexSearcher searcher = new IndexSearcher(reader);
 
         List<String> idxs = new ArrayList<>();
-        // TreeMap instead of HashMap to make sure keys are sorted
-        Map<Integer, Map<Integer, Float>> scores = new TreeMap<>();
-        List<Float> time = new ArrayList<>();
+        Map<Integer, Float> scores = new TreeMap<>();
 
         System.out.println("Working...");
-        int groupsize = 10000;
         ProgressBar progressBar = new ProgressBar(files.size());
         progressBar.start();
-        for(int i = 0; i < files.size(); ++i) {
+        for(int i = 0; i < cnt; ++i) {
             progressBar.set(i+1);
             File file = files.get(i);
             if(file.getName().equals(".DS_Store")) { continue; } // MAC
@@ -172,39 +175,16 @@ public class Main {
                 String title = nodes.item(0).getTextContent();
 
                 // Get Query and Time it
-                long startTime = System.nanoTime();
                 Query q = getQuery(title, index, reader, analyzer);
-                TopDocs docs = searcher.search(q, cnt);
-                ScoreDoc[] hits = docs.scoreDocs;
-                long endTime = System.nanoTime();
-                long duration = (endTime - startTime);
-                float secs = duration / (float)(1000*1000*1000);
-                time.add(secs);
+                Explanation explain = searcher.explain(q, searchCache.get(name));
+                float score = (float) explain.getValue();
 
-                // Fill the Matrix with zeros
-                Map<Integer, Float> score = new HashMap<>();
-
-                // Set the correct scores
-                for(ScoreDoc hit: hits) {
-                    int id = hit.doc;
-                    Document d = searcher.doc(id);
-                    // Get the consistent id from the files ArrayList
-                    int fix = indexOfFileByEnd(files, d.get("name"));
-//                    System.out.println("SCORE OF " + d.get("name") + " (" + fix + "): " + hit.score);
-                    score.put(fix, hit.score);
-                }
-                if(!score.isEmpty()) {
+                if(score > 0.0f) {
                     scores.put(i, score);
-                }
-                if(i != 0 && i % groupsize == 0) {
-                    writeToJson("data/results-" + (i / groupsize) + ".json", idxs, scores, time);
-                    idxs.clear();
-                    scores.clear();
-                    time.clear();
                 }
             }
         }
-        writeToJson("data/results-" + Math.ceil((float)cnt / groupsize) + ".json", idxs, scores, time);
+        writeToJson("data/results.json", idxs, scores);
         progressBar.end();
     }
 
@@ -220,8 +200,26 @@ public class Main {
                 res.addAll(loadFiles(file.getPath()));
             }
         }
-        Collections.sort(res); // Set the order
-        return res;
+
+        // Pick 10000 documents (efficiency)
+        if(res.size() < 1000) {
+            Collections.sort(res); // Set the order
+            return res;
+        }
+        Random rand = new Random();
+        ArrayList<File> rres = new ArrayList<>();
+        HashSet<Integer> found = new HashSet<>();
+        for(int i = 0; i < 10000; ++i) {
+            int n = -1;
+            do {
+                rand.nextInt(res.size());
+            } while(found.contains(n));
+            found.add(n);
+            rres.add(res.get(n));
+        }
+
+        Collections.sort(rres); // Set the order
+        return rres;
     }
 
     private static int indexOfFileByEnd(ArrayList<File> lst, String end) {
@@ -234,14 +232,12 @@ public class Main {
         return -1;
     }
 
-    private static void writeToJson(String filename, List<String> idxs, Object scores, List<Float> time)
+    private static void writeToJson(String filename, List<String> idxs, Object scores)
             throws IOException {
         // Make sure the json is structured correctly
         HashMap<String, Object> hm = new HashMap<>();
         hm.put("idxs", idxs);
         hm.put("scores", scores);
-        Helper.check(idxs.size(), time.size());
-        hm.put("time", time);
 
         try {
             String json = Helper.toJSON(hm);

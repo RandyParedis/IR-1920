@@ -5,7 +5,9 @@ the need to write a lot of individual lines of code. If you want something that 
 in this file, you can still use matplotlib as default.
 """
 import matplotlib.pyplot as plt
-import numpy as np
+from sklearn.metrics import roc_curve, precision_recall_curve, average_precision_score
+from sklearn.utils.fixes import signature
+from boxplotHelper import compute_boxplot, draw_boxplot
 import sys
 import os
 import json
@@ -43,6 +45,31 @@ class Plot:
                ylabel='Queried Question',
                xlabel='Score of Query')
 
+    @staticmethod
+    def pr_curve(ax, y_test, y_pred):
+        precision, recall, _ = precision_recall_curve(y_test, y_pred)
+        step_kwargs = ({'step': 'post'} if 'step' in signature(plt.fill_between).parameters else {})
+        average_precision = average_precision_score(y_test, y_pred)
+
+        ax.step(recall, precision, color='b', alpha=0.2, where='post')
+        ax.fill_between(recall, precision, alpha=0.2, color='b', **step_kwargs)
+        ax.set_xlabel('Recall')
+        ax.set_ylabel('Precision')
+        ax.set_ylim([0.0, 1.05])
+        ax.set_xlim([0.0, 1.0])
+        ax.set_title('Precision-Recall curve: AP={0:0.2f}'.format(average_precision))
+
+    @staticmethod
+    def roc_curve(ax, y_test, y_pred):
+        fpr_rf, tpr_rf, _ = roc_curve(y_test, y_pred)
+
+        ax.plot([0, 1], [0, 1], 'k--')
+        ax.plot(fpr_rf, tpr_rf, label='RF')
+        ax.set_xlabel('False positive rate')
+        ax.set_ylabel('True positive rate')
+        ax.set_title('ROC curve')
+        ax.legend(loc='best')
+
 
 def normalize(vector: list):
     S = sum(vector)
@@ -79,23 +106,36 @@ if __name__ == '__main__':
         print(len(data["idxs"]), "records in dataset")
 
         # Plot time
-        #fig, (ax1, ax2) = plt.subplots(1, 2, sharey=True, gridspec_kw={'wspace': 0, 'width_ratios': [5, 1]})
-        #ax1.set_xmargin(0.01)
-        #ax2.set_xmargin(0.01)
-        #ax1.set_ylabel('seconds')
-        #for t in ax1.get_xticklabels():
+        # fig, (ax1, ax2) = plt.subplots(1, 2, sharey=True, gridspec_kw={'wspace': 0, 'width_ratios': [5, 1]})
+        # ax1.set_xmargin(0.01)
+        # ax2.set_xmargin(0.01)
+        # ax1.set_ylabel('seconds')
+        # for t in ax1.get_xticklabels():
         #    t.set_rotation(90)
-        #fig.suptitle("Lucene Self-Scoring Duration")
-        #Plot.bar(ax1, ["Q%s" % x for x in data['idxs']], data['time'])
-        #Plot.boxplot(ax2, data['time'])
-        #plt.show()
+        # fig.suptitle("Lucene Self-Scoring Duration")
+        # Plot.bar(ax1, ["Q%s" % x for x in data['idxs']], data['time'])
+        # Plot.boxplot(ax2, data['time'])
+        # plt.show()
 
         L = data["scores"]
-        fig, ax = plt.subplots()
-        ax.set_xlabel("Question ID")
-        ax.set_ylabel("Score")
-        Plot.bar(ax, ['' for x in L if x in L[x]], [L[x][x] for x in L if x in L[x]],
-                 "Self-Scoring Performance")
+        R = range(len(data["idxs"]))
+        # fig1, ax = plt.subplots()
+        # ax.set_xlabel("Question ID")
+        # ax.set_ylabel("Score")
+        # Plot.bar(ax, ['' for x in L if x in L[x]], [L[x][x] for x in L if x in L[x]],
+        #          "Self-Scoring Performance")
+        # plt.show()
+
+        # fig2, (ax1, ax2) = plt.subplots(1, 2)
+        # fig2.suptitle("Self-Scoring Performance")
+        # y_test = [1 if str(x) in L and str(x) in L[str(x)] and L[str(x)][str(x)] > 0 else 0 for x in R]
+        # y_pred = [1 if str(x) in L else 0 for x in R]
+        # Plot.pr_curve(ax1, y_test, y_pred)
+        # Plot.roc_curve(ax2, y_test, y_pred)
+        # plt.show()
+
+        fig3, axb = plt.subplots()
+        Plot.boxplot(axb, normalize([x for x in R if str(x) in L and str(x) in L[str(x)] and L[str(x)][str(x)] > 0]))
         plt.show()
 
 

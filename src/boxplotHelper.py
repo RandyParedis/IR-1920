@@ -6,6 +6,9 @@ situations where you don't have access over the entire dataset, but only over a 
 thereof.
 There are also some additional helper functions that can be useful in other circumstances
 as well.
+
+Author: Randy Paredis
+Date:   11-24-2019
 """
 
 from enum import Enum
@@ -212,7 +215,9 @@ def histostep(xj, b: int, q: list, n: list, N: int):
         # Calculate desired marker position
         n_ = i * (N - 1) / b
         di = n_ - n[i]
-        if abs(di) >= 1 and abs(n[i+1] - n[i]) > 1:
+        # Prevent markers moving to the same position.
+        if (di >= 1 and n[i+1] - n[i] > 1) or \
+                (di <= -1 and n[i-1] - n[i] < 1):
             di = sign(di)
             qi = PPP(q, n, i, di)
             if q[i-1] < qi < q[i+1]:
@@ -248,10 +253,7 @@ def PPP(q: list, n: list, i: int, d=1):
         return n[j] - n[j-1] + d*f
 
     def int_q(j):
-        nn = n[j+1] - n[j]
-        if nn == 0:
-            return 0
-        return (q[j+1]-q[j]) / nn
+        return (q[j+1]-q[j]) / (n[j+1] - n[j])
 
     return q[i] + (d / (n[i+1] - n[i-1])) * (int_n(i) * int_q(i) + int_n(i+1, -1) * int_q(i-1))
 
@@ -284,35 +286,47 @@ def linear_interpolation(x, data: list):
     return y0 + (x - x0) * (y1 - y0) / (x1 - x0)
 
 
-def sign(x):
+def sign(num):
     """Apply the sign function.
 
     Args:
-        x (numeric):    The value of which the sign needs to be determined.
+        num (numeric):    The value of which the sign needs to be determined.
 
     Returns:
-        1   if x > 0
-        -1  if x < 0
-        0   if x == 0
+        1   if num > 0
+        -1  if num < 0
+        0   if num == 0
     """
-    return 1 if x > 0 else -1 if x < 0 else 0
+    return 1 if num > 0 else -1 if num < 0 else 0
 
 
 def binomial(n, k):
     """The binomial computation.
 
     The amount of possible ways to choose k out of n.
-    This is the computation of the binomial coefficients.
+    This is the computation of the binomial coefficient C(n, k).
+    Instead of the basic formula of
+        n! / (k! * (n - k)!)    where 'x!' stands for 'x factorial',
+    this method will try and compute a space-efficient binomial
+    (i.e. O(1)). It is based on the explanation on:
+    https://www.geeksforgeeks.org/space-and-time-efficient-binomial-coefficient/
 
     Args:
         n (numeric):    The total number (top number).
         k (numeric):    The amount to choose (bottom number).
 
     Returns:
-        n! / (k! * (n - k)!)  where 'x!' stands for 'x factorial'.
+
     """
-    fact = math.factorial
-    return float(fact(n)) / float(fact(k) * fact(n-k))
+    # We know C(n, k) = C(n, n - k) and therefore we can simplify
+    #   Basically, we choose the least amount of operations needed.
+    if k > n - k:
+        k = n - k
+    res = 1.0
+    for i in range(k):
+        res *= float(n - i)
+        res /= float(i + 1)
+    return res
 
 
 def binprob(t, n, p):
@@ -332,14 +346,158 @@ def binprob(t, n, p):
                 Pr[X <= t]
     """
     # print("\tX ~ Bin(%f, %f); Pr[X <= %i]" % (n, p, t))
-    return sum([binomial(n, i)*(p**i)*((1-p)**(n-i)) for i in range(math.ceil(t))])
+    return sum([binomial(n, i)*(p**i)*((1-p)**(n-i)) for i in range(math.floor(t))])
+
+
+def draw_boxplot(minimum, Q1, median, Q3, maximum, outliers=False, labels=None):
+    """Get a boxplot-data object in matplotlib, based on its values.
+
+    Using this function, it is possible to quickly draw a boxplot, based on
+    its internal values. By default, matplotlib uses either bootstrapping or
+    Gaussian-based asymptotic approximation (Tukey).
+
+    This function therefore allows drawing boxplots based on other algorithms,
+    but it does NOT draw the boxplots themselves. It yields a mere object, which
+    can be used in the Axes.bpx method of matplotlib.
+
+    Args:
+        minimum (numeric):  The smallest number to be drawn on the boxplot.
+        Q1 (numeric):       The lower quartile edge of the box.
+        median (numeric):   The median position indicator in the box.
+        Q3 (numeric):       The upper quartile edge of the box.
+        maximum (numeric):  The largest number to be drawn on the boxplot.
+        outliers (bool):    When true, this will make sure the whiskers are at most
+                            1.5 * IQR away from the box. If the `minimum` and the
+                            `maximum` are outside of this range, they will be
+                            indicated as outliers.
+                            Do note that, as was the case with the compute_boxplot
+                            function, this method is a mere approximation of the
+                            boxplot, which becomes clear when comparing it to the
+                            actual boxplot. Theoretically, it's a good approximation
+                            nonetheless.
+                            Defaults to ``False``.
+        labels (iterable):  Labels for each dataset.
+                            See also cbook.boxplot_stats.labels
+
+    Returns:
+        A dictionary containing the results for each column of data.
+        This is basically a transformed dictionary, based on:
+            >>> cbook.boxplot_stats([minimum, Q1, median, Q3, maximum], labels=labels)[0]
+
+    Example:
+        >>> import matplotlib.pyplot as plt
+        >>>
+        >>> fig, ax = plt.subplots()
+        >>> boxplot = draw_boxplot(minimum, Q1, median, Q3, maximum)
+        >>> ax.bxp(boxplot)       # draw the actual boxplot
+        >>> plt.show()
+    """
+    from matplotlib import cbook
+
+    s = cbook.boxplot_stats([minimum, Q1, median, Q3, maximum], labels=labels)[0]
+    iqr = Q3 - Q1
+    s["q1"] = Q1
+    s["median"] = median
+    s["q3"] = Q3
+    s["iqr"] = iqr
+    s["fliers"] = []
+    if outliers:
+        L = Q1 - (1.5 * iqr)
+        H = Q3 + (1.5 * iqr)
+        if minimum < L:
+            s["fliers"].append(minimum)
+        if maximum > H:
+            s["fliers"].append(maximum)
+        s["whislo"] = max(minimum, L)
+        s["whishi"] = min(maximum, H)
+    else:
+        s["whislo"] = minimum
+        s["whishi"] = maximum
+
+    return s
+
+
+def mean(seq):
+    """Computes the mean of a sequence.
+
+    Args:
+        seq (iterable): The sequence to compute the mean for.
+
+    Returns:
+        The mean of the sequence.
+    """
+    if len(seq) == 0:
+        return 0
+    return sum(seq) / len(seq)
+
+
+def var(seq):
+    """Computes the variance of a sequence.
+
+    Args:
+        seq (iterable): The sequence to compute the variance for.
+
+    Returns:
+        The variance of the sequence.
+    """
+    mu = mean(seq)
+    S = sum([(X - mu)**2 for X in seq])
+    return S / len(seq)
+
+
+def std(seq):
+    """Computes the standard derivation of a sequence.
+
+    Args:
+        seq (iterable): The sequence to compute the standard
+                        derivation for.
+
+    Returns:
+        The standard derivation of the sequence.
+    """
+    return var(seq) ** 0.5
+
+
+def harmonic(n: int, m=1):
+    """Computes the n-th generalized harmonic number.
+
+    Args:
+        n (int):        The number to obtain.
+        m (numeric):    The power of each denominator.
+                        Defaults to 1, which also allows non-generalized numbers.
+
+    Returns:
+        The n-th generalized harmonic number.
+    """
+    return sum([1 / (q ** m) for q in range(1, n+1)])
+
+
+def harmonicinv(y, m=1):
+    """Compute the inverse general harmonic number.
+
+    I.e. GH(n, m) = y <==> IH(y, m) = n
+
+    Args:
+        y (numeric):    The general harmonic number.
+        m (numeric):    The power to compute.
+                        Defaults to 1.
+
+    Returns:
+        The inverse general harmonic number.
+    """
+    s = 0
+    while y > 0:
+        s += 1
+        y -= 1 / (s ** m)
+    return s
 
 
 if __name__ == '__main__':
     import numpy.random as rng
+    import pandas as pd
+    import progressbar
+    import progressbar.widgets as widgets
 
-    x = rng.uniform(1.0, 100.0, 1000)
-    x = [float(n) for n in x]
     algos = [
         BoxplotAlgorithm.MEDIAN,
         BoxplotAlgorithm.TUKEY,
@@ -350,47 +508,75 @@ if __name__ == '__main__':
         BoxplotAlgorithm.FAME,
         BoxplotAlgorithm.P_SQUARE,
     ]
-
-    import pandas as pd
-
     cols = [a.name for a in algos]
+
+    N = 10000
+    Q1_tests = {A.name: [] for A in algos}
+    Q3_tests = {A.name: [] for A in algos}
+    EC = []
+    errors = []
+
+    print("\nRUNNING ALGORITHMIC TESTS")
+    print("=========================\n")
+    bar = progressbar.ProgressBar(maxval=N*len(algos), widgets=[
+        ' ', widgets.Percentage(), ' (', widgets.Counter(), ' of %i) ' % (N*len(algos)),
+        widgets.AdaptiveETA(), ' ', widgets.Bar()
+    ])
+    bar.start()
+    try:
+        for l in range(N):
+            x = rng.uniform(1.0, 100.0, 1000)
+            x = [float(n) for n in x]
+
+            frame = pd.DataFrame(columns=cols)
+
+            for r in ["Q1", "Q3", "IQR"]:
+                frame.loc[r] = 0
+
+            for A in algos:
+                r = compute_boxplot(x, A)
+                frame.at["Q1", A.name] = r["Q1"]
+                frame.at["Q3", A.name] = r["Q3"]
+                frame.at["IQR", A.name] = r["Q3"] - r["Q1"]
+
+                Q1T = binprob(frame.at["Q1", A.name], len(x), 0.25)
+                Q3T = binprob(frame.at["Q3", A.name], len(x), 0.75)
+                frame.at["Q1 test", A.name] = Q1T
+                frame.at["Q3 test", A.name] = Q3T
+
+                Q1_tests[A.name].append(Q1T)
+                Q3_tests[A.name].append(Q3T)
+                if abs(Q1T) > 5 or abs(Q3T) > 5:
+                    EC.append(r)
+
+                bar.update(l*len(algos)+algos.index(A)+1)
+        bar.finish()
+    except KeyboardInterrupt as k:
+        # Flush ^C character
+        print('\r  ', end='\r')
+        bar.update(bar.currval)
+
+
+    print("\nSUMMARY:")
     frame = pd.DataFrame(columns=cols)
-
-    for r in ["Q1", "Q3", "IQR"]:    # ["min", "Q1", "median", "Q3", "max", "IQR"]:
-        frame.loc[r] = 0
-
-    bxdata = {}
+    frame.loc["Q1 mean"] = 0
+    frame.loc["Q1 std"] = 0
+    frame.loc["Q3 mean"] = None
+    frame.loc["Q3 std"] = None
     for A in algos:
-        r = compute_boxplot(x, A)
-        bxdata[A.name] = r
-        # frame.at["min", A.name] = r["min"]
-        frame.at["Q1", A.name] = r["Q1"]
-        # frame.at["median", A.name] = r["median"]
-        frame.at["Q3", A.name] = r["Q3"]
-        # frame.at["max", A.name] = r["max"]
-        frame.at["IQR", A.name] = r["Q3"] - r["Q1"]
-
-        # frame.at["Q1 test", A.name] = binprob(frame.at["Q1", A.name], len(x), 0.25)
-        # frame.at["Q3 test", A.name] = binprob(frame.at["Q3", A.name], len(x), 0.75)
-
-
-    # print("SERIES:", x)
+        frame.at["Q1 mean", A.name] = mean(Q1_tests[A.name])
+        frame.at["Q1 std", A.name] = std(Q1_tests[A.name])
+        frame.at["Q3 mean", A.name] = mean(Q3_tests[A.name])
+        frame.at["Q3 std", A.name] = std(Q3_tests[A.name])
     print(frame)
+    print()
 
-    # from matplotlib import pyplot as plt, cbook
-    #
-    # data = {'default': cbook.boxplot_stats(x, labels=['default'])[0]}
-    # for A in algos:
-    #     r = bxdata[A.name]
-    #     s = cbook.boxplot_stats(x, labels=[A.name])[0]
-    #     s["q1"] = r["Q1"]
-    #     s["q3"] = r["Q3"]
-    #     s["iqr"] = r["Q3"] - r["Q1"]
-    #     s["whislo"] = r["min"]
-    #     s["whishi"] = r["max"]
-    #     s["fliers"] = []
-    #     data[A.name] = s
-    #
-    # fig, ax = plt.subplots(1, 1)
-    # ax.bxp([data[d] for d in data], positions=range(len(algos) + 1))
-    # plt.show()
+    if len(EC) > 0:
+        print("\n%i EDGE CASES FOUND:" % len(EC))
+        for ec in EC:
+            print("\t", ec)
+        print()
+
+    if len(errors) > 0:
+        print("\n%i ERROR(S) OCCURRED\tsee 'errors.log' for more info" % len(errors))
+        print()

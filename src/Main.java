@@ -18,8 +18,6 @@ import javax.xml.xpath.XPathExpressionException;
 import java.io.*;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class Main {
     private static ProgressBar spb;
@@ -37,33 +35,23 @@ public class Main {
         searchCache.put(name, searchCache.size());
     }
 
-    private static void createDocs(String path, Analyzer analyzer, Directory index)
+    private static void createDocs(List<File> files, Analyzer analyzer, Directory index)
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
         IndexWriterConfig config = new IndexWriterConfig(analyzer);
         config.setOpenMode(IndexWriterConfig.OpenMode.CREATE);           // Overwrite existing files
-        File dir = new File(path);                                       // The directory to search in
 
         IndexWriter w = new IndexWriter(index, config);
-        File[] files = dir.listFiles();
-        ArrayList<File> directories = new ArrayList<>();
-        if(files != null) {
-            for(File file: files) {
-                if(file.getName().equals(".DS_Store")) { continue; } // MAC
-                if(file.isFile()) {
-                    addParsedDoc(file, w);
-                    spb.next();
-                    spb.print();
-                } else if(file.isDirectory()) {
-                    directories.add(file);
-                }
+        for(File file: files) {
+            if(file.isFile()) {
+                addParsedDoc(file, w);
+                spb.next();
+                spb.print();
+            } else {
+                w.close();
+                throw new IOException("Impossible to have a directory at this point!");
             }
         }
         w.close();
-
-        // prevents overwriting
-        for(File d: directories) {
-            createDocs(d.getPath(), analyzer, index);
-        }
     }
 
     private static void addParsedDoc(File file, IndexWriter w) throws
@@ -88,43 +76,21 @@ public class Main {
 
     /**
      * Create a matrix concerning the performance on scoring the questions in a directory with its title as
-     * (transformed) query. It does not return anything, but rather generates JSON-files which contain the time it
-     * took for each question to score and its corresponding scoring matrix, encoded behind two keys, as illustrated
-     * below. It also includes a quick reference for each index in the matrix and the corresponding question it refers
-     * to. This allows a more flexible and less overhead-heavy file on the whole.
-     *
-     * These file can be used as the input in some python script for showing the corresponding plots graphical
-     * representations.
-     *
-     * In order to prevent file memory explosion (worst case, the scores array is n^2), it writes the matrices during
-     * execution and per 1000 files. The scoring and timing is done on all files, so it's mere the full matrix that's
-     * being split-up. Just join all information in all files for a full result.
+     * (transformed) query. It does not return anything, but rather generates JSON-files which contain the score
+     * these files gave themselves and how much they gave their opposite.
      *
      * Example results.json :
      *      {
      *          "scores": {
-     * 		        "0": {
-     * 			        "0": 12.510421,
-     * 			        "20": 5.111517
-     *              },
-     * 		        "6": {
-     * 			        "6": 8.548369
-     *              },
+     * 		        "0": [12.510421, 5.111517],
+     * 		        "6": [8.548369, 0.0],
      *              ...
      *          },
-     *          "idxs": ["4", "9", "14", "42", "16", "59", ...],
-     *          "time": [0.15608598, 0.12798472, 0.050792, 0.107817546, 0.074838094, ...]
+     *          "idxs": ["4", "9", "14", "42", "16", "59", ...]
      *      }
      *
-     * The matrix can be reconstructed as follows:
-     *      1)  Create a NxN matrix of 0's, where N = size of idxs
-     *      2)  Go through the scores object and use its keys to identify the rows and say its value object
-     *          is called V.
-     *      3)  Use V's keys for the columns and its values for the scores.
-     *      4)  Each row's and column's index of the matrix corresponds to the file with question id found in idxs,
-     *          at the index of the row/column index.
-     * For instance, in the example, row and column 0 correspond to question4.xml, which took 0.15 seconds to run
-     * and yielded the score 12.510421 for its own title as (transformed) query.
+     * For instance, in the example, question with index 0 (accoring to the idxs list, this is question 4) gave itself
+     * a score of 12.510421, but also scored high on the negative space (5.111517).
      *
      * @param directory     The directory to look inside of.
      * @param analyzer      The Analyzer to use.
@@ -138,17 +104,19 @@ public class Main {
      */
     public static void performance(String directory, Analyzer analyzer, Directory index)
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException, ParseException {
-        ExecutorService executor = Executors.newFixedThreadPool(4);
 
         System.out.println("Loading files...");
-        ArrayList<File> files = loadFiles(directory);
-        int cnt = files.size();
+        int cnt = 50000;
+        ArrayList<File> files = pickFiles(loadFiles(directory), cnt - 1, 0);
+        File neg_space = new File("data/question_NS.xml");
+        files.add(neg_space);
+        searchCache.put(neg_space.getName(), searchCache.size());
 
         System.out.println("Creating Index...");
         spb = new ProgressBar(cnt);
         spb.start();
         spb.print();
-        createDocs(directory, analyzer, index);
+        createDocs(files, analyzer, index);
         spb.end();
         System.out.println("Index Created");
 
@@ -157,16 +125,15 @@ public class Main {
         IndexSearcher searcher = new IndexSearcher(reader);
 
         List<String> idxs = new ArrayList<>();
-        Map<Integer, Float> scores = new TreeMap<>();
+        Map<Integer, List<Float>> scores = new TreeMap<>();
 
         System.out.println("Working...");
-        ProgressBar progressBar = new ProgressBar(files.size());
-        progressBar.start();
+        spb.reset(cnt);
+        spb.start();
         for(int i = 0; i < cnt; ++i) {
-            progressBar.set(i+1);
+            spb.set(i+1);
             File file = files.get(i);
-            if(file.getName().equals(".DS_Store")) { continue; } // MAC
-            progressBar.print();
+            spb.print();
             if(file.isFile()) {
                 // Parse File
                 String name = file.getName();
@@ -174,18 +141,20 @@ public class Main {
                 NodeList nodes = XML.xpath("/qroot/question/Title", XML.parse(file));
                 String title = nodes.item(0).getTextContent();
 
-                // Get Query and Time it
+                // Get Query and Score it
                 Query q = getQuery(title, index, reader, analyzer);
                 Explanation explain = searcher.explain(q, searchCache.get(name));
                 float score = (float) explain.getValue();
+                explain = searcher.explain(q, searchCache.get(neg_space.getName()));
+                float score_NS = (float) explain.getValue();
 
-                if(score > 0.0f) {
-                    scores.put(i, score);
+                if(score > 0.0f || score_NS > 0.0f) {
+                    scores.put(i, Arrays.asList(score, score_NS));
                 }
             }
         }
         writeToJson("data/results.json", idxs, scores);
-        progressBar.end();
+        spb.end();
     }
 
     private static ArrayList<File> loadFiles(String directory) {
@@ -201,21 +170,25 @@ public class Main {
             }
         }
 
+        return res;
+    }
+
+    private static ArrayList<File> pickFiles(ArrayList<File> list, int count, int seed) {
         // Pick 10000 documents (efficiency)
-        if(res.size() < 1000) {
-            Collections.sort(res); // Set the order
-            return res;
+        if(list.size() < count) {
+            Collections.sort(list); // Set the order
+            return list;
         }
-        Random rand = new Random();
+        Random rand = new Random(seed);
         ArrayList<File> rres = new ArrayList<>();
         HashSet<Integer> found = new HashSet<>();
-        for(int i = 0; i < 10000; ++i) {
-            int n = -1;
+        for(int i = 0; i < count; ++i) {
+            int n;
             do {
-                rand.nextInt(res.size());
+                n = rand.nextInt(list.size());
             } while(found.contains(n));
             found.add(n);
-            rres.add(res.get(n));
+            rres.add(list.get(n));
         }
 
         Collections.sort(rres); // Set the order

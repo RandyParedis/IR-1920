@@ -12,12 +12,24 @@ public class ProgressBar {
         this(0, max);
     }
 
+    public ProgressBar() { this(0, 0); }
+
     public void start() {
         this.time = System.nanoTime();
     }
 
     public void end() {
         System.out.print("\n");
+    }
+
+    public void reset(int current, int max) {
+        time = 0;
+        this.current = current;
+        this.max = max;
+    }
+
+    public void reset(int max) {
+        this.reset(0, max);
     }
 
     public void set(int value) {

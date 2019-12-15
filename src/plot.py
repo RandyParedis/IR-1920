@@ -81,29 +81,38 @@ def normalize(vector: list):
 
 if __name__ == '__main__':
     args = sys.argv
-    if len(args) == 2 and os.path.isdir(args[1]):
+    if len(args) == 2 and os.path.isfile(args[1]):
         data = {
             "scores": {},
-            "idxs": [],
-            "time": []
+            "idxs": []
         }
-        dname = args[1]
-        files = os.listdir(dname)
-        tabs = '    ' * 13
-        for i in range(len(files)):
-            fname = files[i]
-            print("\r\tFILE %i / %i [%.2f %%] {%s}%s" % (i, len(files), i / len(files) * 100, fname, tabs), end='')
-            if fname.endswith('.json'):
-                with open(dname + fname) as json_file:
-                    d = json.load(json_file)
-                    for sc in d['scores']:
-                        if sc in data["scores"]:
-                            raise 4
-                        data["scores"][sc] = d['scores'][sc]
-                    data["idxs"] += d["idxs"]
-                    data["time"] += d["time"]
-        print("\r\tFILE %i / %i [100 %%]%s" % (len(files), len(files), tabs))
-        print(len(data["idxs"]), "records in dataset")
+        name = args[1]
+        if os.path.isdir(name):
+            dir = args[1]
+            files = os.listdir(name)
+            tabs = '    ' * 13
+            for i in range(len(files)):
+                fname = files[i]
+                print("\r\tFILE %i / %i [%.2f %%] {%s}%s" % (i, len(files), i / len(files) * 100, fname, tabs), end='')
+                if fname.endswith('.json'):
+                    with open(name + fname) as json_file:
+                        d = json.load(json_file)
+                        for sc in d['scores']:
+                            if sc in data["scores"]:
+                                raise 4
+                            data["scores"][sc] = d['scores'][sc]
+                        data["idxs"] += d["idxs"]
+                        data["time"] += d["time"]
+            print("\r\tFILE %i / %i [100 %%]%s" % (len(files), len(files), tabs))
+        elif os.path.isfile(name) and name.endswith('.json'):
+            with open(name) as json_file:
+                d = json.load(json_file)
+                data["scores"] = d["scores"]
+                data["idxs"] = d["idxs"]
+        else:
+            raise ValueError("Invalid argument!")
+        S = len(data["idxs"])
+        print(S, "records in dataset")
 
         # Plot time
         # fig, (ax1, ax2) = plt.subplots(1, 2, sharey=True, gridspec_kw={'wspace': 0, 'width_ratios': [5, 1]})
@@ -119,6 +128,8 @@ if __name__ == '__main__':
 
         L = data["scores"]
         R = range(len(data["idxs"]))
+        MP = [L[str(x)][0] if str(x) in L else 0.0 for x in R]
+        MN = [L[str(x)][1] if str(x) in L else 0.0 for x in R]
         # fig1, ax = plt.subplots()
         # ax.set_xlabel("Question ID")
         # ax.set_ylabel("Score")
@@ -126,17 +137,23 @@ if __name__ == '__main__':
         #          "Self-Scoring Performance")
         # plt.show()
 
+        for i in range(S):
+            print(MP[i], MN[i])
+
         # fig2, (ax1, ax2) = plt.subplots(1, 2)
         # fig2.suptitle("Self-Scoring Performance")
-        # y_test = [1 if str(x) in L and str(x) in L[str(x)] and L[str(x)][str(x)] > 0 else 0 for x in R]
-        # y_pred = [1 if str(x) in L else 0 for x in R]
+        # y_test = [1 if x > 0.5 else 0 for x in MP] + [1 if x > 0.5 else 0 for x in MN]
+        # y_pred = ([1] * S) + ([0] * (S-1)) + [1]
         # Plot.pr_curve(ax1, y_test, y_pred)
         # Plot.roc_curve(ax2, y_test, y_pred)
         # plt.show()
+        #
+        # for i in range(S*2):
+        #     print(y_test[i], y_pred[i])
 
-        fig3, axb = plt.subplots()
-        Plot.boxplot(axb, normalize([x for x in R if str(x) in L and str(x) in L[str(x)] and L[str(x)][str(x)] > 0]))
-        plt.show()
+        # fig3, axb = plt.subplots()
+        # Plot.boxplot(axb, normalize([x for x in R if str(x) in L and str(x) in L[str(x)] and L[str(x)][str(x)] > 0]))
+        # plt.show()
 
 
         # Plot scores

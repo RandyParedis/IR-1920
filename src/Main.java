@@ -111,7 +111,10 @@ public class Main {
 
         System.out.println("Loading files...");
         int cnt = 10000;
-        ArrayList<File> files = pickFiles(loadFiles(directory), cnt, 420);
+        ArrayList<File> files = pickFiles(loadFiles(directory), cnt - 1, 420);
+        File neg_space = new File("data/question_NS.xml");
+        files.add(neg_space);
+        searchCache.put(neg_space.getName(), searchCache.size());
 
         System.out.println("Creating Index...");
         spb = new ProgressBar(cnt);
@@ -126,29 +129,63 @@ public class Main {
         IndexSearcher searcher = new IndexSearcher(reader);
 
         List<String> idxs = new ArrayList<>();
-        for(File f: files) {
-            idxs.add(f.getPath().replace(directory, "")
-                    .replace("question", "")
-                    .replace(".xml", ""));
-        }
-        Map<Integer, Float> scores = new TreeMap<>();
+//        for(File f: files) {
+//            idxs.add(f.getPath().replace(directory, "")
+//                    .replace("question", "")
+//                    .replace(".xml", ""));
+//        }
+        Map<Integer, List<Float>> scores = new TreeMap<>();
 
-        System.out.println("Searching for Query Matches");
-        Query q = getQuery("python", index, reader, analyzer);
-        TopDocs docs = searcher.search(q, cnt);
-        ScoreDoc[] hits = docs.scoreDocs;
+//        System.out.println("Searching for Query Matches");
+//        Query q = getQuery("python", index, reader, analyzer);
+//        TopDocs docs = searcher.search(q, cnt);
+//        ScoreDoc[] hits = docs.scoreDocs;
 
         System.out.println("Generating Output Files");
-        spb.reset(hits.length);
+//        spb.reset(hits.length);
+        spb.reset(cnt);
         spb.start();
-        for(int i = 0; i < hits.length; ++i) {
+        for(int i = 0; i < cnt; ++i) {
             spb.set(i+1);
             spb.print();
-            int docId = hits[i].doc;
-            float score = hits[i].score;
-            Document d = searcher.doc(docId);
-            String name = d.get("name");
-            scores.put(searchCache.get(name), score);
+            File file = files.get(i);
+            if(file.isFile()) {
+                // Parse File
+                String name = file.getName();
+                idxs.add(name.replace("question", "").replace(".xml", ""));
+                NodeList nodes = XML.xpath("/qroot/question/Title", XML.parse(file));
+                String title = nodes.item(0).getTextContent();
+
+                // Get Query and Score it
+                Query q = getQuery(title, index, reader, analyzer);
+                TopDocs docs = searcher.search(q, cnt);
+                ScoreDoc[] hits = docs.scoreDocs;
+                float score = 0.0f;
+                float score_NS = 0.0f;
+                for(ScoreDoc hit : hits) {
+                    int docId = hit.doc;
+                    Document d = searcher.doc(docId);
+                    String dname = d.get("name");
+                    if (dname.equals(name)) {
+                        score = hit.score;
+                    } else if (dname.equals(neg_space.getName())) {
+                        score_NS = hit.score;
+                    }
+                }
+//                Explanation explain = searcher.explain(q, searchCache.get(name));
+//                float score = (float) explain.getValue();
+//                explain = searcher.explain(q, searchCache.get(neg_space.getName()));
+//                float score_NS = (float) explain.getValue();
+
+                if(score > 0.0f || score_NS > 0.0f) {
+                    scores.put(i, Arrays.asList(score, score_NS));
+                }
+            }
+//            int docId = hits[i].doc;
+//            float score = hits[i].score;
+//            Document d = searcher.doc(docId);
+//            String name = d.get("name");
+//            scores.put(searchCache.get(name), score);
         }
         writeToJson("data/results.json", directory, idxs, scores);
         spb.end();

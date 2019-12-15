@@ -10,9 +10,13 @@ import java.io.IOException;
 import java.util.*;
 
 public class Helper {
+    public static String transform(String old) {
+        return old.strip().toLowerCase().replaceAll("[^a-z0-9 ]", "");
+    }
+
     public static String queryTransform(String old, int sugs, Directory index, IndexReader reader, Analyzer analyzer)
             throws IOException {
-        String[] words = old.strip().toLowerCase().replaceAll("[^a-z0-9 ]", "").split(" ");
+        String[] words = transform(old).split(" ");
         List<String> ors = new ArrayList<>();
         for(String word : words) {
             if(word.isEmpty()) { continue; }

@@ -7,6 +7,7 @@ import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.*;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.MMapDirectory;
@@ -63,15 +64,18 @@ public class Main {
         String answers = "";
         NodeList items = XML.xpath("/qroot/answer/Body", doc);
         for(int i = 0; i < items.getLength(); ++i) {
-            answers += "\n\n" + items.item(i).getTextContent();
+            answers += "\n\n" + Helper.transform(items.item(i).getTextContent());
         }
-        addDoc(w, file.getName(), title, body, tags, answers);
+        addDoc(w, file.getName(), Helper.transform(title), Helper.transform(body),
+                Helper.transform(tags.replace(",", " ")), answers);
     }
 
     private static Query getQuery(String old, Directory index, IndexReader reader, Analyzer analyzer)
             throws IOException, ParseException {
         String querystr = Helper.queryTransform(old, 5, index, reader, analyzer);
-        return new MultiFieldQueryParser(new String[]{"body", "tags", "answers"}, analyzer).parse(querystr);
+        MultiFieldQueryParser mfqp = new MultiFieldQueryParser(new String[]{"body", "tags", "answers"}, analyzer);
+        mfqp.setDefaultOperator(QueryParser.Operator.OR);
+        return mfqp.parse(querystr);
     }
 
     /**
@@ -106,11 +110,8 @@ public class Main {
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException, ParseException {
 
         System.out.println("Loading files...");
-        int cnt = 50000;
-        ArrayList<File> files = pickFiles(loadFiles(directory), cnt - 1, 0);
-        File neg_space = new File("data/question_NS.xml");
-        files.add(neg_space);
-        searchCache.put(neg_space.getName(), searchCache.size());
+        int cnt = 10000;
+        ArrayList<File> files = pickFiles(loadFiles(directory), cnt, 420);
 
         System.out.println("Creating Index...");
         spb = new ProgressBar(cnt);
@@ -125,35 +126,31 @@ public class Main {
         IndexSearcher searcher = new IndexSearcher(reader);
 
         List<String> idxs = new ArrayList<>();
-        Map<Integer, List<Float>> scores = new TreeMap<>();
-
-        System.out.println("Working...");
-        spb.reset(cnt);
-        spb.start();
-        for(int i = 0; i < cnt; ++i) {
-            spb.set(i+1);
-            File file = files.get(i);
-            spb.print();
-            if(file.isFile()) {
-                // Parse File
-                String name = file.getName();
-                idxs.add(name.replace("question", "").replace(".xml", ""));
-                NodeList nodes = XML.xpath("/qroot/question/Title", XML.parse(file));
-                String title = nodes.item(0).getTextContent();
-
-                // Get Query and Score it
-                Query q = getQuery(title, index, reader, analyzer);
-                Explanation explain = searcher.explain(q, searchCache.get(name));
-                float score = (float) explain.getValue();
-                explain = searcher.explain(q, searchCache.get(neg_space.getName()));
-                float score_NS = (float) explain.getValue();
-
-                if(score > 0.0f || score_NS > 0.0f) {
-                    scores.put(i, Arrays.asList(score, score_NS));
-                }
-            }
+        for(File f: files) {
+            idxs.add(f.getPath().replace(directory, "")
+                    .replace("question", "")
+                    .replace(".xml", ""));
         }
-        writeToJson("data/results.json", idxs, scores);
+        Map<Integer, Float> scores = new TreeMap<>();
+
+        System.out.println("Searching for Query Matches");
+        Query q = getQuery("python", index, reader, analyzer);
+        TopDocs docs = searcher.search(q, cnt);
+        ScoreDoc[] hits = docs.scoreDocs;
+
+        System.out.println("Generating Output Files");
+        spb.reset(hits.length);
+        spb.start();
+        for(int i = 0; i < hits.length; ++i) {
+            spb.set(i+1);
+            spb.print();
+            int docId = hits[i].doc;
+            float score = hits[i].score;
+            Document d = searcher.doc(docId);
+            String name = d.get("name");
+            scores.put(searchCache.get(name), score);
+        }
+        writeToJson("data/results.json", directory, idxs, scores);
         spb.end();
     }
 
@@ -205,10 +202,11 @@ public class Main {
         return -1;
     }
 
-    private static void writeToJson(String filename, List<String> idxs, Object scores)
+    private static void writeToJson(String filename, String directory, List<String> idxs, Object scores)
             throws IOException {
         // Make sure the json is structured correctly
         HashMap<String, Object> hm = new HashMap<>();
+        hm.put("directory", directory);
         hm.put("idxs", idxs);
         hm.put("scores", scores);
 

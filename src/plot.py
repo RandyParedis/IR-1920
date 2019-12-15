@@ -11,6 +11,7 @@ from boxplotHelper import compute_boxplot, draw_boxplot
 import sys
 import os
 import json
+import re
 
 
 class Plot:
@@ -60,8 +61,8 @@ class Plot:
         ax.set_title('Precision-Recall curve: AP={0:0.2f}'.format(average_precision))
 
     @staticmethod
-    def roc_curve(ax, y_test, y_pred):
-        fpr_rf, tpr_rf, _ = roc_curve(y_test, y_pred)
+    def roc_curve(ax, y_true, y_score):
+        fpr_rf, tpr_rf, _ = roc_curve(y_true, y_score)
 
         ax.plot([0, 1], [0, 1], 'k--')
         ax.plot(fpr_rf, tpr_rf, label='RF')
@@ -79,15 +80,32 @@ def normalize(vector: list):
         return vector
 
 
+def prediction(idxs, directory=""):
+    pred = []
+    for path in idxs:
+        secs = path.split("/")
+        secs[-1] = "question" + secs[-1] + ".xml"
+        myfile = os.path.join(os.getcwd(), directory, *secs)
+        if os.path.isfile(myfile):
+            s = None
+            with open(myfile, 'r') as file:
+                s = re.search(r'\bpython\b', file.read())
+            pred.append(1 if s is not None else 0)
+    return pred
+
+
+
 if __name__ == '__main__':
     args = sys.argv
-    if len(args) == 2 and os.path.isfile(args[1]):
+    if len(args) == 2:
         data = {
             "scores": {},
-            "idxs": []
+            "idxs": [],
+            "directory": ""
         }
         name = args[1]
         if os.path.isdir(name):
+            raise NotImplementedError("Review Before use!")
             dir = args[1]
             files = os.listdir(name)
             tabs = '    ' * 13
@@ -108,11 +126,22 @@ if __name__ == '__main__':
             with open(name) as json_file:
                 d = json.load(json_file)
                 data["scores"] = d["scores"]
+                data["directory"] = d["directory"]
                 data["idxs"] = d["idxs"]
         else:
             raise ValueError("Invalid argument!")
         S = len(data["idxs"])
         print(S, "records in dataset")
+        R = range(S)
+        L = data["scores"]
+
+        fig2, (ax1, ax2) = plt.subplots(1, 2)
+        fig2.suptitle("Benchmark Performance")
+        y_score = [1 if str(x) in L and L[str(x)] > 0 else 0 for x in R]
+        y_true = prediction(data["idxs"], data["directory"])
+        Plot.pr_curve(ax1, y_true, y_score)
+        Plot.roc_curve(ax2, y_true, y_score)
+        plt.show()
 
         # Plot time
         # fig, (ax1, ax2) = plt.subplots(1, 2, sharey=True, gridspec_kw={'wspace': 0, 'width_ratios': [5, 1]})
@@ -125,37 +154,18 @@ if __name__ == '__main__':
         # Plot.bar(ax1, ["Q%s" % x for x in data['idxs']], data['time'])
         # Plot.boxplot(ax2, data['time'])
         # plt.show()
-
-        L = data["scores"]
-        R = range(len(data["idxs"]))
-        MP = [L[str(x)][0] if str(x) in L else 0.0 for x in R]
-        MN = [L[str(x)][1] if str(x) in L else 0.0 for x in R]
+        #
         # fig1, ax = plt.subplots()
         # ax.set_xlabel("Question ID")
         # ax.set_ylabel("Score")
         # Plot.bar(ax, ['' for x in L if x in L[x]], [L[x][x] for x in L if x in L[x]],
         #          "Self-Scoring Performance")
         # plt.show()
-
-        for i in range(S):
-            print(MP[i], MN[i])
-
-        # fig2, (ax1, ax2) = plt.subplots(1, 2)
-        # fig2.suptitle("Self-Scoring Performance")
-        # y_test = [1 if x > 0.5 else 0 for x in MP] + [1 if x > 0.5 else 0 for x in MN]
-        # y_pred = ([1] * S) + ([0] * (S-1)) + [1]
-        # Plot.pr_curve(ax1, y_test, y_pred)
-        # Plot.roc_curve(ax2, y_test, y_pred)
-        # plt.show()
         #
-        # for i in range(S*2):
-        #     print(y_test[i], y_pred[i])
-
-        # fig3, axb = plt.subplots()
-        # Plot.boxplot(axb, normalize([x for x in R if str(x) in L and str(x) in L[str(x)] and L[str(x)][str(x)] > 0]))
-        # plt.show()
-
-
+        # for i in range(S):
+        #     if MP[i] > 0 or MN[i] > 0:
+        #         print(MP[i], MN[i])
+        #
         # Plot scores
         # N = len(data['idxs'])
         # matrix = [[0 for r in range(N)] for c in range(N)]

@@ -140,13 +140,10 @@ if __name__ == '__main__':
         fig2.suptitle("Benchmark Performance")
         y_score = [1 if str(x) in L and L[str(x)][0] > 0 else 0 for x in R1] + \
                   [1 if str(x) in L and L[str(x)][1] > 0 else 0 for x in R2]
-        y_true = ([1] * (S-1) + ([0] * (S-1)) + [1]
+        y_true = ([1] * (S-1)) + ([0] * (S-1)) + [1]
         Plot.pr_curve(ax1, y_true, y_score)
         Plot.roc_curve(ax2, y_true, y_score)
         plt.show()
-
-        for i in range(2*S):
-            print(y_score[i], y_true[i])
 
         # Plot time
         # fig, (ax1, ax2) = plt.subplots(1, 2, sharey=True, gridspec_kw={'wspace': 0, 'width_ratios': [5, 1]})

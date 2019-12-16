@@ -6,3 +6,4 @@ out
 errors.log
 *.zip
 *.class
+__pychache__

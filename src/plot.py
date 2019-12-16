@@ -5,7 +5,7 @@ the need to write a lot of individual lines of code. If you want something that 
 in this file, you can still use matplotlib as default.
 """
 import matplotlib.pyplot as plt
-from sklearn.metrics import roc_curve, precision_recall_curve, average_precision_score
+from sklearn.metrics import roc_curve, precision_recall_curve, average_precision_score, auc
 from sklearn.utils.fixes import signature
 from boxplotHelper import compute_boxplot, draw_boxplot
 import sys
@@ -63,12 +63,13 @@ class Plot:
     @staticmethod
     def roc_curve(ax, y_true, y_score):
         fpr_rf, tpr_rf, _ = roc_curve(y_true, y_score)
+        auc_rf = auc(fpr_rf, tpr_rf)
 
         ax.plot([0, 1], [0, 1], 'k--')
         ax.plot(fpr_rf, tpr_rf, label='RF')
         ax.set_xlabel('False positive rate')
         ax.set_ylabel('True positive rate')
-        ax.set_title('ROC curve')
+        ax.set_title('ROC curve (AUC={0:0.2f})'.format(auc_rf))
         ax.legend(loc='best')
 
 

@@ -191,38 +191,43 @@ public class Main {
         spb.end();
     }
 
-    private static ArrayList<File> loadFiles(String directory) {
-        ArrayList<File> res = new ArrayList<>();
+    private static ArrayList<String> loadFiles(String directory) {
+        ArrayList<String> res = new ArrayList<>();
         File dir = new File(directory);
-        File[] fls = dir.listFiles();
-        for(File file: Objects.requireNonNull(fls)) {
-            if(file.getName().equals(".DS_Store")) { continue; } // MAC
-            if(file.isFile()) {
-                res.add(file);
-            } else if(file.isDirectory()) {
-                res.addAll(loadFiles(file.getPath()));
+
+        // Iterate via Strings for efficiency
+        String[] fls = dir.list();
+        for(String file: Objects.requireNonNull(fls)) {
+            if(file.equals(".DS_Store")) { continue; } // MAC
+            if(file.endsWith(".xml")) { // We're only interested in XML
+                res.add(directory + "/" + file);
+            } else {
+                res.addAll(loadFiles(directory + "/" + file));
             }
         }
 
         return res;
     }
 
-    private static ArrayList<File> pickFiles(ArrayList<File> list, int count, int seed) {
-        // Pick 10000 documents (efficiency)
-        if(list.size() < count) {
-            Collections.sort(list); // Set the order
-            return list;
-        }
-        Random rand = new Random(seed);
+    private static ArrayList<File> pickFiles(ArrayList<String> list, int count, int seed) {
         ArrayList<File> rres = new ArrayList<>();
-        HashSet<Integer> found = new HashSet<>();
-        for(int i = 0; i < count; ++i) {
-            int n;
-            do {
-                n = rand.nextInt(list.size());
-            } while(found.contains(n));
-            found.add(n);
-            rres.add(list.get(n));
+
+        // Pick <count> Documents (efficiency)
+        if(list.size() < count) {
+            for(String s : list) {
+                rres.add(new File(s));
+            }
+        } else { // Pick Random
+            Random rand = new Random(seed);
+            HashSet<Integer> found = new HashSet<>();
+            for(int i = 0; i < count; ++i) {
+                int n;
+                do {
+                    n = rand.nextInt(list.size());
+                } while(found.contains(n));
+                found.add(n);
+                rres.add(new File(list.get(n)));
+            }
         }
 
         Collections.sort(rres); // Set the order

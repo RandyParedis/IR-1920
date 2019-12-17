@@ -12,6 +12,7 @@ import sys
 import os
 import json
 import re
+import random
 
 
 class Plot:
@@ -137,14 +138,24 @@ if __name__ == '__main__':
         R2 = range(S)
         L = data["scores"]
 
+        PSS = [1 if str(x) in L and L[str(x)][0] > 0 else 0 for x in R1]
+        NSS = [1 if str(x) in L and L[str(x)][1] > 0 else 0 for x in R2]
+        PST = [1] * (S-1)
+        NST = ([0] * (S-1)) + [1]
+
+        perc = int((S-1) * .75)
+        PSS = random.sample(PSS, perc)
+        PST = random.sample(PST, perc)
+        perc = int(S * .25)
+        NSS = random.sample(NSS, perc)
+        NST = random.sample(NST, perc)
+
         fig2, (ax1, ax2) = plt.subplots(1, 2)
-        fig2.suptitle("Benchmark Performance")
-        y_score = [1 if str(x) in L and L[str(x)][0] > 0 else 0 for x in R1] + \
-                  [1 if str(x) in L and L[str(x)][1] > 0 else 0 for x in R2]
-        y_true = ([1] * (S-1)) + ([0] * (S-1)) + [1]
+        y_score = PSS + NSS
+        y_true = PST + NST
         Plot.pr_curve(ax1, y_true, y_score)
         Plot.roc_curve(ax2, y_true, y_score)
-        plt.show()
+        fig2.savefig("../images/75-25.png")
 
         # Plot time
         # fig, (ax1, ax2) = plt.subplots(1, 2, sharey=True, gridspec_kw={'wspace': 0, 'width_ratios': [5, 1]})

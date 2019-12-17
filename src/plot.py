@@ -155,7 +155,7 @@ if __name__ == '__main__':
         y_true = PST + NST
         Plot.pr_curve(ax1, y_true, y_score)
         Plot.roc_curve(ax2, y_true, y_score)
-        fig2.savefig("../images/75-25.png")
+        fig2.savefig("../images/boolean_sim.png")
 
         # Plot time
         # fig, (ax1, ax2) = plt.subplots(1, 2, sharey=True, gridspec_kw={'wspace': 0, 'width_ratios': [5, 1]})
@@ -211,3 +211,6 @@ if __name__ == '__main__':
         # fig, ax = plt.subplots()
         # Plot.confusion_matrix(ax, matrix, data['idxs'], 'Confusion Matrix')
         # plt.show()
+
+    else:
+        print('Missing parameter attribute')

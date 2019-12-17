@@ -9,6 +9,7 @@ import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.*;
+import org.apache.lucene.search.similarities.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.MMapDirectory;
 import org.w3c.dom.NodeList;
@@ -23,6 +24,8 @@ import java.util.*;
 public class Main {
     private static ProgressBar spb;
     private static Map<String, Integer> searchCache = new HashMap<>();
+    private static BooleanSimilarity similarity = new BooleanSimilarity();
+//    private static TFIDFSimilarity similarity = new TFIDFSimilarity();
 
     private static void addDoc(IndexWriter w, String name, String title, String body, String tags, String answers)
             throws IOException {
@@ -40,6 +43,7 @@ public class Main {
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
         IndexWriterConfig config = new IndexWriterConfig(analyzer);
         config.setOpenMode(IndexWriterConfig.OpenMode.CREATE);           // Overwrite existing files
+        config.setSimilarity(similarity);
 
         IndexWriter w = new IndexWriter(index, config);
         for(File file: files) {
@@ -127,6 +131,7 @@ public class Main {
         // Search with the query
         IndexReader reader = DirectoryReader.open(index);
         IndexSearcher searcher = new IndexSearcher(reader);
+        searcher.setSimilarity(similarity);
 
         List<String> idxs = new ArrayList<>();
 //        for(File f: files) {

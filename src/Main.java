@@ -212,7 +212,10 @@ public class Main {
             if(file.endsWith(".xml")) { // We're only interested in XML
                 res.add(directory + "/" + file);
             } else {
-                res.addAll(loadFiles(directory + "/" + file));
+                File f = new File(directory + "/" + file);
+                if(f.isDirectory()) {
+                    res.addAll(loadFiles(directory + "/" + file));
+                }
             }
         }
 
@@ -221,6 +224,7 @@ public class Main {
 
     private static ArrayList<File> pickFiles(ArrayList<String> list, int count, int seed) {
         ArrayList<File> rres = new ArrayList<>();
+        System.out.println("Total Dataset Size: " + list.size());
 
         // Pick <count> Documents (efficiency)
         if(list.size() < count) {

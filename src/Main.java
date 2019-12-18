@@ -281,7 +281,8 @@ public class Main {
             throws IOException, ParseException, XPathExpressionException,
             SAXException, ParserConfigurationException {
         // Create the documents to index
-        StandardAnalyzer analyzer = new StandardAnalyzer();
+//        StandardAnalyzer analyzer = new StandardAnalyzer();
+        MyCustomAnalyzer analyzer = new MyCustomAnalyzer();
         Directory index = new MMapDirectory(Paths.get(".search")); // Replaces deprecated RAMDirectory
 
         String loc = args.length == 0 ? "smallPosts" : args[0];

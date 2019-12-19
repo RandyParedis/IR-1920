@@ -157,7 +157,7 @@ if __name__ == '__main__':
         Plot.roc_curve(ax2, y_true, y_score)
         plt.subplots_adjust(wspace=0.3)
 #         plt.suptitle('Benchmark results Initial settings, fontsize=14, fontweight='bold')
-        fig2.savefig("../images/customAna-tfidfSim.png")
+        fig2.savefig("../images/new.png")
 
         # Plot time
         # fig, (ax1, ax2) = plt.subplots(1, 2, sharey=True, gridspec_kw={'wspace': 0, 'width_ratios': [5, 1]})

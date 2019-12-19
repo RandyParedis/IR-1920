@@ -24,9 +24,9 @@ import java.util.*;
 public class Main {
     private static ProgressBar spb;
     private static Map<String, Integer> searchCache = new HashMap<>();
-    private static BooleanSimilarity similarity = new BooleanSimilarity();
-//    private static TFIDFSimilarity similarity = new ClassicSimilarity();
-    private static boolean otherSim = false;
+//    private static BooleanSimilarity similarity = new BooleanSimilarity();
+    private static TFIDFSimilarity similarity = new ClassicSimilarity();
+    private static boolean otherSim = true;
 
     private static void addDoc(IndexWriter w, String name, String title, String body, String tags, String answers)
             throws IOException {

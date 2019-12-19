@@ -143,19 +143,21 @@ if __name__ == '__main__':
         PST = [1] * (S-1)
         NST = ([0] * (S-1)) + [1]
 
-        perc = int((S-1) * .75)
-        PSS = random.sample(PSS, perc)
-        PST = random.sample(PST, perc)
-        perc = int(S * .25)
-        NSS = random.sample(NSS, perc)
-        NST = random.sample(NST, perc)
+#         perc = int((S-1) * .10)
+#         PSS = random.sample(PSS, perc)
+#         PST = random.sample(PST, perc)
+#         perc = int(S * .90)
+#         NSS = random.sample(NSS, perc)
+#         NST = random.sample(NST, perc)
 
         fig2, (ax1, ax2) = plt.subplots(1, 2)
         y_score = PSS + NSS
         y_true = PST + NST
         Plot.pr_curve(ax1, y_true, y_score)
         Plot.roc_curve(ax2, y_true, y_score)
-        fig2.savefig("../images/custom_analyzer.png")
+        plt.subplots_adjust(wspace=0.3)
+#         plt.suptitle('Benchmark results Initial settings, fontsize=14, fontweight='bold')
+        fig2.savefig("../images/customAna-tfidfSim.png")
 
         # Plot time
         # fig, (ax1, ax2) = plt.subplots(1, 2, sharey=True, gridspec_kw={'wspace': 0, 'width_ratios': [5, 1]})

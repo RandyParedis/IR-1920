@@ -1,0 +1,12 @@
+digraph G {
+ 	rankdir=LR
+	node [shape=box]
+	a [label="LowerCaseFilter"]
+	b [label="StopFilter"]
+	c [label="WordDelimiterGraphFilter"]
+	d [label="PorterStemFilter"]
+	e [label="SynonymFilter"]
+	f [label="NGramTokenFilter"]
+	
+	a -> b -> c -> d -> e -> f
+}

@@ -1,5 +1,6 @@
 import jdk.jshell.spi.ExecutionControl;
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.WordlistLoader;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -13,6 +14,7 @@ import org.apache.lucene.search.*;
 import org.apache.lucene.search.similarities.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.MMapDirectory;
+import org.apache.lucene.util.BytesRef;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -21,6 +23,8 @@ import javax.xml.xpath.XPathExpressionException;
 import java.io.*;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Main {
     private static ProgressBar spb;
@@ -95,10 +99,10 @@ public class Main {
     private static List<File> setUp(String directory, Analyzer analyzer, Directory index, int cnt)
             throws ParserConfigurationException, SAXException, XPathExpressionException, IOException {
         System.out.println("Loading files...");
-        ArrayList<File> files = pickFiles(loadFiles(directory), cnt - 1, 420);
-        File neg_space = new File("data/question_NS.xml");
-        files.add(neg_space);
-        searchCache.put(neg_space.getName(), searchCache.size());
+        ArrayList<File> files = pickFiles(loadFiles(directory), cnt, 420);
+//        File neg_space = new File("data/question_NS.xml");
+//        files.add(neg_space);
+//        searchCache.put(neg_space.getName(), searchCache.size());
 
         System.out.println("Creating Index...");
         spb = new ProgressBar(cnt);
@@ -294,9 +298,42 @@ public class Main {
         }
     }
 
+    private static void vocabulary(Directory index, String filename, int cnt) throws IOException {
+        IndexReader reader = DirectoryReader.open(index);
+        PRF prf = new PRF(reader);
+
+        List<Integer> range = IntStream.range(0, cnt).boxed().collect(Collectors.toList());
+        Vector vec = prf.sum(range);
+        Set<String> vocabulary = new TreeSet<>();
+
+        for(Map.Entry<String, Number> entry: vec.entrySet()) {
+            String key = entry.getKey();
+            double value = entry.getValue().doubleValue();
+            if(key.matches("[a-zA-Z]+")) {
+                vocabulary.add(key);
+            }
+        }
+        Iterator<String> it = vocabulary.iterator();
+        System.out.println("VOCABULARY HAS SIZE " + vocabulary.size());
+
+        BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
+        while(it.hasNext()) {
+            writer.write(it.next());
+            writer.newLine();
+        }
+        writer.close();
+    }
+
+    private static void writeCache(String filename) throws ExecutionControl.NotImplementedException, IOException {
+        String json = Helper.toJSON(searchCache);
+        BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
+        writer.write(json);
+        writer.close();
+    }
+
     public static void main(String[] args)
             throws IOException, ParseException, XPathExpressionException,
-            SAXException, ParserConfigurationException {
+            SAXException, ParserConfigurationException, ExecutionControl.NotImplementedException {
         // Create the documents to index
         StandardAnalyzer analyzer = new StandardAnalyzer();
 //        MyCustomAnalyzer analyzer = new MyCustomAnalyzer();
@@ -307,7 +344,10 @@ public class Main {
         int cnt = 10000;
         List<File> files = setUp(loc, analyzer, index, cnt);
 
-        performance(loc, analyzer, index, files);
+        vocabulary(index, "data/vocabulary.txt", cnt);
+        writeCache("data/cache.json");
+
+//        performance(loc, analyzer, index, files);
 //        createDocs("/home/red/Software/lucene-8.3.0", analyzer, index);
 //
 //        // Search with the query

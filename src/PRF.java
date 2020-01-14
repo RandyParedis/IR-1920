@@ -53,6 +53,6 @@ public class PRF {
     }
 
     public Vector rocchio(Vector query, Vector relevant, Vector irrelevant, Number alpha, Number beta, Number gamma) {
-        return query.multiply(alpha).add(relevant.mean().multiply(beta)).subtract(irrelevant.mean().multiply(gamma));
+        return query.copy().multiply(alpha).add(relevant.mean().multiply(beta)).subtract(irrelevant.mean().multiply(gamma));
     }
 }

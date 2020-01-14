@@ -39,25 +39,23 @@ public class Vector {
         contents.putAll(vector);
     }
 
+    public Vector copy() {
+        return new Vector(this.contents);
+    }
+
     public Vector add(Vector other) {
-        Vector n = new Vector();
         for(Map.Entry<String, Number> entry: other.contents.entrySet()) {
             String key = entry.getKey();
-            if(!n.hasKey(key)) {
-                n.insert(key, entry.getValue());
-            } else {
-                n.insert(key, n.obtain(key).doubleValue() + entry.getValue().doubleValue());
-            }
+            addFor(key, entry.getValue());
         }
-        return n;
+        return this;
     }
 
     public Vector add(Number other) {
-        Vector n = new Vector();
         for(Map.Entry<String, Number> e: entrySet()) {
-            n.insert(e.getKey(), e.getValue().doubleValue() + other.doubleValue());
+            insert(e.getKey(), e.getValue().doubleValue() + other.doubleValue());
         }
-        return n;
+        return this;
     }
 
     public void addFor(String term, Number value) {
@@ -69,52 +67,48 @@ public class Vector {
     }
 
     public Vector subtract(Vector other) {
-        Vector n = new Vector();
         for(Map.Entry<String, Number> entry: other.contents.entrySet()) {
             String key = entry.getKey();
-            if(!n.hasKey(key)) {
-                n.insert(key, - entry.getValue().doubleValue());
+            if(!hasKey(key)) {
+                insert(key, - entry.getValue().doubleValue());
             } else {
-                n.insert(key, n.obtain(key).doubleValue() - entry.getValue().doubleValue());
+                insert(key, obtain(key).doubleValue() - entry.getValue().doubleValue());
             }
         }
-        return n;
+        return this;
     }
 
     public Vector subtract(Number other) {
-        Vector n = new Vector();
         for(Map.Entry<String, Number> e: entrySet()) {
-            n.insert(e.getKey(), e.getValue().doubleValue() - other.doubleValue());
+            insert(e.getKey(), e.getValue().doubleValue() - other.doubleValue());
         }
-        return n;
+        return this;
     }
 
     public Vector multiply(Number other) {
-        Vector n = new Vector();
         for(Map.Entry<String, Number> e: entrySet()) {
-            n.insert(e.getKey(), e.getValue().doubleValue() * other.doubleValue());
+            insert(e.getKey(), e.getValue().doubleValue() * other.doubleValue());
         }
-        return n;
+        return this;
     }
 
     public Vector divide(Number other) {
-        Vector n = new Vector();
         for(Map.Entry<String, Number> e: entrySet()) {
-            n.insert(e.getKey(), e.getValue().doubleValue() / other.doubleValue());
+            insert(e.getKey(), e.getValue().doubleValue() / other.doubleValue());
         }
-        return n;
+        return this;
     }
 
     public Vector inverse() {
-        Vector n = new Vector();
         for(Map.Entry<String, Number> e: entrySet()) {
-            n.insert(e.getKey(), 1.0 / e.getValue().doubleValue());
+            insert(e.getKey(), 1.0 / e.getValue().doubleValue());
         }
-        return n;
+        return this;
     }
 
     public Vector mean() {
-        return divide(size());
+        Vector vec = copy();
+        return vec.divide(vec.size());
     }
 
     public Number sum() {
@@ -125,7 +119,34 @@ public class Vector {
         return num;
     }
 
+    public Number min() {
+        Number min = Double.POSITIVE_INFINITY;
+        for(Map.Entry<String, Number> entry: entrySet()) {
+            Number val = entry.getValue();
+            if(entry.getValue().doubleValue() < min.doubleValue()) {
+                min = val;
+            }
+        }
+        return min;
+    }
+
+    public Number max() {
+        Number max = Double.NEGATIVE_INFINITY;
+        for(Map.Entry<String, Number> entry: entrySet()) {
+            Number val = entry.getValue();
+            if(entry.getValue().doubleValue() > max.doubleValue()) {
+                max = val;
+            }
+        }
+        return max;
+    }
+
     public Vector normalize() {
         return divide(sum());
+    }
+
+    public Vector normalized() {
+        Vector vec = copy();
+        return vec.divide(vec.sum());
     }
 }

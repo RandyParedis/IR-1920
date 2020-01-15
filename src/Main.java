@@ -1,11 +1,7 @@
 import jdk.jshell.spi.ExecutionControl;
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.WordlistLoader;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
-import org.apache.lucene.document.FieldType;
-import org.apache.lucene.document.TextField;
+import org.apache.lucene.document.*;
 import org.apache.lucene.index.*;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.ParseException;
@@ -14,7 +10,6 @@ import org.apache.lucene.search.*;
 import org.apache.lucene.search.similarities.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.MMapDirectory;
-import org.apache.lucene.util.BytesRef;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -23,8 +18,6 @@ import javax.xml.xpath.XPathExpressionException;
 import java.io.*;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class Main {
     private static ProgressBar spb;
@@ -32,10 +25,10 @@ public class Main {
 //    private static BooleanSimilarity similarity = new BooleanSimilarity();
     private static TFIDFSimilarity similarity = new ClassicSimilarity();
     private static boolean otherSim = true;
-    private static FieldType freqVecStorer = null;
+    private static FieldType freqVecStorer;
 
     static {
-        freqVecStorer = new FieldType(TextField.TYPE_NOT_STORED);
+        freqVecStorer = new FieldType(TextField.TYPE_STORED);
         freqVecStorer.setStoreTermVectors(true);
     }
 
@@ -100,9 +93,6 @@ public class Main {
             throws ParserConfigurationException, SAXException, XPathExpressionException, IOException {
         System.out.println("Loading files...");
         ArrayList<File> files = pickFiles(loadFiles(directory), cnt, 420);
-//        File neg_space = new File("data/question_NS.xml");
-//        files.add(neg_space);
-//        searchCache.put(neg_space.getName(), searchCache.size());
 
         System.out.println("Creating Index...");
         spb = new ProgressBar(cnt);
@@ -116,110 +106,62 @@ public class Main {
     }
 
     /**
-     * Create a matrix concerning the performance on scoring the questions in a directory with its title as
-     * (transformed) query. It does not return anything, but rather generates JSON-files which contain the score
-     * these files gave themselves and how much they gave their opposite.
+     * Creates a set of scores for the queries located in 'data/queries.txt'.
      *
-     * Example results.json :
-     *      {
-     *          "scores": {
-     * 		        "0": [12.510421, 5.111517],
-     * 		        "6": [8.548369, 0.0],
-     *              ...
-     *          },
-     *          "idxs": ["4", "9", "14", "42", "16", "59", ...]
-     *      }
+     * The result is a json file where each key represents the question index and each
+     * value its set of corresponding scores. The first element of the set represents
+     * the score for the first query, its second element the second query etc...
      *
-     * For instance, in the example, question with index 0 (accoring to the idxs list, this is question 4) gave itself
-     * a score of 12.510421, but also scored high on the negative space (5.111517).
-     *
-     * @param directory     The directory to look inside of.
      * @param analyzer      The Analyzer to use.
      * @param index         The Directory to use.
-     *
-     * @throws IOException
-     * @throws ParserConfigurationException
-     * @throws SAXException
-     * @throws XPathExpressionException
-     * @throws ParseException
      */
-    public static void performance(String directory, Analyzer analyzer, Directory index, List<File> files)
-            throws IOException, ParserConfigurationException, SAXException, XPathExpressionException, ParseException {
+    public static void performance(Analyzer analyzer, Directory index, List<File> files)
+            throws IOException, ParseException {
 
+        // Load all general information
         int cnt = files.size();
-        File neg_space = files.get(cnt - 1);
+        List<String> queries = getQueries("data/queries.txt");
 
-        // Search with the query
+        // Set IndexReader, IndexSearcher and Similarity measure
         IndexReader reader = DirectoryReader.open(index);
         IndexSearcher searcher = new IndexSearcher(reader);
         if (otherSim) {
             searcher.setSimilarity(similarity);
         }
 
-        PRF rocchio = new PRF(reader);
-
-        Vector fv = rocchio.getFeatureVector(0);
-        for(Map.Entry<String, Number> entry : fv.entrySet()) {
-            System.out.println(entry.getKey() + " ==> " + entry.getValue());
+        Map<Integer, List<Double>> scores = new TreeMap<>();
+        System.out.println("Searching for Query Matches");
+        spb.reset(queries.size());
+        spb.start();
+        spb.print();
+        for(int qi = 0; qi < queries.size(); ++qi) {
+            String query = queries.get(qi);
+            Query q = getQuery(query, index, reader, analyzer);
+            TopDocs docs = searcher.search(q, cnt);
+            ScoreDoc[] hits = docs.scoreDocs;
+            for(ScoreDoc hit : hits) {
+                int docId = hit.doc;
+                Document d = searcher.doc(docId);
+                String qname = d.get("name");
+                int qid = Integer.parseInt(qname.replace("question", "")
+                        .replace(".xml", ""));
+                double score = hit.score;
+                if(scores.containsKey(qid)) {
+                    scores.get(qid).set(qi, score);
+                } else {
+                    List sc = new ArrayList<Double>();
+                    for(int i = 0; i < queries.size(); ++i) {
+                        sc.add(0);
+                    }
+                    sc.set(qi, score);
+                    scores.put(qid, sc);
+                }
+            }
+            spb.next();
+            spb.print();
         }
-
-//        List<String> idxs = new ArrayList<>();
-////        for(File f: files) {
-////            idxs.add(f.getPath().replace(directory, "")
-////                    .replace("question", "")
-////                    .replace(".xml", ""));
-////        }
-//        Map<Integer, List<Float>> scores = new TreeMap<>();
-//
-////        System.out.println("Searching for Query Matches");
-////        Query q = getQuery("python", index, reader, analyzer);
-////        TopDocs docs = searcher.search(q, cnt);
-////        ScoreDoc[] hits = docs.scoreDocs;
-//
-//        System.out.println("Generating Output Files");
-////        spb.reset(hits.length);
-//        spb.reset(cnt);
-//        spb.start();
-//        for(int i = 0; i < cnt; ++i) {
-//            spb.set(i+1);
-//            spb.print();
-//            File file = files.get(i);
-//            if(file.isFile()) {
-//                // Parse File
-//                String name = file.getName();
-//                idxs.add(name.replace("question", "").replace(".xml", ""));
-//                NodeList nodes = XML.xpath("/qroot/question/Title", XML.parse(file));
-//                String title = nodes.item(0).getTextContent();
-//
-//                // Get Query and Score it
-//                Query q = getQuery(title, index, reader, analyzer);
-//                TopDocs docs = searcher.search(q, cnt);
-//                ScoreDoc[] hits = docs.scoreDocs;
-//                float score = 0.0f;
-//                float score_NS = 0.0f;
-//                for(ScoreDoc hit : hits) {
-//                    int docId = hit.doc;
-//                    Document d = searcher.doc(docId);
-//                    String dname = d.get("name");
-//                    if (dname.equals(name)) {
-//                        score = hit.score;
-//                    } else if (dname.equals(neg_space.getName())) {
-//                        score_NS = hit.score;
-//                    }
-//                }
-//
-//                if(score > 0.0f || score_NS > 0.0f) {
-//                    scores.put(i, Arrays.asList(score, score_NS));
-//                }
-//            }
-////            int docId = hits[i].doc;
-////            float score = hits[i].score;
-////            Document d = searcher.doc(docId);
-////            String name = d.get("name");
-////            scores.put(searchCache.get(name), score);
-//        }
-//        writeToJson("data/results.json", directory, idxs, scores);
-//        spb.end();
+        writeToJson("data/results.json", scores);
+        spb.end();
     }
 
     private static ArrayList<String> loadFiles(String directory) {
@@ -279,16 +221,10 @@ public class Main {
         return -1;
     }
 
-    private static void writeToJson(String filename, String directory, List<String> idxs, Object scores)
+    private static void writeToJson(String filename, Object object)
             throws IOException {
-        // Make sure the json is structured correctly
-        HashMap<String, Object> hm = new HashMap<>();
-        hm.put("directory", directory);
-        hm.put("idxs", idxs);
-        hm.put("scores", scores);
-
         try {
-            String json = Helper.toJSON(hm);
+            String json = Helper.toJSON(object);
 
             BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
             writer.write(json);
@@ -298,42 +234,18 @@ public class Main {
         }
     }
 
-    private static void vocabulary(Directory index, String filename, int cnt) throws IOException {
-        IndexReader reader = DirectoryReader.open(index);
-        PRF prf = new PRF(reader);
-
-        List<Integer> range = IntStream.range(0, cnt).boxed().collect(Collectors.toList());
-        Vector vec = prf.sum(range);
-        Set<String> vocabulary = new TreeSet<>();
-
-        for(Map.Entry<String, Number> entry: vec.entrySet()) {
-            String key = entry.getKey();
-            double value = entry.getValue().doubleValue();
-            if(key.matches("[a-zA-Z]+")) {
-                vocabulary.add(key);
-            }
+    private static List<String> getQueries(String filename) throws FileNotFoundException {
+        List<String> queries = new ArrayList<>();
+        Scanner sc = new Scanner(new File(filename));
+        while(sc.hasNextLine()) {
+            queries.add(sc.nextLine());
         }
-        Iterator<String> it = vocabulary.iterator();
-        System.out.println("VOCABULARY HAS SIZE " + vocabulary.size());
-
-        BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
-        while(it.hasNext()) {
-            writer.write(it.next());
-            writer.newLine();
-        }
-        writer.close();
-    }
-
-    private static void writeCache(String filename) throws ExecutionControl.NotImplementedException, IOException {
-        String json = Helper.toJSON(searchCache);
-        BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
-        writer.write(json);
-        writer.close();
+        return queries;
     }
 
     public static void main(String[] args)
-            throws IOException, ParseException, XPathExpressionException,
-            SAXException, ParserConfigurationException, ExecutionControl.NotImplementedException {
+            throws IOException, ParseException, XPathExpressionException, SAXException, ParserConfigurationException,
+            ExecutionControl.NotImplementedException, org.json.simple.parser.ParseException {
         // Create the documents to index
         StandardAnalyzer analyzer = new StandardAnalyzer();
 //        MyCustomAnalyzer analyzer = new MyCustomAnalyzer();
@@ -343,11 +255,9 @@ public class Main {
 
         int cnt = 10000;
         List<File> files = setUp(loc, analyzer, index, cnt);
+        performance(analyzer, index, files);
+        writeToJson("data/cache.json", searchCache);
 
-        vocabulary(index, "data/vocabulary.txt", cnt);
-        writeCache("data/cache.json");
-
-//        performance(loc, analyzer, index, files);
 //        createDocs("/home/red/Software/lucene-8.3.0", analyzer, index);
 //
 //        // Search with the query

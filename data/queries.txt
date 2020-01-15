@@ -1,0 +1,5 @@
+convert decimal to double
+python open file
+python from c no library
+c template type parameter deduction
+c vs python

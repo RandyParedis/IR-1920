@@ -13,9 +13,10 @@ This file belongs to the project for the Information Retrieval course made by
     - Johannes Akkermans
     - Randy Paredis
 """
-import stackexchange
-from datetime import datetime
+import time
 import json
+from lxml import html
+import requests
 
 K = 50
 
@@ -33,34 +34,39 @@ for question in CACHE:
     DATASET.add(int(question[len("question"):-len(".xml")]))
 
 
+_fetch_cache = {}
+def fetch(q: str):
+    if q not in _fetch_cache:
+        xpath = "//div[@class='flush-left js-search-results'][1]/div/div/attribute::id"
+        ids = []
+        for p in range(1, 11):
+            page = requests.get('https://stackoverflow.com/search?page=%i&pagesize=50&'
+                                'q=%s' % (p, ("is:question created:2008-08-21..2019-09-10 " + q)
+                                          .replace(" ", "+").replace(":", "%3A")))
+            tree = html.fromstring(page.content)
+            data = tree.xpath(xpath)
+            ids += data
+            print("\tPAGE", p, "; IDS:", len(data))
+            time.sleep(2.5)
+            if len(data) < 50:
+                break
+        _fetch_cache[q] = [int(x.split("-")[-1]) for x in ids]
+    return _fetch_cache[q]
+
+
+def intersection(lst1, lst2):
+    return list(set(lst1) & set(lst2))
+
+
 def main():
     print("FINDING RELEVANCE FOR %i QUERIES" % len(QUERIES))
 
-    # We add some leeway in the dates below and assume the question id has an AUTO_INCREMENT
-    # MIN ID = 21454 ==> Created on 2008-08-21
-    fromdate = datetime.timestamp(datetime.strptime("2008-08-01", "%Y-%m-%d"))
-    # MAX ID = 57743117 ==> Edited on 2019-09-01
-    todate = datetime.timestamp(datetime.strptime("2019-09-10", "%Y-%m-%d"))
-
     relevant = {}
-    so = stackexchange.Site(stackexchange.StackOverflow)
     for query in QUERIES:
         print("QUERY:", query)
-        relevant[query] = []
-        u = so.search_advanced(q=query, sort='creation', pagesize=100, fromdate=fromdate, todate=todate)
-        g = u
-        while g.quota_remaining > 1000:
-            items = g.items
-            for item in items:
-                id = item.id
-                if id in DATASET:
-                    relevant[query].append(id)
-                if len(relevant[query]) >= K:
-                    break
-            if g.has_more:
-                g = g.fetch_next()
-            print("RELEVANT", len(relevant[query]))
-        break
+        ids = fetch(query)
+        relevant[query] = intersection(ids, DATASET)
+        print("RELEVANT", len(relevant[query]))
     with open("../data/relevant.json", "w") as file:
         json.dump(relevant, file)
 

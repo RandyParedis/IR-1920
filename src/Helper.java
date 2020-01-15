@@ -11,7 +11,7 @@ import java.util.*;
 
 public class Helper {
     public static String transform(String old) {
-        return old.strip().toLowerCase().replaceAll("[^a-z0-9 ]", " ");
+        return old.strip().toLowerCase().replaceAll("[^a-z0-9 ]", "");
     }
 
     public static String queryTransform(String old, int sugs, Directory index, IndexReader reader, Analyzer analyzer)

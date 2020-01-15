@@ -27,6 +27,8 @@ public class Main {
     private static boolean otherSim = true;
     private static FieldType freqVecStorer;
 
+    private static Set<String> tagList = new TreeSet<>();
+
     static {
         freqVecStorer = new FieldType(TextField.TYPE_STORED);
         freqVecStorer.setStoreTermVectors(true);
@@ -38,9 +40,10 @@ public class Main {
         doc.add(new Field("name", name, freqVecStorer));
         doc.add(new Field("title", title, freqVecStorer));
         doc.add(new Field("body", body, freqVecStorer));
-        doc.add(new Field("tags", tags.replace(",", " "), freqVecStorer));
+        doc.add(new Field("tags", tags.replace("  ", " "), freqVecStorer));
         doc.add(new Field("answers", answers, freqVecStorer));
         w.addDocument(doc);
+        tagList.addAll(Arrays.asList(tags.split("\\s+")));
         searchCache.put(name, searchCache.size());
     }
 
@@ -64,6 +67,8 @@ public class Main {
             }
         }
         w.close();
+
+        tagList.removeIf(s -> !s.matches("[a-zA-Z]+"));
     }
 
     private static void addParsedDoc(File file, IndexWriter w) throws
@@ -106,11 +111,22 @@ public class Main {
     }
 
     /**
-     * Creates a set of scores for the queries located in 'data/queries.txt'.
+     * Creates a set of scores for the queries that are in the tagList.
      *
-     * The result is a json file where each key represents the question index and each
-     * value its set of corresponding scores. The first element of the set represents
-     * the score for the first query, its second element the second query etc...
+     * Basically, for each unique, alphabetic tag, a new query is created and scored
+     * with our codes. The set of queries is also written to 'data/queries.txt'.
+     *
+     * Next, all documents are scored for this set of queries, which is stored in the
+     * 'data/results.json' file. Each main key in this file represents the unique
+     * question id (which is located in the filename) and each value is a dictionary
+     * representing a succinct version of the score matrix. The pairs in these values
+     * are the index of the query (in the order they are listed in the
+     * 'data/queries.txt') and their corresponding score. When omitted, the scores are
+     * zero.
+     *
+     * Finally, a 'data/relevant.json' file is also generated. For each query listed
+     * in this file, you get a list of all the question ids that were marked relevant
+     * for that query.
      *
      * @param analyzer      The Analyzer to use.
      * @param index         The Directory to use.
@@ -120,7 +136,9 @@ public class Main {
 
         // Load all general information
         int cnt = files.size();
-        List<String> queries = getQueries("data/queries.txt");
+        List<String> queries = new ArrayList<>(tagList);
+        writeTagList("data/queries.txt");
+        Map<String, List<String>> relevant = new TreeMap<>();
 
         // Set IndexReader, IndexSearcher and Similarity measure
         IndexReader reader = DirectoryReader.open(index);
@@ -129,7 +147,7 @@ public class Main {
             searcher.setSimilarity(similarity);
         }
 
-        Map<Integer, List<Double>> scores = new TreeMap<>();
+        Map<String, Map<Integer, Double>> scores = new TreeMap<>();
         System.out.println("Searching for Query Matches");
         spb.reset(queries.size());
         spb.start();
@@ -143,24 +161,32 @@ public class Main {
                 int docId = hit.doc;
                 Document d = searcher.doc(docId);
                 String qname = d.get("name");
-                int qid = Integer.parseInt(qname.replace("question", "")
-                        .replace(".xml", ""));
+                String qid = qname.replace("question", "").replace(".xml", "");
                 double score = hit.score;
                 if(scores.containsKey(qid)) {
-                    scores.get(qid).set(qi, score);
+                    scores.get(qid).put(qi, score);
                 } else {
-                    List sc = new ArrayList<Double>();
-                    for(int i = 0; i < queries.size(); ++i) {
-                        sc.add(0);
-                    }
-                    sc.set(qi, score);
+                    Map<Integer, Double> sc = new HashMap<>();
+                    sc.put(qi, score);
                     scores.put(qid, sc);
+                }
+
+                List<String> ts = Arrays.asList(d.get("tags").split("\\s+"));
+                if(ts.contains(query)) {
+                    if(relevant.containsKey(query)) {
+                        relevant.get(query).add(qid);
+                    } else {
+                        List<String> val = new ArrayList<>();
+                        val.add(qid);
+                        relevant.put(query, val);
+                    }
                 }
             }
             spb.next();
             spb.print();
         }
         writeToJson("data/results.json", scores);
+        writeToJson("data/relevant.json", relevant);
         spb.end();
     }
 
@@ -232,6 +258,14 @@ public class Main {
         } catch (ExecutionControl.NotImplementedException e) {
             e.printStackTrace();
         }
+    }
+
+    private static void writeTagList(String filename) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
+        for(String tag: tagList) {
+            writer.write(tag + "\n");
+        }
+        writer.close();
     }
 
     private static List<String> getQueries(String filename) throws FileNotFoundException {

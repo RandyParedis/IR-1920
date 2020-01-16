@@ -27,7 +27,7 @@ public class Main {
     private static boolean otherSim = true;
     private static FieldType freqVecStorer;
 
-    private static Set<String> tagList = new TreeSet<>();
+    private static Set<String> queries = new TreeSet<>();
 
     static {
         freqVecStorer = new FieldType(TextField.TYPE_STORED);
@@ -43,7 +43,11 @@ public class Main {
         doc.add(new Field("tags", tags.replace("  ", " "), freqVecStorer));
         doc.add(new Field("answers", answers, freqVecStorer));
         w.addDocument(doc);
-        tagList.addAll(Arrays.asList(tags.split("\\s+")));
+        List<String> qs = Arrays.asList(tags.split("\\s+"));
+        List<List<String>> prms = Helper.permutations(qs);
+        for(List<String> ls: prms) {
+            queries.add(String.join(" ", ls));
+        }
         searchCache.put(name, searchCache.size());
     }
 
@@ -68,7 +72,7 @@ public class Main {
         }
         w.close();
 
-        tagList.removeIf(s -> !s.matches("[a-zA-Z]+"));
+        queries.removeIf(s -> !s.matches("[a-zA-Z ]+"));
     }
 
     private static void addParsedDoc(File file, IndexWriter w) throws
@@ -136,7 +140,7 @@ public class Main {
 
         // Load all general information
         int cnt = files.size();
-        List<String> queries = new ArrayList<>(tagList);
+        List<String> qrs = new ArrayList<>(queries);
         writeTagList("data/queries.txt");
         Map<String, List<String>> relevant = new TreeMap<>();
 
@@ -149,11 +153,11 @@ public class Main {
 
         Map<String, Map<Integer, Double>> scores = new TreeMap<>();
         System.out.println("Searching for Query Matches");
-        spb.reset(queries.size());
+        spb.reset(qrs.size());
         spb.start();
         spb.print();
-        for(int qi = 0; qi < queries.size(); ++qi) {
-            String query = queries.get(qi);
+        for(int qi = 0; qi < qrs.size(); ++qi) {
+            String query = qrs.get(qi);
             Query q = getQuery(query, index, reader, analyzer);
             TopDocs docs = searcher.search(q, cnt);
             ScoreDoc[] hits = docs.scoreDocs;
@@ -172,7 +176,12 @@ public class Main {
                 }
 
                 List<String> ts = Arrays.asList(d.get("tags").split("\\s+"));
-                if(ts.contains(query)) {
+                List<List<String>> prms = Helper.permutations(ts);
+                List<String> ns = new ArrayList<>();
+                for(List<String> ls: prms) {
+                    ns.add(String.join(" ", ls));
+                }
+                if(ns.contains(query)) {
                     if(relevant.containsKey(query)) {
                         relevant.get(query).add(qid);
                     } else {
@@ -262,7 +271,7 @@ public class Main {
 
     private static void writeTagList(String filename) throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
-        for(String tag: tagList) {
+        for(String tag: queries) {
             writer.write(tag + "\n");
         }
         writer.close();
@@ -289,8 +298,9 @@ public class Main {
 
         int cnt = 10000;
         List<File> files = setUp(loc, analyzer, index, cnt);
+
         performance(analyzer, index, files);
-        writeToJson("data/cache.json", searchCache);
+//        writeToJson("data/cache.json", searchCache);
 
 //        createDocs("/home/red/Software/lucene-8.3.0", analyzer, index);
 //

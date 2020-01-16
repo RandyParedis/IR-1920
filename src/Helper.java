@@ -37,6 +37,24 @@ public class Helper {
         return sc.suggestSimilar(word, sugs, reader, "content", SuggestMode.SUGGEST_ALWAYS);
     }
 
+    public static List<List<String>> permutations(List<String> from) {
+        int size = from.size();
+        List<List<String>> result = new ArrayList<>();
+        if(size == 1) {
+            result.add(from);
+        } else {
+            List<List<String>> res = permutations(from.subList(1, from.size()));
+            result.add(from.subList(0, 1));
+            result.addAll(res);
+            for(List<String> a: res) {
+                List<String> b = new ArrayList<>(a);
+                b.add(from.get(0));
+                result.add(b);
+            }
+        }
+        return result;
+    }
+
     private static String toJSONMap(Map obj, int d) throws NotImplementedException {
         String res = "{";
         Map<Object, Object> m = (Map<Object, Object>)(obj);

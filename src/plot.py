@@ -48,6 +48,61 @@ class Plot:
                xlabel='Score of Query')
 
     @staticmethod
+    def pr_roc_info(docscore: dict):
+        # docscore is dict of {docid -> (score, relevant)}
+        totrel = 0
+        table = []
+        for doc in docscore:
+            table.append([doc, docscore[doc][0], docscore[doc][1]])
+            totrel += docscore[doc][1]
+        table.sort(key=lambda x: -x[1])
+
+        precision = lambda tp, fp: float(tp) / (tp + fp)
+        recall = lambda tp, fn: float(tp) / (tp + fn)
+        fallout = lambda fp, tn: float(fp) / (fp + tn)
+
+        tp = 0
+        prec = [1.0]
+        recs = [0.0]
+        fout = [0.0]
+        for i in range(len(table)):
+            row = table[i]
+            if row[2] == 1:
+                tp += 1
+            fp = i + 1 - tp
+            fn = totrel - tp
+            tn = sum([1 - x[2] for x in table[i+1:]])
+            prec.append(precision(tp, fp))
+            recs.append(recall(tp, fn))
+            fout.append(fallout(fp, tn))
+
+        return prec, recs, fout
+
+    @staticmethod
+    def pr_plot(ax, precision, recall):
+        step_kwargs = ({'step': 'post'} if 'step' in signature(plt.fill_between).parameters else {})
+
+        ax.step(recall, precision, color='b', alpha=0.2, where='post')
+        ax.fill_between(recall, precision, alpha=0.2, color='b', **step_kwargs)
+        ax.set_xlabel('Recall')
+        ax.set_ylabel('Precision')
+        ax.set_ylim([0.0, 1.05])
+        ax.set_xlim([0.0, 1.0])
+        ax.set_title('Precision-Recall curve')
+
+    @staticmethod
+    def roc_plot(ax, tpr, fpr):
+        auc_rf = auc(fpr, tpr)
+
+        ax.plot([0, 1], [0, 1], 'k--')
+        ax.plot(fpr, tpr, label='RF')
+        ax.set_xlabel('False positive rate')
+        ax.set_ylabel('True positive rate')
+        ax.set_title('ROC curve (AUC={0:0.2f})'.format(auc_rf))
+        ax.legend(loc='best')
+
+
+    @staticmethod
     def pr_curve(ax, y_test, y_pred):
         precision, recall, _ = precision_recall_curve(y_test, y_pred)
         step_kwargs = ({'step': 'post'} if 'step' in signature(plt.fill_between).parameters else {})
@@ -98,6 +153,15 @@ def prediction(idxs, directory=""):
 
 
 if __name__ == '__main__':
+
+    # EXAMPLE USAGE OF NEW CURVES:
+    # p, r, f = Plot.pr_roc_info({"1": (0.4, 1), "2": (0.7, 0), "3": (0.9, 1), "4": (0.2, 0)})
+    # fig2, (ax1, ax2) = plt.subplots(1, 2)
+    # Plot.pr_plot(ax1, p, r)
+    # Plot.roc_plot(ax2, r, f)
+    # plt.subplots_adjust(wspace=0.3)
+    # plt.show()
+
     args = sys.argv
     if len(args) == 2:
         data = {

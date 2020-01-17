@@ -8,6 +8,7 @@ import org.apache.lucene.search.spell.SuggestMode;
 import org.apache.lucene.store.Directory;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Helper {
     public static String transform(String old) {
@@ -37,22 +38,29 @@ public class Helper {
         return sc.suggestSimilar(word, sugs, reader, "content", SuggestMode.SUGGEST_ALWAYS);
     }
 
-    public static List<List<String>> permutations(List<String> from) {
+    private static Set<Set<String>> permutations(Set<String> from) {
         int size = from.size();
-        List<List<String>> result = new ArrayList<>();
+        Set<Set<String>> result = new HashSet<>();
         if(size == 1) {
             result.add(from);
         } else {
-            List<List<String>> res = permutations(from.subList(1, from.size()));
-            result.add(from.subList(0, 1));
+            List<String> al = new ArrayList<>(from);
+            Set<Set<String>> res = permutations(new TreeSet<>(al.subList(1, al.size())));
+            result.add(new TreeSet<>(al.subList(0, 1)));
             result.addAll(res);
-            for(List<String> a: res) {
+            for(Set<String> a: res) {
                 List<String> b = new ArrayList<>(a);
-                b.add(from.get(0));
-                result.add(b);
+                b.add(al.get(0));
+                result.add(new TreeSet(b));
             }
         }
         return result;
+    }
+
+    public static Set<Set<String>> tagsToQueries(String tags) {
+        List<String> qs = Arrays.asList(tags.split("\\s+"));
+        Set<String> from = new TreeSet<>(qs);
+        return permutations(from);
     }
 
     private static String toJSONMap(Map obj, int d) throws NotImplementedException {

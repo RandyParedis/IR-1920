@@ -43,9 +43,8 @@ public class Main {
         doc.add(new Field("tags", tags.replace("  ", " "), freqVecStorer));
         doc.add(new Field("answers", answers, freqVecStorer));
         w.addDocument(doc);
-        List<String> qs = Arrays.asList(tags.split("\\s+"));
-        List<List<String>> prms = Helper.permutations(qs);
-        for(List<String> ls: prms) {
+        Set<Set<String>> prms = Helper.tagsToQueries(tags);
+        for(Set<String> ls: prms) {
             queries.add(String.join(" ", ls));
         }
         searchCache.put(name, searchCache.size());
@@ -175,10 +174,9 @@ public class Main {
                     scores.put(qid, sc);
                 }
 
-                List<String> ts = Arrays.asList(d.get("tags").split("\\s+"));
-                List<List<String>> prms = Helper.permutations(ts);
-                List<String> ns = new ArrayList<>();
-                for(List<String> ls: prms) {
+                Set<Set<String>> prms = Helper.tagsToQueries(d.get("tags"));
+                Set<String> ns = new TreeSet<>();
+                for(Set<String> ls: prms) {
                     ns.add(String.join(" ", ls));
                 }
                 if(ns.contains(query)) {

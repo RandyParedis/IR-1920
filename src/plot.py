@@ -48,6 +48,28 @@ class Plot:
                xlabel='Score of Query')
 
     @staticmethod
+    def prf_transform(precision, recall, fallout):
+        N = len(precision)
+
+        nr = {}
+        nf = {}
+        for i in range(N):
+            p = precision[i]
+            r = recall[i]
+            f = fallout[i]
+            if r in nr:
+                nr[r] = max(nr[r], p)
+            else:
+                nr[r] = p
+            if f in nf:
+                nf[f] = max(nf[f], r)
+            else:
+                nf[f] = r
+
+        return list(nr.values()), list(nr.keys()), list(nf.values()), list(nf.keys())
+
+
+    @staticmethod
     def pr_roc_info(docscore: dict):
         # docscore is dict of {docid -> (score, relevant)}
         totrel = 0
@@ -158,9 +180,10 @@ if __name__ == '__main__':
 
     # EXAMPLE USAGE OF NEW CURVES:
     # p, r, f = Plot.pr_roc_info({"1": (0.4, 1), "2": (0.7, 0), "3": (0.9, 1), "4": (0.2, 0)})
+    # p_, r_, t_, f_ = Plot.prf_transform(p, r, f)
     # fig2, (ax1, ax2) = plt.subplots(1, 2)
-    # Plot.pr_plot(ax1, p, r)
-    # Plot.roc_plot(ax2, r, f)
+    # Plot.pr_plot(ax1, p_, r_)
+    # Plot.roc_plot(ax2, t_, f_)
     # plt.subplots_adjust(wspace=0.3)
     # plt.show()
 

@@ -25,12 +25,13 @@ with open('../data/questionids.txt') as q:
         question_ids[line] = linenr
         linenr += 1
 
-pavg, ravg, favg = None, None, None
+pavg, ravg, tavg, favg = None, None, None, None
 first = True
+cnt = 0
 for i in range(id):
     query = queries[i]
 
-    if len(relevant[query]) > 2:
+    if query in relevant and len(relevant[query]) > 2:
         docscore = {}
         for key in results:
             docscore[key] = (results[key].get(str(i), 0.0), 1 if key in relevant[query] else 0)
@@ -47,19 +48,22 @@ for i in range(id):
                 pavg[j] += p[j]
                 ravg[j] += r[j]
                 favg[j] += f[j]
+        cnt += 1
 
 
-pavg = [float(x) / id for x in pavg]
-ravg = [float(x) / id for x in ravg]
-favg = [float(x) / id for x in favg]
+pavg = [float(x) / cnt for x in pavg]
+ravg = [float(x) / cnt for x in ravg]
+favg = [float(x) / cnt for x in favg]
 
-print('precision ', pavg)
-print('recall ', ravg)
-print('fallout ', favg)
+p_, r_, t_, f_ = Plot.prf_transform(pavg, ravg, favg)
+
+print("Precision:", p_)
+print("Recall:", r_)
+print("Recall2:", t_)
+print("Fallout:", f_)
+
 fig2, (ax1, ax2) = plt.subplots(1, 2)
-Plot.pr_plot(ax1, p, r)
-Plot.roc_plot(ax2, r, f)
+Plot.pr_plot(ax1, p_, r_)
+Plot.roc_plot(ax2, t_, f_)
 plt.subplots_adjust(wspace=0.3)
 plt.show()
-
-pass

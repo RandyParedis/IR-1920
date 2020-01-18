@@ -92,7 +92,7 @@ public class Main {
     private static Query getQuery(String old, Directory index, IndexReader reader, Analyzer analyzer)
             throws IOException, ParseException {
         String querystr = Helper.queryTransform(old, 5, index, reader, analyzer);
-        MultiFieldQueryParser mfqp = new MultiFieldQueryParser(new String[]{"body", "tags", "answers"}, analyzer);
+        MultiFieldQueryParser mfqp = new MultiFieldQueryParser(new String[]{"body", "answers"}, analyzer);
         mfqp.setDefaultOperator(QueryParser.Operator.OR);
         return mfqp.parse(querystr);
     }

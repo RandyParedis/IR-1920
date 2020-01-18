@@ -26,14 +26,15 @@ with open('../data/questionids.txt') as q:
         linenr += 1
 
 pavg, ravg, favg = None, None, None
+first = True
 for i in range(id):
     query = queries[i]
-    first = True
+
     if len(relevant[query]) > 2:
         docscore = {}
         for key in results:
             if str(i) in results[key].keys():
-                docscore[key] = (results[key][str(i)], 1 if key in relevant[query] else 0)
+                docscore[key] = (results[key].get(str(i), 0.0), 1 if key in relevant[query] else 0)
         print(docscore)
 
         p, r, f = Plot.pr_roc_info(docscore)
@@ -41,21 +42,18 @@ for i in range(id):
             pavg = p
             ravg = r
             favg = f
+            first = False
 
         else:
             for j in range(len(p)):
                 pavg[j] += p[j]
-
-            for j in range(len(r)):
                 ravg[j] += r[j]
-
-            for j in range(len(f)):
                 favg[j] += f[j]
-    first = False
 
-pavg /= id
-ravg /= id
-favg /= id
+
+pavg = [float(x) / id for x in pavg]
+ravg = [float(x) / id for x in ravg]
+favg = [float(x) / id for x in favg]
 
 print('precision ', pavg)
 print('recall ', ravg)

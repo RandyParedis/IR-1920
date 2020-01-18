@@ -114,13 +114,19 @@ public class Main {
     }
 
     private static Map<Double, Document> advancedSearch(String query, List<String> relevant, Analyzer analyzer,
-                                                        IndexSearcher searcher, int cnt, int k,
+                                                        IndexSearcher searcher, int cnt,
                                                         Number alpha, Number beta, Number gamma)
             throws IOException, ParseException {
 
         IndexReader reader = searcher.getIndexReader();
-        Vector vNew = rocchio(relevant, reader, query, k, alpha, beta, gamma);
-        return search(searcher, vNew.toQuery(analyzer), cnt);
+        Vector vNew = rocchio(relevant, reader, query, alpha, beta, gamma);
+        try {
+            Query q = vNew.toQuery(analyzer);
+            return search(searcher, q, cnt);
+        } catch(ParseException e) {
+            System.out.println("\tEXCEPTION!");
+            return new HashMap<Double, Document>();
+        }
     }
 
     private static Map<Double, Document> search(IndexSearcher searcher, Query q, int cnt) throws IOException {
@@ -136,19 +142,17 @@ public class Main {
         return results;
     }
 
-    private static Vector rocchio(List<String> docs, IndexReader reader, String query, int k,
+    private static Vector rocchio(List<String> relevant, IndexReader reader, String query,
                                   Number alpha, Number beta, Number gamma)
             throws IOException {
         List<Integer> rel = new ArrayList<>();
         List<Integer> irrel = new ArrayList<>();
-        int i = 0;
-        for(String name: docs) {
-            if(i < k) {
-                rel.add(searchCache.get(name));
+        for(Map.Entry<String, Integer> entry: searchCache.entrySet()) {
+            if(relevant.contains(entry.getKey())) {
+                rel.add(entry.getValue());
             } else {
-                irrel.add(searchCache.get(name));
+                irrel.add(entry.getValue());
             }
-            ++i;
         }
         PRF prf = new PRF(reader);
         Vector vRel = prf.sum(rel);
@@ -227,7 +231,7 @@ public class Main {
                 rel.set(i, "question" + rel.get(i) + ".xml");
             }
 
-            Map<Double, Document> res = advancedSearch(query, rel, analyzer, searcher, cnt, 10,0.5, 0, 0.5);
+            Map<Double, Document> res = advancedSearch(query, rel, analyzer, searcher, cnt,0.5, 0, 0.5);
 //            Map<Double, Document> res = search(searcher, getQuery(query, index, reader, analyzer), cnt);
             for(Map.Entry<Double, Document> entry: res.entrySet()) {
                 Document d = entry.getValue();
@@ -245,6 +249,7 @@ public class Main {
 
             spb.next();
             spb.print();
+            System.out.print("\t SCORESIZE: " + scores.size());
         }
         writeToJson("data/results.json", scores);
         writeToJson("data/relevant.json", relevant);

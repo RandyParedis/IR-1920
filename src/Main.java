@@ -116,7 +116,7 @@ public class Main {
     private static Map<Double, Document> advancedSearch(String query, List<String> relevant, Analyzer analyzer,
                                                         IndexSearcher searcher, int cnt,
                                                         Number alpha, Number beta, Number gamma)
-            throws IOException, ParseException {
+            throws IOException {
 
         IndexReader reader = searcher.getIndexReader();
         Vector vNew = rocchio(relevant, reader, query, alpha, beta, gamma);
@@ -146,17 +146,20 @@ public class Main {
                                   Number alpha, Number beta, Number gamma)
             throws IOException {
         List<Integer> rel = new ArrayList<>();
-        List<Integer> irrel = new ArrayList<>();
-        for(Map.Entry<String, Integer> entry: searchCache.entrySet()) {
-            if(relevant.contains(entry.getKey())) {
-                rel.add(entry.getValue());
-            } else {
-                irrel.add(entry.getValue());
-            }
+//        List<Integer> irrel = new ArrayList<>();
+        for(String rels: relevant) {
+            rel.add(searchCache.get(rels));
         }
+//        for(Map.Entry<String, Integer> entry: searchCache.entrySet()) {
+//            if(relevant.contains(entry.getKey())) {
+//                rel.add(entry.getValue());
+//            } else {
+////                irrel.add(entry.getValue());
+//            }
+//        }
         PRF prf = new PRF(reader);
         Vector vRel = prf.sum(rel);
-        Vector vIrr = prf.sum(irrel);
+        Vector vIrr =new Vector();
         Vector vQry = prf.getQueryVector(query);
 
         return prf.rocchio(vQry, vRel, vIrr, alpha, beta, gamma);

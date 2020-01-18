@@ -113,17 +113,57 @@ public class Main {
         return files;
     }
 
-    private static Map<Document, Double> search(IndexSearcher searcher, Query q, int cnt) throws IOException {
+    private class ScorePair {
+        Number score;
+        String field;
+        String term;
+    }
+
+    private static Map<Double, Document> advancedSearch(String query, Directory index, Analyzer analyzer,
+                                                        IndexSearcher searcher, int cnt, int k,
+                                                        Number alpha, Number beta, Number gamma)
+            throws IOException, ParseException {
+
+        IndexReader reader = searcher.getIndexReader();
+        Query qObj = getQuery(query, index, reader, analyzer);
+        Map<Double, Document> res = search(searcher, qObj, cnt);
+        Vector vNew = rocchio(res, reader, query, k, alpha, beta, gamma);
+        return search(searcher, vNew.toQuery(analyzer), cnt);
+    }
+
+    private static Map<Double, Document> search(IndexSearcher searcher, Query q, int cnt) throws IOException {
         TopDocs docs = searcher.search(q, cnt);
         ScoreDoc[] hits = docs.scoreDocs;
-        Map<Document, Double> results = new HashMap<>();
+        Map<Double, Document> results = new TreeMap<>();
         for(ScoreDoc hit : hits) {
             int docId = hit.doc;
             Document d = searcher.doc(docId);
             double score = hit.score;
-            results.put(d, score);
+            results.put(score, d);
         }
         return results;
+    }
+
+    private static Vector rocchio(Map<Double, Document> docs, IndexReader reader, String query, int k,
+                                  Number alpha, Number beta, Number gamma)
+            throws IOException {
+        List<Integer> rel = new ArrayList<>();
+        List<Integer> irrel = new ArrayList<>();
+        int i = 0;
+        for(Map.Entry<Double, Document> entry: docs.entrySet()) {
+            if(i < k) {
+                rel.add(searchCache.get(entry.getValue().get("name")));
+            } else {
+                irrel.add(searchCache.get(entry.getValue().get("name")));
+            }
+            ++i;
+        }
+        PRF prf = new PRF(reader);
+        Vector vRel = prf.sum(rel);
+        Vector vIrr = prf.sum(irrel);
+        Vector vQry = prf.getQueryVector(query);
+
+        return prf.rocchio(vQry, vRel, vIrr, alpha, beta, gamma);
     }
 
     /**
@@ -170,11 +210,12 @@ public class Main {
         spb.print();
         for(int qi = 0; qi < qrs.size(); ++qi) {
             String query = qrs.get(qi);
-            Query q = getQuery(query, index, reader, analyzer);
-            Map<Document, Double> res = search(searcher, q, cnt);
-            for(Map.Entry<Document, Double> entry: res.entrySet()) {
-                Document d = entry.getKey();
-                double score = entry.getValue();
+//            Map<Double, Document> res = advancedSearch(query, index, analyzer, searcher, cnt, 10,
+//                    0.5, 0, 0.5);
+            Map<Double, Document> res = search(searcher, getQuery(query, index, reader, analyzer), cnt);
+            for(Map.Entry<Double, Document> entry: res.entrySet()) {
+                Document d = entry.getValue();
+                double score = entry.getKey();
                 String qname = d.get("name");
                 String qid = qname.replace("question", "").replace(".xml", "");
                 if(scores.containsKey(qid)) {

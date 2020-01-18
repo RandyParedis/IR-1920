@@ -1,9 +1,17 @@
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
+import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.search.Query;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 public class Vector {
     private Map<String, Number> contents = new HashMap<>();
+
+    static double epsilon = 0.000000001;
 
     public Vector() {}
 
@@ -148,5 +156,35 @@ public class Vector {
     public Vector normalized() {
         Vector vec = copy();
         return vec.divide(vec.sum());
+    }
+
+    public boolean isNormalized() {
+        return isNormalized(epsilon);
+    }
+
+    public boolean isNormalized(double epsilon) {
+        Number s = sum();
+        return Math.abs(s.doubleValue() - 1) < epsilon;
+    }
+
+    public Query toQuery(Analyzer analyzer) throws ParseException {
+        return toQuery(analyzer, epsilon);
+    }
+
+    public Query toQuery(Analyzer analyzer, double epsilon) throws ParseException {
+        StringBuilder qstring = new StringBuilder();
+        for(Map.Entry<String, Number> entry: entrySet()) {
+            double value = entry.getValue().doubleValue();
+            if(Math.abs(value) > epsilon) {
+                if(value > 0.0) {
+                    qstring.append(entry.getKey()).append("^").append(value).append(" ");
+                } else {
+                    qstring.append("-").append(entry.getKey()).append("^").append(Math.abs(value)).append(" ");
+                }
+            }
+        }
+        MultiFieldQueryParser mfqp = new MultiFieldQueryParser(new String[]{"body", "answers"}, analyzer);
+        mfqp.setDefaultOperator(QueryParser.Operator.OR);
+        return mfqp.parse(qstring.toString());
     }
 }

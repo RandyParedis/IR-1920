@@ -1,5 +1,5 @@
 import json
-from plot import *
+from plot import Plot, plt
 
 queries = {}
 queries_invert = {}
@@ -33,9 +33,7 @@ for i in range(id):
     if len(relevant[query]) > 2:
         docscore = {}
         for key in results:
-            if str(i) in results[key].keys():
-                docscore[key] = (results[key].get(str(i), 0.0), 1 if key in relevant[query] else 0)
-        print(docscore)
+            docscore[key] = (results[key].get(str(i), 0.0), 1 if key in relevant[query] else 0)
 
         p, r, f = Plot.pr_roc_info(docscore)
         if first:

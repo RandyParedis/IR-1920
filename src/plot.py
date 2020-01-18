@@ -72,14 +72,11 @@ class Plot:
             fp = i + 1 - tp
             fn = totrel - tp
             tn = sum([1 - x[2] for x in table[i+1:]])
-            if tp == 0 and tn == 0:
-                print('tp', tp)
-                print('fp', fp)
-                print('fn', fn)
-                print('tn', tn)
             prec.append(precision(tp, fp))
             recs.append(recall(tp, fn))
             fout.append(fallout(fp, tn))
+
+        assert len(prec) == len(recs) == len(fout)
 
         return prec, recs, fout
 

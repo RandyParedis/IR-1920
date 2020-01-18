@@ -97,7 +97,7 @@ public class Main {
         return mfqp.parse(querystr);
     }
 
-    private static List<File> setUp(String directory, Analyzer analyzer, Directory index, int cnt)
+    private static List<File> index(String directory, Analyzer analyzer, Directory index, int cnt)
             throws ParserConfigurationException, SAXException, XPathExpressionException, IOException {
         System.out.println("Loading files...");
         ArrayList<File> files = pickFiles(loadFiles(directory), cnt, 420);
@@ -111,6 +111,19 @@ public class Main {
         System.out.println("Index Created");
 
         return files;
+    }
+
+    private static Map<Document, Double> search(IndexSearcher searcher, Query q, int cnt) throws IOException {
+        TopDocs docs = searcher.search(q, cnt);
+        ScoreDoc[] hits = docs.scoreDocs;
+        Map<Document, Double> results = new HashMap<>();
+        for(ScoreDoc hit : hits) {
+            int docId = hit.doc;
+            Document d = searcher.doc(docId);
+            double score = hit.score;
+            results.put(d, score);
+        }
+        return results;
     }
 
     /**
@@ -158,14 +171,12 @@ public class Main {
         for(int qi = 0; qi < qrs.size(); ++qi) {
             String query = qrs.get(qi);
             Query q = getQuery(query, index, reader, analyzer);
-            TopDocs docs = searcher.search(q, cnt);
-            ScoreDoc[] hits = docs.scoreDocs;
-            for(ScoreDoc hit : hits) {
-                int docId = hit.doc;
-                Document d = searcher.doc(docId);
+            Map<Document, Double> res = search(searcher, q, cnt);
+            for(Map.Entry<Document, Double> entry: res.entrySet()) {
+                Document d = entry.getKey();
+                double score = entry.getValue();
                 String qname = d.get("name");
                 String qid = qname.replace("question", "").replace(".xml", "");
-                double score = hit.score;
                 if(scores.containsKey(qid)) {
                     scores.get(qid).put(qi, score);
                 } else {
@@ -295,7 +306,7 @@ public class Main {
         String loc = args.length == 0 ? "smallPosts" : args[0];
 
         int cnt = 10000;
-        List<File> files = setUp(loc, analyzer, index, cnt);
+        List<File> files = index(loc, analyzer, index, cnt);
 
         performance(analyzer, index, files);
 //        writeToJson("data/cache.json", searchCache);

@@ -43,7 +43,7 @@ public class Main {
         doc.add(new Field("tags", tags.replace("  ", " "), freqVecStorer));
         doc.add(new Field("answers", answers, freqVecStorer));
         w.addDocument(doc);
-        Set<Set<String>> prms = Helper.tagsToQueries(tags);
+        Set<Set<String>> prms = Helper.tagsToQueries(Helper.transform(tags));
         for(Set<String> ls: prms) {
             queries.add(String.join(" ", ls));
         }
@@ -83,10 +83,9 @@ public class Main {
         String answers = "";
         NodeList items = XML.xpath("/qroot/answer/Body", doc);
         for(int i = 0; i < items.getLength(); ++i) {
-            answers += "\n\n" + Helper.transform(items.item(i).getTextContent());
+            answers += "\n\n" + items.item(i).getTextContent();
         }
-        addDoc(w, file.getName(), Helper.transform(title), Helper.transform(body),
-                Helper.transform(tags.replace(",", " ")), answers);
+        addDoc(w, file.getName(), title, body, tags.replace(",", " "), answers);
     }
 
     private static Query getQuery(String old, Directory index, IndexReader reader, Analyzer analyzer)
@@ -113,8 +112,8 @@ public class Main {
         return files;
     }
 
-    private static Map<Double, Document> advancedSearch(String query, List<String> relevant, Analyzer analyzer,
-                                                        IndexSearcher searcher, int cnt,
+    private static Map<Double, Document> advancedSearch(String query, List<Integer> relevant, List<Integer> irrelevant,
+                                                        Analyzer analyzer, IndexSearcher searcher, int cnt,
                                                         Number alpha, Number beta, Number gamma)
             throws IOException {
 
@@ -142,24 +141,12 @@ public class Main {
         return results;
     }
 
-    private static Vector rocchio(List<String> relevant, IndexReader reader, String query,
+    private static Vector rocchio(List<Integer> relevant, IndexReader reader, String query,
                                   Number alpha, Number beta, Number gamma)
             throws IOException {
-        List<Integer> rel = new ArrayList<>();
-//        List<Integer> irrel = new ArrayList<>();
-        for(String rels: relevant) {
-            rel.add(searchCache.get(rels));
-        }
-//        for(Map.Entry<String, Integer> entry: searchCache.entrySet()) {
-//            if(relevant.contains(entry.getKey())) {
-//                rel.add(entry.getValue());
-//            } else {
-////                irrel.add(entry.getValue());
-//            }
-//        }
         PRF prf = new PRF(reader);
-        Vector vRel = prf.sum(rel);
-        Vector vIrr =new Vector();
+        Vector vRel = prf.sum(relevant);
+        Vector vIrr = new Vector();
         Vector vQry = prf.getQueryVector(query);
 
         return prf.rocchio(vQry, vRel, vIrr, alpha, beta, gamma);
@@ -210,6 +197,9 @@ public class Main {
         for(int qi = 0; qi < qrs.size(); ++qi) {
             String query = qrs.get(qi);
 
+            List<Integer> irrel = new ArrayList<>();
+            List<Integer> rel = new ArrayList<>();
+
             for(Map.Entry<String, Integer> entry: searchCache.entrySet()) {
                 String qid = entry.getKey().replace("question", "").replace(".xml", "");
                 Document d = searcher.doc(entry.getValue());
@@ -226,15 +216,13 @@ public class Main {
                         val.add(qid);
                         relevant.put(query, val);
                     }
+                    rel.add(entry.getValue());
+                } else {
+                    irrel.add(entry.getValue());
                 }
             }
 
-            List<String> rel = relevant.get(query);
-            for(int i = 0; i < rel.size(); ++i) {
-                rel.set(i, "question" + rel.get(i) + ".xml");
-            }
-
-            Map<Double, Document> res = advancedSearch(query, rel, analyzer, searcher, cnt,0.5, 0, 0.5);
+            Map<Double, Document> res = advancedSearch(query, rel, irrel, analyzer, searcher, cnt,0.5, 0, 0.5);
 //            Map<Double, Document> res = search(searcher, getQuery(query, index, reader, analyzer), cnt);
             for(Map.Entry<Double, Document> entry: res.entrySet()) {
                 Document d = entry.getValue();
@@ -350,8 +338,8 @@ public class Main {
             throws IOException, ParseException, XPathExpressionException, SAXException, ParserConfigurationException,
             ExecutionControl.NotImplementedException, org.json.simple.parser.ParseException {
         // Create the documents to index
-        StandardAnalyzer analyzer = new StandardAnalyzer();
-//        MyCustomAnalyzer analyzer = new MyCustomAnalyzer();
+//        StandardAnalyzer analyzer = new StandardAnalyzer();
+        MyCustomAnalyzer analyzer = new MyCustomAnalyzer();
         Directory index = new MMapDirectory(Paths.get(".search")); // Instead of deprecated RAMDirectory
 
         String loc = args.length == 0 ? "smallPosts" : args[0];

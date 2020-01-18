@@ -11,6 +11,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Helper {
+    private static Map<String, Set<Set<String>>> permutationsCache = new HashMap<>();
+
     public static String transform(String old) {
         return old.strip().toLowerCase().replaceAll("[^a-z0-9 ]", "");
     }
@@ -58,9 +60,15 @@ public class Helper {
     }
 
     public static Set<Set<String>> tagsToQueries(String tags) {
-        List<String> qs = Arrays.asList(tags.split("\\s+"));
-        Set<String> from = new TreeSet<>(qs);
-        return permutations(from);
+        if(permutationsCache.containsKey(tags)) {
+            return permutationsCache.get(tags);
+        } else {
+            List<String> qs = Arrays.asList(tags.split("\\s+"));
+            Set<String> from = new TreeSet<>(qs);
+            Set<Set<String>> r = permutations(from);
+            permutationsCache.put(tags, r);
+            return r;
+        }
     }
 
     private static String toJSONMap(Map obj, int d) throws NotImplementedException {

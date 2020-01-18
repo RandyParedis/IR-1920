@@ -113,21 +113,13 @@ public class Main {
         return files;
     }
 
-    private class ScorePair {
-        Number score;
-        String field;
-        String term;
-    }
-
-    private static Map<Double, Document> advancedSearch(String query, Directory index, Analyzer analyzer,
+    private static Map<Double, Document> advancedSearch(String query, List<String> relevant, Analyzer analyzer,
                                                         IndexSearcher searcher, int cnt, int k,
                                                         Number alpha, Number beta, Number gamma)
             throws IOException, ParseException {
 
         IndexReader reader = searcher.getIndexReader();
-        Query qObj = getQuery(query, index, reader, analyzer);
-        Map<Double, Document> res = search(searcher, qObj, cnt);
-        Vector vNew = rocchio(res, reader, query, k, alpha, beta, gamma);
+        Vector vNew = rocchio(relevant, reader, query, k, alpha, beta, gamma);
         return search(searcher, vNew.toQuery(analyzer), cnt);
     }
 
@@ -144,17 +136,17 @@ public class Main {
         return results;
     }
 
-    private static Vector rocchio(Map<Double, Document> docs, IndexReader reader, String query, int k,
+    private static Vector rocchio(List<String> docs, IndexReader reader, String query, int k,
                                   Number alpha, Number beta, Number gamma)
             throws IOException {
         List<Integer> rel = new ArrayList<>();
         List<Integer> irrel = new ArrayList<>();
         int i = 0;
-        for(Map.Entry<Double, Document> entry: docs.entrySet()) {
+        for(String name: docs) {
             if(i < k) {
-                rel.add(searchCache.get(entry.getValue().get("name")));
+                rel.add(searchCache.get(name));
             } else {
-                irrel.add(searchCache.get(entry.getValue().get("name")));
+                irrel.add(searchCache.get(name));
             }
             ++i;
         }
@@ -210,22 +202,10 @@ public class Main {
         spb.print();
         for(int qi = 0; qi < qrs.size(); ++qi) {
             String query = qrs.get(qi);
-//            Map<Double, Document> res = advancedSearch(query, index, analyzer, searcher, cnt, 10,
-//                    0.5, 0, 0.5);
-            Map<Double, Document> res = search(searcher, getQuery(query, index, reader, analyzer), cnt);
-            for(Map.Entry<Double, Document> entry: res.entrySet()) {
-                Document d = entry.getValue();
-                double score = entry.getKey();
-                String qname = d.get("name");
-                String qid = qname.replace("question", "").replace(".xml", "");
-                if(scores.containsKey(qid)) {
-                    scores.get(qid).put(qi, score);
-                } else {
-                    Map<Integer, Double> sc = new HashMap<>();
-                    sc.put(qi, score);
-                    scores.put(qid, sc);
-                }
 
+            for(Map.Entry<String, Integer> entry: searchCache.entrySet()) {
+                String qid = entry.getKey().replace("question", "").replace(".xml", "");
+                Document d = searcher.doc(entry.getValue());
                 Set<Set<String>> prms = Helper.tagsToQueries(d.get("tags"));
                 Set<String> ns = new TreeSet<>();
                 for(Set<String> ls: prms) {
@@ -241,6 +221,28 @@ public class Main {
                     }
                 }
             }
+
+            List<String> rel = relevant.get(query);
+            for(int i = 0; i < rel.size(); ++i) {
+                rel.set(i, "question" + rel.get(i) + ".xml");
+            }
+
+            Map<Double, Document> res = advancedSearch(query, rel, analyzer, searcher, cnt, 10,0.5, 0, 0.5);
+//            Map<Double, Document> res = search(searcher, getQuery(query, index, reader, analyzer), cnt);
+            for(Map.Entry<Double, Document> entry: res.entrySet()) {
+                Document d = entry.getValue();
+                double score = entry.getKey();
+                String qname = d.get("name");
+                String qid = qname.replace("question", "").replace(".xml", "");
+                if(scores.containsKey(qid)) {
+                    scores.get(qid).put(qi, score);
+                } else {
+                    Map<Integer, Double> sc = new HashMap<>();
+                    sc.put(qi, score);
+                    scores.put(qid, sc);
+                }
+            }
+
             spb.next();
             spb.print();
         }

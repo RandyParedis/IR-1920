@@ -1,5 +1,6 @@
 import json
 from plot import Plot, plt
+import progressbar #pip install progressbar2
 
 queries = {}
 queries_invert = {}
@@ -28,27 +29,29 @@ with open('../data/questionids.txt') as q:
 pavg, ravg, tavg, favg = None, None, None, None
 first = True
 cnt = 0
-for i in range(id):
-    query = queries[i]
+with progressbar.ProgressBar(max_value=id) as bar:
+    for i in range(id):
+        query = queries[i]
 
-    if query in relevant and len(relevant[query]) > 2:
-        docscore = {}
-        for key in results:
-            docscore[key] = (results[key].get(str(i), 0.0), 1 if key in relevant[query] else 0)
+        if query in relevant and len(relevant[query]) > 2:
+            docscore = {}
+            for key in results:
+                docscore[key] = (results[key].get(str(i), 0.0), 1 if key in relevant[query] else 0)
 
-        p, r, f = Plot.pr_roc_info(docscore)
-        if first:
-            pavg = p
-            ravg = r
-            favg = f
-            first = False
+            p, r, f = Plot.pr_roc_info(docscore)
+            if first:
+                pavg = p
+                ravg = r
+                favg = f
+                first = False
 
-        else:
-            for j in range(len(p)):
-                pavg[j] += p[j]
-                ravg[j] += r[j]
-                favg[j] += f[j]
-        cnt += 1
+            else:
+                for j in range(len(p)):
+                    pavg[j] += p[j]
+                    ravg[j] += r[j]
+                    favg[j] += f[j]
+            cnt += 1
+        bar.update(i)
 
 
 pavg = [float(x) / cnt for x in pavg]

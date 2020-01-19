@@ -60,8 +60,8 @@ public class MyCustomAnalyzer extends Analyzer {
         result = new TrimFilter(result);
         result = new WordDelimiterGraphFilter(result, CATENATE_ALL, null);
         result = new PorterStemFilter(result);
-//        result = new SynonymFilter(result, generateSynonymMap(), true);
-//        result = new NGramTokenFilter(result, 4);
+        result = new SynonymFilter(result, generateSynonymMap(), true);
+        result = new NGramTokenFilter(result, 4);
         return new TokenStreamComponents(src, result);
 
     }

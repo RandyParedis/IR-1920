@@ -24,8 +24,8 @@ import java.util.*;
 public class Main {
     private static ProgressBar spb;
     private static Map<String, Integer> searchCache = new HashMap<>();
-//    private static BooleanSimilarity similarity = new BooleanSimilarity();
-    private static TFIDFSimilarity similarity = new ClassicSimilarity();
+    private static BooleanSimilarity similarity = new BooleanSimilarity();
+//    private static TFIDFSimilarity similarity = new ClassicSimilarity();
     private static boolean otherSim = true;
     private static FieldType freqVecStorer;
 

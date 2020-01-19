@@ -1,6 +1,6 @@
 import json
 from plot import Plot, plt
-import progressbar #pip install progressbar2
+import progressbar
 
 queries = {}
 queries_invert = {}

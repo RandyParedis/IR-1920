@@ -1,0 +1,27 @@
+\begin{thebibliography}{1}
+
+\bibitem{lucene}
+{Apache Lucene Homepage}.
+\newblock \url{https://lucene.apache.org/}.
+\newblock Accessed: 2019-12-18.
+
+\bibitem{lucene-wiki}
+{Apache Lucene Wikipedia Page}.
+\newblock \url{https://en.wikipedia.org/wiki/Apache\_Lucene}.
+\newblock Accessed: 2019-12-18.
+
+\bibitem{hapax}
+{Hapax legomenon}.
+\newblock \url{https://en.wikipedia.org/wiki/Hapax\_legomenon}.
+
+\bibitem{lucene-tutorial}
+{Lucene Basic Concepts}.
+\newblock \url{http://www.lucenetutorial.com/basic-concepts.html}.
+\newblock Accessed: 2019-12-18.
+
+\bibitem{synonyms}
+{Offline database of synonyms/thesaurus}.
+\newblock \url{https://github.com/zaibacu/thesaurus}.
+\newblock Accessed: 2019-12-19.
+
+\end{thebibliography}

@@ -79,9 +79,9 @@ class Plot:
             totrel += docscore[doc][1]
         table.sort(key=lambda x: -x[1])
 
-        precision = lambda tp, fp: float(tp) / (tp + fp)
-        recall = lambda tp, fn: float(tp) / (tp + fn)
-        fallout = lambda fp, tn: float(fp) / (fp + tn)
+        precision = lambda tp, fp: 0 if tp == fp == 0 else float(tp) / (tp + fp)
+        recall = lambda tp, fn: 0 if tp == fn == 0 else float(tp) / (tp + fn)
+        fallout = lambda fp, tn: 0 if tn == fp == 0 else float(fp) / (fp + tn)
 
         tp = 0
         prec = [1.0]

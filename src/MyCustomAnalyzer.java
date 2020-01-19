@@ -31,8 +31,8 @@ public class MyCustomAnalyzer extends Analyzer {
             SynonymMap.Builder builder = new SynonymMap.Builder(true);
             reader = new BufferedReader(new FileReader("data/en_thesaurus_synonyms.txt"));
             String line = reader.readLine();
+            JSONParser parser = new JSONParser();
             while (line != null) {
-                JSONParser parser = new JSONParser();
                 JSONObject json = (JSONObject) parser.parse(line);
                 String word = (String) json.get("word");
                 JSONArray jsonArray = (JSONArray) json.get("synonyms");

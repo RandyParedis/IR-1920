@@ -10,6 +10,8 @@ import org.apache.lucene.search.*;
 import org.apache.lucene.search.similarities.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.MMapDirectory;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -43,7 +45,8 @@ public class Main {
         doc.add(new Field("tags", tags.replace("  ", " "), freqVecStorer));
         doc.add(new Field("answers", answers, freqVecStorer));
         w.addDocument(doc);
-        Set<Set<String>> prms = Helper.tagsToQueries(Helper.transform(tags));
+//        Set<Set<String>> prms = Helper.tagsToQueries(Helper.transform(tags));
+        Set<Set<String>> prms = Helper.tagsToQueries(tags);
         for(Set<String> ls: prms) {
             queries.add(String.join(" ", ls));
         }
@@ -112,22 +115,6 @@ public class Main {
         return files;
     }
 
-    private static Map<Double, Document> advancedSearch(String query, List<Integer> relevant, List<Integer> irrelevant,
-                                                        Analyzer analyzer, IndexSearcher searcher, int cnt,
-                                                        Number alpha, Number beta, Number gamma)
-            throws IOException {
-
-        IndexReader reader = searcher.getIndexReader();
-        Vector vNew = rocchio(relevant, reader, query, alpha, beta, gamma);
-        try {
-            Query q = vNew.toQuery(analyzer);
-            return search(searcher, q, cnt);
-        } catch(ParseException e) {
-            System.out.println("\tEXCEPTION!");
-            return new HashMap<Double, Document>();
-        }
-    }
-
     private static Map<Double, Document> search(IndexSearcher searcher, Query q, int cnt) throws IOException {
         TopDocs docs = searcher.search(q, cnt);
         ScoreDoc[] hits = docs.scoreDocs;
@@ -141,13 +128,32 @@ public class Main {
         return results;
     }
 
-    private static Vector rocchio(List<Integer> relevant, IndexReader reader, String query,
+    private static Map<Double, Document> advancedSearch(String query, List<Integer> relevant, List<Integer> irrelevant,
+                                                        Analyzer analyzer, IndexSearcher searcher, int cnt, int k,
+                                                        Number alpha, Number beta, Number gamma)
+            throws IOException {
+
+        IndexReader reader = searcher.getIndexReader();
+        Vector vNew = rocchio(relevant, irrelevant, k, reader, query, alpha, beta, gamma);
+        try {
+            Query q = vNew.toQuery(analyzer);
+            return search(searcher, q, cnt);
+        } catch(ParseException e) {
+            System.out.println("\tEXCEPTION!");
+            return new HashMap<Double, Document>();
+        }
+    }
+
+    private static Vector rocchio(List<Integer> relevant, List<Integer> irrelevant, int k,
+                                  IndexReader reader, String query,
                                   Number alpha, Number beta, Number gamma)
             throws IOException {
         PRF prf = new PRF(reader);
-        Vector vRel = prf.sum(relevant);
-        Vector vIrr = new Vector();
+        Vector vRel = prf.sum(relevant, k);
+        Vector vIrr = new Vector(); //prf.sum(irrelevant, k);
         Vector vQry = prf.getQueryVector(query);
+
+        System.out.print("\tREL: " + vRel.size() + "; IRR: " + vIrr.size() + "; QRY: " + vQry.size());
 
         return prf.rocchio(vQry, vRel, vIrr, alpha, beta, gamma);
     }
@@ -174,7 +180,7 @@ public class Main {
      * @param index         The Directory to use.
      */
     public static void performance(Analyzer analyzer, Directory index, List<File> files)
-            throws IOException, ParseException {
+            throws IOException, org.json.simple.parser.ParseException, ParseException {
 
         // Load all general information
         int cnt = files.size();
@@ -194,21 +200,23 @@ public class Main {
         spb.reset(qrs.size());
         spb.start();
         spb.print();
-        for(int qi = 0; qi < qrs.size(); ++qi) {
+        Document d = null;
+        int to = 1000;
+        for(int qi = 0; qi < to; ++qi) {
             String query = qrs.get(qi);
-
-            List<Integer> irrel = new ArrayList<>();
-            List<Integer> rel = new ArrayList<>();
 
             for(Map.Entry<String, Integer> entry: searchCache.entrySet()) {
                 String qid = entry.getKey().replace("question", "").replace(".xml", "");
-                Document d = searcher.doc(entry.getValue());
+                d = searcher.doc(entry.getValue());
                 Set<Set<String>> prms = Helper.tagsToQueries(d.get("tags"));
-                Set<String> ns = new TreeSet<>();
+                boolean fnd = false;
                 for(Set<String> ls: prms) {
-                    ns.add(String.join(" ", ls));
+                    if(String.join(" ", ls).equals(query)) {
+                        fnd = true;
+                        break;
+                    }
                 }
-                if(ns.contains(query)) {
+                if(fnd) {
                     if(relevant.containsKey(query)) {
                         relevant.get(query).add(qid);
                     } else {
@@ -216,16 +224,14 @@ public class Main {
                         val.add(qid);
                         relevant.put(query, val);
                     }
-                    rel.add(entry.getValue());
-                } else {
-                    irrel.add(entry.getValue());
                 }
             }
 
-            Map<Double, Document> res = advancedSearch(query, rel, irrel, analyzer, searcher, cnt,0.5, 0, 0.5);
-//            Map<Double, Document> res = search(searcher, getQuery(query, index, reader, analyzer), cnt);
+//            Map<Double, Document> res = advancedSearch(query, rel, irrel, analyzer, searcher, cnt, 100,
+//                    0.7, 0.3, 0);
+            Map<Double, Document> res = search(searcher, getQuery(query, index, reader, analyzer), cnt);
             for(Map.Entry<Double, Document> entry: res.entrySet()) {
-                Document d = entry.getValue();
+                d = entry.getValue();
                 double score = entry.getKey();
                 String qname = d.get("name");
                 String qid = qname.replace("question", "").replace(".xml", "");
@@ -240,7 +246,16 @@ public class Main {
 
             spb.next();
             spb.print();
-            System.out.print("\t SCORESIZE: " + scores.size());
+
+            if(qi % 100 == 0) {
+                writeToJson("data/results.json", scores);
+                // Optimize Python later on
+                if(relevant.get(query).size() > 2) {
+                    writeToJson("data/relevant.json", relevant);
+                }
+                scores.clear();
+                relevant.clear();
+            }
         }
         writeToJson("data/results.json", scores);
         writeToJson("data/relevant.json", relevant);
@@ -304,17 +319,23 @@ public class Main {
         return -1;
     }
 
-    private static void writeToJson(String filename, Object object)
-            throws IOException {
-        try {
-            String json = Helper.toJSON(object);
+    private static void writeToJson(String filename, Map object)
+            throws IOException, org.json.simple.parser.ParseException {
+        writeToJson(filename, object, true);
+    }
 
-            BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
-            writer.write(json);
-            writer.close();
-        } catch (ExecutionControl.NotImplementedException e) {
-            e.printStackTrace();
+    private static void writeToJson(String filename, Map object, boolean append)
+            throws IOException, org.json.simple.parser.ParseException {
+        JSONObject map = new JSONObject(object);
+        File file = new File(filename);
+        if(append && file.exists()) {
+            JSONParser parser = new JSONParser();
+            JSONObject already = (JSONObject) parser.parse(new FileReader(file));
+            map.putAll(already);
         }
+        BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+        writer.write(map.toJSONString());
+        writer.close();
     }
 
     private static void writeTagList(String filename) throws IOException {

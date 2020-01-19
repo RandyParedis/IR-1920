@@ -28,7 +28,7 @@ public class PRF {
         return res;
     }
 
-    public Vector getFeatureVector(int docId) throws IOException {
+    public Vector getFeatureVector(int docId, int k) throws IOException {
         if(cache.containsKey(docId)) {
             return cache.get(docId);
         }
@@ -45,16 +45,22 @@ public class PRF {
                 String term = text.utf8ToString();
                 int freq = (int) termsEnum.totalTermFreq();
                 frequencies.addFor(term, freq);
+                if(frequencies.size() > k) {
+                    break;
+                }
+            }
+            if(frequencies.size() > k) {
+                break;
             }
         }
         cache.put(docId, frequencies);
         return frequencies;
     }
 
-    public Vector sum(List<Integer> docIds) throws IOException {
+    public Vector sum(List<Integer> docIds, int k) throws IOException {
         Vector sum = new Vector();
         for(Integer id: docIds) {
-            sum.add(getFeatureVector(id));
+            sum.add(getFeatureVector(id, k));
         }
         return sum;
     }

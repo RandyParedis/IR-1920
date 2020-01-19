@@ -5,9 +5,7 @@ import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.Query;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class Vector {
     private Map<String, Number> contents = new HashMap<>();
@@ -48,70 +46,59 @@ public class Vector {
         contents.putAll(vector);
     }
 
+    public void delete(String name) {
+        contents.remove(name);
+    }
+
     public Vector copy() {
         return new Vector(this.contents);
     }
 
     public Vector add(Vector other) {
         for(Map.Entry<String, Number> entry: other.contents.entrySet()) {
-            String key = entry.getKey();
-            addFor(key, entry.getValue());
+            addFor(entry.getKey(), entry.getValue());
         }
         return this;
     }
 
     public Vector add(Number other) {
-        for(Map.Entry<String, Number> e: entrySet()) {
-            insert(e.getKey(), e.getValue().doubleValue() + other.doubleValue());
-        }
+        contents.replaceAll((k, v) -> v.doubleValue() + other.doubleValue());
         return this;
     }
 
     public void addFor(String term, Number value) {
-        if(!hasKey(term)) {
-            insert(term, value);
-        } else {
-            insert(term, obtain(term).doubleValue() + value.doubleValue());
-        }
+        contents.computeIfPresent(term, (k, v) -> v.doubleValue() + value.doubleValue());
+        contents.putIfAbsent(term, value);
     }
 
     public Vector subtract(Vector other) {
         for(Map.Entry<String, Number> entry: other.contents.entrySet()) {
-            String key = entry.getKey();
-            if(!hasKey(key)) {
-                insert(key, - entry.getValue().doubleValue());
-            } else {
-                insert(key, obtain(key).doubleValue() - entry.getValue().doubleValue());
-            }
+            subtractFor(entry.getKey(), entry.getValue());
         }
         return this;
     }
 
     public Vector subtract(Number other) {
-        for(Map.Entry<String, Number> e: entrySet()) {
-            insert(e.getKey(), e.getValue().doubleValue() - other.doubleValue());
-        }
+        contents.replaceAll((k, v) -> v.doubleValue() - other.doubleValue());
         return this;
     }
 
+    public void subtractFor(String term, Number value) {
+        addFor(term, - value.doubleValue());
+    }
+
     public Vector multiply(Number other) {
-        for(Map.Entry<String, Number> e: entrySet()) {
-            insert(e.getKey(), e.getValue().doubleValue() * other.doubleValue());
-        }
+        contents.replaceAll((k, v) -> v.doubleValue() * other.doubleValue());
         return this;
     }
 
     public Vector divide(Number other) {
-        for(Map.Entry<String, Number> e: entrySet()) {
-            insert(e.getKey(), e.getValue().doubleValue() / other.doubleValue());
-        }
+        contents.replaceAll((k, v) -> v.doubleValue() / other.doubleValue());
         return this;
     }
 
     public Vector inverse() {
-        for(Map.Entry<String, Number> e: entrySet()) {
-            insert(e.getKey(), 1.0 / e.getValue().doubleValue());
-        }
+        contents.replaceAll((k, v) -> 1.0 / v.doubleValue());
         return this;
     }
 
@@ -121,11 +108,7 @@ public class Vector {
     }
 
     public Number sum() {
-        Number num = 0.0d;
-        for(Map.Entry<String, Number> entry: entrySet()) {
-            num = num.doubleValue() + entry.getValue().doubleValue();
-        }
-        return num;
+        return contents.values().stream().reduce(0, (s, num) -> s.doubleValue() + num.doubleValue());
     }
 
     public Number min() {

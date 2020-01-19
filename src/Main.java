@@ -197,11 +197,11 @@ public class Main {
 
         Map<String, Map<Integer, Double>> scores = new TreeMap<>();
         System.out.println("Searching for Query Matches");
-        spb.reset(qrs.size());
+        int to = 1000;
+        spb.reset(to);
         spb.start();
         spb.print();
         Document d = null;
-        int to = 1000;
         for(int qi = 0; qi < to; ++qi) {
             String query = qrs.get(qi);
 

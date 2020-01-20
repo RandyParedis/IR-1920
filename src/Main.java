@@ -93,10 +93,10 @@ public class Main {
 
     private static Query getQuery(String old, Directory index, IndexReader reader, Analyzer analyzer)
             throws IOException, ParseException {
-        String querystr = Helper.queryTransform(old, 5, index, reader, analyzer);
-        MultiFieldQueryParser mfqp = new MultiFieldQueryParser(new String[]{"body", "answers"}, analyzer);
+//        String querystr = Helper.queryTransform(old, 5, index, reader, analyzer);
+        MultiFieldQueryParser mfqp = new MultiFieldQueryParser(new String[]{"title", "body", "answers"}, analyzer);
         mfqp.setDefaultOperator(QueryParser.Operator.OR);
-        return mfqp.parse(querystr);
+        return mfqp.parse(old);
     }
 
     private static List<File> index(String directory, Analyzer analyzer, Directory index, int cnt)

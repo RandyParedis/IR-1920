@@ -68,6 +68,15 @@ class Plot:
 
         return list(nr.values()), list(nr.keys()), list(nf.values()), list(nf.keys())
 
+    @staticmethod
+    def pr_roc_info2(docscore: dict):
+        ordered = sorted(docscore, key= lambda x: -docscore[x][0])
+        top = ordered[:10]
+        y_pred = [docscore[x][1] for x in ordered]
+        y_test = [1 if x in top else 0 for x in ordered]
+        precision, recall, _ = precision_recall_curve(y_test, y_pred)
+        fpr, tpr, _ = roc_curve(y_pred, y_test)
+        return precision, recall, fpr, tpr, average_precision_score(y_test, y_pred)
 
     @staticmethod
     def pr_roc_info(docscore: dict):
@@ -103,16 +112,19 @@ class Plot:
         return prec, recs, fout
 
     @staticmethod
-    def pr_plot(ax, precision, recall):
-        step_kwargs = ({'step': 'post'} if 'step' in signature(plt.fill_between).parameters else {})
+    def pr_plot(ax, precision, recall, aps = None):
+        step_kwargs = ({'step': 'pre'} if 'step' in signature(plt.fill_between).parameters else {})
 
-        ax.step(recall, precision, color='b', alpha=0.2, where='post')
+        ax.step(recall, precision, color='b', alpha=0.2, where='pre')
         ax.fill_between(recall, precision, alpha=0.2, color='b', **step_kwargs)
         ax.set_xlabel('Recall')
         ax.set_ylabel('Precision')
         ax.set_ylim([0.0, 1.05])
         ax.set_xlim([0.0, 1.0])
-        ax.set_title('Precision-Recall curve')
+        if aps is None:
+            ax.set_title('Precision-Recall curve')
+        else:
+            ax.set_title('Precision-Recall curve: AP={0:0.2f}'.format(aps))
 
     @staticmethod
     def roc_plot(ax, tpr, fpr):

@@ -71,7 +71,7 @@ Apache Lucene is a free and open-source search engine software library written i
 There are a lot of features Lucene offers, but we will not need all of them. This is why we will gradually go over our project and the Lucene features we've used to obtain the described results. All specific details on the internal workings of Lucene are described in its documentation, publicly available on \cite{lucene}.
 
 \subsection{Dataset}
-Of course, before we can do anything, we require a dataset on which we will execute Lucene. In order to do that, we've downloaded the massive dataset from StackOverflow\footnote{From the website indicated in the assignment.}. Next, we extracted this dataset before running a Python script that parses this massive xml-file into $2\,010\,607$ smaller files, containing questions and answers, all of whom had \texttt{python} or \texttt{c++} in its tags. Every 1000 files are put into a sub-folder to allow our operating systems not to freak if the main folder was opened. The overall size of this data approximates 7 gigabytes, which is why it's not accompanied with our submission of the project.
+Of course, before we can do anything, we require a dataset on which we will execute Lucene. In order to do that, we've downloaded the massive dataset from StackOverflow\footnote{From the website indicated in the assignment.}. Next, we extracted this dataset before running a Python script that parses this massive xml-file into $2\,010\,607$ smaller files, containing questions and answers, all of whom had \texttt{python} or \texttt{c++} in its tags. Every 1000 files are put into a sub-folder, making sure our operating systems can handle this amount of data. The overall size approximates 7 gigabytes, which is why it's not accompanied with our submission of the project.
 
 Now that we have this dataset, we can start looking at Lucene.
 
@@ -83,21 +83,21 @@ Lucene comes with a \texttt{StandardAnalyzer} class\footnote{\texttt{org.apache.
 StandardAnalyzer analyzer = new StandardAnalyzer();
 \end{lstlisting}
 
-Alas, the \texttt{StandardAnalyzer} does not take into account that our data consists of a lot of xml-files. On top of that, xml makes use of a special character encoding system that does not map straightforwardly on unicode. This is an issue we need to keep in mind when processing our data. Luckily, there is the possibility of creating a custom \texttt{Analyzer} (in our project, this is the \texttt{MyCustomAnalyzer} class) to solve this issue.
+Alas, the \texttt{StandardAnalyzer} does not take into account that our data consists of a lot of xml-files. On top of that, xml makes use of a special character encoding system that does not map straightforwardly on unicode. This is an issue we need to keep in mind when processing our data. Luckily, there is the possibility of creating a custom \texttt{Analyzer} (in our project, this is the \texttt{MyCustomAnalyzer} class) to solve this issue. More on the \texttt{MyCustomAnalyzer} in section \ref{sec:optimizations}.
 
 \subsection{Indexing}\label{sec:indexing}
 \subsubsection{Index Directory}
 Now that we have an \texttt{Analyzer}, we need a place to keep track of the indexing. Because indexing itself is an expensive operation, it will not be done before every search and, on top of that, it will be stored in a folder on disk, making sure your indexes remain consistent (and above all: existent) between multiple executions.
 
-In our implementation, we create a new directory, called \texttt{.search} in which we will store this information. If this directory already exists, it is cleared beforehand. Note that we will bypass the use of storing these files in a directory this way.
+In our implementation, we create a new directory, called \texttt{.search} in which we will store this information. If this directory already exists, it is cleared beforehand. Note that, this way, we will bypass the usecase of storing these files in a directory.
 \begin{lstlisting}[language=Java]
 Directory index = new MMapDirectory(Paths.get(".search"));
 \end{lstlisting}
 
 \subsubsection{Indexing of Files}\label{sec:indexfiles}
-The dataset we've used was too big to index as a whole for the scope of our project. This is why our code only indexes on a part of this data ($10\,000$ files), which was randomly selected using Java's builtin random number generator with a fixed seed (for repeatability).
+The dataset we've used was too big to index as a whole for the scope of our project. This is why our code only indexes on a part of this data ($10\,000$ files), which was randomly selected using Java's builtin random number generator with a fixed seed of 420 (for repeatability).
 
-In order to do so, we had to flatten our dataset in such a way that our OS could handle it. Here is where we discovered a problem on MacOS (compared to Ubuntu LTS 18.04, that is). On Mac, the \texttt{File} class actually opens the file, causing this to be a costly operation. We solved this inconvenience via iterating over the filenames and only taking those ending in ``xml''\footnote{This method has as a downside that it will not work on Windows systems.}.
+In order to do so, we had to flatten our dataset in such a way that our OS could handle it. Here is where we discovered a problem on MacOS (compared to Ubuntu LTS 18.04, that is). On Mac, the \texttt{File} class actually opens the file, causing this to be a costly operation. We solved this inconvenience via iterating over the filenames and only taking those ending in ``xml''\footnote{This method has as a downside that it will not work on Windows systems. Mainly because we hardcoded the ``\texttt{/}'' as a path separator.}.
 
 Either way, after we've obtained our files to index, we will add all these documents to an \texttt{IndexWriter}\footnote{\texttt{org.apache.lucene.index.IndexWriter}}. This object basically keeps track of all labeled information of the documents in our dataset.
 \begin{lstlisting}[language=Java]
@@ -110,12 +110,14 @@ For the purpose of the assignment, we indexed the fields \textit{name} (i.e. the
 Internally, Lucene does not search all the files, because that would be too costly. In fact, this indexing stage creates a list of indexes and the pages they refer to, similarly to something you might see in a handbook. These indexes are called ``\textit{reverse indexes}''. \cite{lucene-tutorial}
 
 \subsubsection{Storing the Feature Vectors}\label{sec:fv}
-Because we will need it later on (see section \ref{sec:bstudy}), we will also tell Lucene it needs to store the term vectors of all fields. This way, we can also use this in section \ref{sec:rocchio} to manipulate the information from the vector space model to our advantage.
+Because we will need it later on (see section \ref{sec:rocchio}), we will also tell Lucene it needs to store the term vectors of all fields. This way, we hope to be able to use the Vector Space Model (VSM) Lucene uses behind the scenes.
 
 \subsubsection{Index File Formats}
-As mentioned before, Lucene stores the indexing data in a set of files. Its contents are not entirely readable by a human, making us suspect there is some sort compression or encoding that's being done by Lucene. Our suspicions were confirmed in \cite{lucene}, which also gives an extended overview of this encoding.
+As mentioned before, Lucene stores the indexing data in a set of files. Its contents are not entirely readable by a human\footnote{Using ourselves as a point of reference.}, making us suspect there is some sort compression or encoding that's being done by Lucene. Our suspicions were confirmed in \cite{lucene}, which also gives an extended overview of this encoding.
 
 \subsection{Score Models}
+There are numerous scoring models bundled with Lucene (as we will discuss in section \ref{sec:scmodels}). By default, Lucene uses the \texttt{TFIDFSimilarity}\footnote{\texttt{org.apache.lucene.search.similarities.TFIDFSimilarity}}.
+
 The fastest way to obtain a score in Lucene, would by via the following code:
 \begin{lstlisting}[language=Java]
 // Search with the query
@@ -125,14 +127,18 @@ TopDocs docs = searcher.search(q, cnt);
 ScoreDoc[] hits = docs.scoreDocs;
 \end{lstlisting}
 
-Here, we would search for a query \texttt{q} and return at most \texttt{cnt} documents that match it, ordered with highest score first. To quote scoring in the words from \cite{lucene}, which also describes our love-hate relationship with it:
+Here, we would search for a query \texttt{q} and return at most \texttt{cnt} documents that match it, ordered by highest score first. To quote scoring in the words from \cite{lucene}, which also describes our love-hate relationship with it:
 \begin{displayquote}
     \textsl{Lucene scoring is the heart of why we all love Lucene. It is blazingly fast and it hides almost all of the complexity from the user. In a nutshell, it works. At least, that is, until it doesn't work, or doesn't work as one would expect it to work.}
 \end{displayquote}
 
-Allow us to emphasize that this quote comes unedited from their own website, basically stating that Lucene does not always works the way you want it to work, an issue we have experienced on numerous occasions during this project.
+Allow us to emphasize that this quote comes unedited from their own website, basically stating that Lucene does not always works the way you want it to work, an issue we have experienced on numerous occasions during this project (especially in section \ref{sec:rocchio}).
 
+<<<<<<< Updated upstream
 \subsubsection{Similarity Scoring}\label{sec:ss}
+=======
+\subsubsection{Similarity Scoring}\label{sec:sim}
+>>>>>>> Stashed changes
 From \cite{lucene}, we can also conclude how its scoring actually works internally. From the course, we know there must be some similarity checking formula at work. We find that Lucene makes use of the \textsf{VSM score}, better known as the \textsf{cosine simularity} (with $V(q)$ and $V(d)$ weighed query vectors):
 $$cosine\_similarity(q, d) = \frac{V(q)\cdot V(d)}{\vert V(q)\vert\cdot\vert V(d)\vert}$$
 Its scoring formula therefore becomes:
@@ -142,7 +148,7 @@ Its scoring formula therefore becomes:
 \end{align*}
 
 \section{Query Building}\label{sec:query}
-Even though Lucene makes use of a Vector Space Model (VSM), it is by default completely hidden. On top of that, we haven't found any information (nor in the documentation, nor anywhere online) on how to search the dataset by vector. We would have to create our own scoring system, an idea we quickly discarded because of the massive size of our data\footnote{We also discarded this idea because we did not believe this was intended with the assignment.}. Instead, we decided to use the builtin binary query system, which is tested and optimized for searching\footnote{On top of that, it is impossible to obtain the VSM without giving such a query.}.
+Even though Lucene makes use of a Vector Space Model (VSM), it is by default completely hidden. On top of that, we haven't found any information (nor in the documentation, nor anywhere online) on how to search the dataset by vector. We would have to create our own scoring system, an idea we quickly discarded because of the massive size of our data\footnote{We also discarded this idea because we did not believe this was intended with the assignment. In fact, the fast and efficient workings of the similarity checking as described in section \ref{sec:sim} was a major influence in this decision.}. Instead, we decided to use the builtin binary query system, which is tested and optimized for searching\footnote{On top of that, it is impossible to obtain the VSM without giving such a query string.}.
 
 To allow for simple manipulations of the queries we introduced the notion of a \texttt{QueryBuilder}. Based on a string with the valid search criteria, we create a query that follows the Lucene query syntax and remains conform with the inputted data. Even though this may seem as an unnecessary additional parsing step, it will become useful later on.
 
@@ -153,7 +159,7 @@ Before we even start to build our query, we need to transform a string into a ge
 
 First we have the \textsf{trimming phase}. Here, we remove all whitespace surrounding our query, i.e. at the beginning and the end. Although the Lucene documentation does not explicitly state this as a requirement, we wanted to make sure it does not cause any undefined behaviour.
 
-Next, we transform our string into lowercase format. Let's call this the \textsf{lowercase transformation phase}. This was done because Lucene is by default case-sensitive and via transforming all and any data to lowercase, we bypass this strange condition Lucene forces upon its users. Of course, this also requires our documents to be transformed in a similar manner (see sections \ref{sec:indexing} and \ref{sec:optimizations}).
+Next, we transform our string into lowercase format. Let's call this the \textsf{lowercase transformation phase}. This was done because matching on capitalization is not useful within our problem domain. Of course, this also requires our documents to be transformed in a similar manner (see sections \ref{sec:indexing} and \ref{sec:optimizations}).
 
 Finally, there is the \textsf{alphanumerisation phase}\footnote{Or that's at least how we called it.}. Here, we will remove all special characters from our queries, seeing as they will only cause issues and strange behaviour (i.e. leaving a period in the query could result in the match of any character). Admittedly, in doing so we loose the ability to match hyphenated words and other special cases like the query ``\texttt{c++}''. It was our hypothesis that these words would not take up too much of the language and thus are irrelevant in this context.
 
@@ -162,14 +168,14 @@ Assuming our query is stored in the variable \texttt{word}, these three phases l
 word.strip().toLowerCase().replaceAll("[^a-z0-9 ]", "")
 \end{lstlisting}
 
-Note that this only applies for the query itself, as far as the documents (and their fields) are concerned, we would like to refer to sections \ref{sec:indexing} and \ref{sec:optimizations}.
+Note that this only applies for the query itself. As will be discussed in section \ref{sec:optimizations}, for the documents themselves, this will be achieved via applying some additional filters to the analyzer.
 
 \subsection{String Separation}
 As you might have guessed from the previous section, we have only removed all whitespace from the beginning and the end of our string. All spaces in the middle are left and for good reason. They tell our system that all of those words \textbf{must} appear together.
 
 If we look at Google and how they go about spaces, you might be able to deduce from the url, that they replace all spaces with an \texttt{AND}-gate (the plus sign). This not only allows words to be in a different word order, but also allows words not to be next to one another. This method works wonders for Google, so why wouldn't it be in our system?
 
-Let's say we have the query ``\texttt{python database setup}''. Even though Lucene will probably add implicit \texttt{AND}-gates, we want to enforce that these three words occur together (not necessarily in that order, or next to one another). Thus, we will add explicit \texttt{AND}-gates between them. Therefore, we obtain the query ``\texttt{python AND database AND setup}'' as an input to Lucene.
+Let's say we have the query ``\texttt{python database setup}''. By default, Lucene adds an \texttt{OR}-gate between these terms, but we want to enforce that these three words occur together (not necessarily in that order, or next to one another). Thus, we will add explicit \texttt{AND}-gates between them. Therefore, we obtain the query ``\texttt{python AND database AND setup}'' as an input to Lucene.
 
 For the further query building, we will be looking at this list of whitespace-less strings, separated with an \texttt{AND}. Such an individual string will be referred to as a ``\textit{term}''.
 \begin{lstlisting}[language=Java]
@@ -183,8 +189,7 @@ Fuzzy search is a powerful tool. It allows a search engine to find words that ar
 In Lucene no spell checking is used by default, but there are multiple ways to obtain fuzzy search.
 \begin{itemize}
     \item Use the Lucene query syntax for fuzzy search. This is done via adding the tilde ($\sim$) to the back of a term. In exploring how Lucene works and what influence this syntax had, we have found it does not fully accomplish what we want to achieve.\\
-    By default, this syntax will allow words to be at most 50\% different. Within this context, the word ``\texttt{bear}'' will also match ``\texttt{beer}'', ``\texttt{boar}'', ``\texttt{bend}'', ``\texttt{fear}'', ``\texttt{feat}'', ``\texttt{rear}'' and ``\texttt{zeal}'' to name a few. All of the words mentioned above are real words, but the similarity measure does not make that assumption. Words like ``\texttt{glar}'', ``\texttt{qeaq}'' and ``\texttt{eeaa}'' does not exist in the English language, but will also be matched. Hypothetically, a set of documents on a fictional alien language might use these non-existing words a lot. If there are very few documents describing bears in the dataset, I might get a lot of fictional alien language information, while I did not want this.\\
-    On top of that, it is unclear from the documentation if this also applies to words with different lengths, which is another reason we don't want to do this.
+    By default, this syntax will allow words to be at most 50\% different. Within this context, the word ``\texttt{bear}'' will also match ``\texttt{beer}'', ``\texttt{boar}'', ``\texttt{bend}'', ``\texttt{fear}'', ``\texttt{feat}'', ``\texttt{rear}'' and ``\texttt{zeal}'' to name a few. All of the words mentioned above are real words, but the similarity measure does not make that assumption. Words like ``\texttt{glar}'', ``\texttt{qeaq}'' and ``\texttt{eeaa}'' does not exist in the English language, but will also be matched. Hypothetically, a set of documents on a fictional alien language might use these non-existing words a lot. If there are very few documents describing bears in the dataset, I might get a lot of fictional alien language information, while I did not want this.
     \item Use Lucene wildcards. While at first sight, this might be a good idea, on second thought there are way too many issues with this method. First, a term is not allowed to start with a wildcard (presumably because it would make it left-recursive). Secondly, there are way too many possible locations to add wildcards. Do you add them between all letters? Do you replace all letters? Do you do a combination of the two? For this combination method and an $n$-letter word, there are $2^{2(n - 1)}$ possibilities for adding wildcards.\\
     For instance, in a 5-letter word ``\texttt{abcde}'', wildcards can be located at the letter locations (except for the \texttt{a}), or between all letters, giving us $2^{4+4} = 2^{2(5-1)} = 2^8 = 256$ possibilities.
     \item Generate all possible replacements for a term. We have an alphabet of 26 letters and 10 different digits with whom we can replace every single letter. But we hit the same wall as with the wildcards, only with a much higher set of possibilities ($36^{n}$ instead of $2^{2n-1}$). Figure \ref{fig:wa} shows that, no matter the value of $n$, this option will always yield more possibilities.
@@ -195,7 +200,7 @@ In Lucene no spell checking is used by default, but there are multiple ways to o
         \label{fig:wa}
     \end{figure}\\
     On top of that, if we say that we only replace one or two letters at a time, there are still unexplored options. Let's say we want to look for ``\texttt{code}'', but accidentally only type ``\texttt{cod}'', this method will not find the right documents.
-    \item Lucene has this \texttt{SpellChecker} class that can suggest the $n$ closest words in the dictionary of all files. This method allows us to resolve typos and tweak the amount of possible replacements\footnote{It's illogical that each word should match all of its possibilities. From ``\texttt{bear}'' to ``\texttt{beard}'', ``\texttt{boar}'' or ``\texttt{beer}'' are smaller changes than replacing it with ``\texttt{glar}''.}. For our purposes, we assumed 5 similar words (and the current one, making it 6 checks) should do the trick. We merge them all together in one big \texttt{OR}-gate for each term.
+    \item Lucene has this \texttt{SpellChecker} class that can suggest the $n$ closest words in the dictionary of all files. This method allows us to resolve typos and tweak the amount of possible replacements\footnote{It's illogical that each word should match all of its possibilities. From ``\texttt{bear}'' to ``\texttt{beard}'', ``\texttt{boar}'' or ``\texttt{beer}'' are smaller changes than replacing it with ``\texttt{glad}''.}. For our purposes, we assumed 5 similar words (and the current one, making it 6 checks) should do the trick. We merge them all together in one big \texttt{OR}-gate for each term.
 \end{itemize}
 As you can guess, we have decided on the latter option, which can be implemented as follows (assume \texttt{term} is our term):
 \begin{lstlisting}[language=Java]
@@ -259,18 +264,18 @@ Each question in our dataset has a group of \textit{tags} associated to it. Thes
 
 For instance, a question that concerns ``\texttt{efficient string comparison in python}'', with tags ``\texttt{string-comparison}'' and ``\texttt{python}'' must be a document that is returned when looking for ``\texttt{python}'', ``\texttt{string-comparison}'', or ``\texttt{python string-comparison}''\footnote{Please denote that ``\texttt{string-comparison}'' is used as a tag for readability of this report, but internally, in our code, this is one of the tags we won't process (see further).}.
 
-Now, how do we go about doing this? On indexing time, we will keep some sort of a query cache\footnote{It is slightly more efficient to do this at indexing time, but it is perfectly doable to do this afterwards, in the actual performance checking.}. This cache is a list of strings that we can use as queries for benchmark purposes. For every question we have in our dataset, we create a new entry in this cache, concerning all unique possible combinations of the set of \textit{tags} for this question. For instance, the tags ``\texttt{python}'', ``\texttt{c}'' and ``\texttt{java}'' become the entries \{``\texttt{python}'', ``\texttt{c}'', ``\texttt{java}'', ``\texttt{c python}'', ``\texttt{java python}'', ``\texttt{c java}'', ``\texttt{c java python}''\} (notice the alphabetical ordering).
+Now, how do we go about doing this? On indexing time, we will keep some sort of a query cache\footnote{It is slightly more efficient to do this at indexing time, but it is perfectly doable to do this afterwards, in the actual performance checking.}. This cache is a list of strings that we can use as queries for benchmark purposes. For every question we have in our dataset, we create a new entry in this cache, concerning all unique possible combinations of the set of \textit{tags} for this question. For instance, the tags ``\texttt{python}'', ``\texttt{c}'' and ``\texttt{java}'' become the entries \{``\texttt{c}'', ``\texttt{java}'', ``\texttt{python}'', ``\texttt{c python}'', ``\texttt{java python}'', ``\texttt{c java}'', ``\texttt{c java python}''\} (notice the alphabetical ordering).
 
 Because we know there are a lot of queries that will be created with this method, we will not concern ourselves with tags that contain anything but alphabetical characters and discard those entries entirely.
 
-Of course, this also implies that we will remove the \textit{tags} from the fields we search on, otherwise we will always retrieve a perfect score, making an entire benchmark study useless.
+Of course, this also implies that we will remove the \textit{tags} from the fields we search on, because this would not make too much sense\footnote{Some experimentation has shown that, in practice, this is not necessary, because the results will be roughly the same.}.
 
 \subsection{Performance Scoring}
 And then comes the scoring phase. For all of these queries, we will determine both the scores and its relevance of all documents as discussed above. This gives us two general information files.
 
 The first one is a results file that states for each question how good it performed on which queries. Secondly, there is a relevance file where each query maps to a list of question ids. These ids represent the questions that were marks ``\textit{correct}'' for the corresponding query.
 
-A \textsf{Hapax Legomenon} (or a \textsf{hapax} for short) is a word or a concept that only occurs only once in a given context (see \cite{hapax}). Within our context, we can state that a query is a \textsf{hapax} if there is only one document that uses it. Or, in layman's terms, a \textit{tag} (or a set thereof) that is only used by a single question. These do not give an accurate representation of our dataset, so we remove them on the whole. Similarly, we believe that a \textit{tag} that's only used by two questions does not provide enough information for our data.
+A \textsf{Hapax Legomenon} (or a \textsf{hapax} for short) is a word or a concept that only occurs only once in a given context (see \cite{hapax}). Within our context, we can state that a \textit{tag} is a \textsf{hapax} if there is only one document that uses it. Or, in layman's terms, a \textit{tag} (or a set thereof) that is only used by a single question. These do not give an accurate representation of our dataset, so we remove them on the whole. Similarly, we believe that a \textit{tag} that's only used by two questions does not provide enough information for our data.
 
 From the $20\,710$ different \textit{tag} combinations that were used as queries, we will only look at the $2\,099$ queries that were able to mark more than two questions as being ``\textit{correct}''.
 
@@ -282,17 +287,18 @@ Because this will yield a lot of curves, most of which without any significant f
 \subsubsection{Initial Score}
 Using the \texttt{StandardAnalyzer} of Lucene\footnote{Which does a lot behind the scenes, including (but not limited to) removing stopwords and lowercase transformations}, the scores are computed as described above. This gives us an idea how well Lucene initially performs.
 
-Using the averaged PR- and ROC-curves to visualize the results, we can conclude from Figure \ref{fig:initBP}, Lucene is not doing such a great job for the task at hand.
+Using the averaged PR- and ROC-curves to visualize the results, we can conclude from Figure \ref{fig:initBP}, Lucene is doing an ok job for the task at hand, but nothing spectacular.
 
 Do note that this graph is generated from all $20\,710$ queries to give a general picture, but that, for time constraints, we reduced this list to the first $1\,000$ queries in our further experimentation.
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth]{images/StandardAnalyzer}
-    \caption{Results initial Benchmark Performance}
+    \caption{Results initial Benchmark Performance. $AUC = 0.74$}
     \label{fig:initBP}
 \end{figure}
 
+<<<<<<< Updated upstream
 \subsection{Scoring Models}
 To check whether the scoring models have any influence on the performance, the different \texttt{Similarity} measures have been used: \texttt{TFIDFSimilarity}\footnote{\texttt{org.apache.lucene.search.similarities.TFIDFSimilarity}} and \texttt{BooleanSimilarity}\footnote{\texttt{org.apache.lucene.search.similarities.BooleanSimilarity}}. 
 
@@ -310,6 +316,13 @@ Different similarity measurements have an impact on the performance of the syste
 	\caption{An overview of the standard Analyzer using a Tf-Idf Similarity measurement}
 	\label{fig:tfidf}
 \end{figure}
+=======
+% -> JOOST: Similarity scoring models
+% Analyze the result
+
+\subsection{Scoring Models}\label{sec:scmodels}
+To check whether the scoring models have any influence on the performance, the different \texttt{Similarity} measures have been used: the default similarity, \texttt{TFIDFSimilarity}\footnote{\texttt{org.apache.lucene.search.similarities.TFIDFSimilarity}} and \texttt{BooleanSimilarity}\footnote{\texttt{org.apache.lucene.search.similarities.BooleanSimilarity}}. Remarkably, these measurements don't score/find any new documents, but rather optimize the scores of any documents that were already found with other methods.
+>>>>>>> Stashed changes
 
 \section{Optimizations}\label{sec:optimizations}
 As was clear from figure \ref{fig:initBP}, we can do better. This is why we will try to optimize our algorithms, in the hope of obtaining better results. In order to achieve this goal, we will reimplement the \texttt{StandardAnalyzer} as a basis for our \texttt{MyCustomAnalyzer} and work from there.
@@ -319,23 +332,23 @@ As discussed in depth in section \ref{sec:query}, we will transform our fields s
 
 This is done via adding a \texttt{PatternReplaceFilter}\footnote{\texttt{org.apache.lucene.analysis.pattern.PatternReplaceFilter}} and a \texttt{TrimFilter}\footnote{\texttt{org.apache.lucene.analysis.miscellaneous.TrimFilter}} in our \texttt{Analyzer}.
 
-In figure \ref{fig:alphanumeric}, you can find the optimizations that came from the application of these filters. As you can see, there is not a lot of performance increase to be had, compared to the original graphs.
+In figure \ref{fig:alphanumeric}, you can find that the application of these filters yielded a worse result.
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth]{images/customAna-trim}
-    \caption{Results Benchmark Performance with Initial Filters}
+    \caption{Results Benchmark Performance with Initial Filters. $AUC = 0.68$}
     \label{fig:alphanumeric}
 \end{figure}
 
 \subsubsection{Word Delimiter}\label{sec:word-delimiter}
 The \texttt{StandardTokenizer} will be extended with a \texttt{WordDelimiterGraphFilter}\footnote{\texttt{org.apache.lucene.analysis.miscellaneous.WordDelimiterGraphFilter}}. This will split the words into multiple subwords and performs optional transformations on subword groups. \cite{lucene}
 
-For example, if someone wants to search for \texttt{``Macbook''}, but the user types \texttt{``Mac Book''}. The WordDelimiter will catch this query because the word \texttt{``Macbook''} will internally saved as $\{``Mac'', ``Book'', ``Macbook''\}$. This way, we can cope with different cases of compound words.
+For example, if someone wants to search for \texttt{``Macbook''}, but the user types \texttt{``Mac Book''}. The WordDelimiter will catch this query because the word \texttt{``Macbook''} will internally saved as \{``\texttt{Mac}'', ``\texttt{Book}'', ``\texttt{Macbook}''\}. This way, we can cope with different cases of compound words.
 
 At first, it sounds like a good idea, but, unfortunately, it doesn't have a huge impact on the performance. It even results in the same PR- and ROC-cuves as Figure \ref{fig:alphanumeric}!
 
 \subsubsection{Stemming}\label{sec:stemming}
-Next, stemming\footnote{\texttt{org.apache.lucene.analysis.PorterStemFilter}} has been added to the analyzer such that multiple variants of a word are mapped to the same word (i.e. plurals are mapped to its singular). This already has an impact on the performance, there is an increase of 3\% that the analyzer will be able to distinguish between positive and negative class.
+Next, stemming\footnote{\texttt{org.apache.lucene.analysis.PorterStemFilter}} has been added to the analyzer such that multiple variants of a word are mapped to the same word (i.e. plurals are mapped to its singular). This already has an impact on the performance, there is an increase of 3\% (compared to the previous plots) that the analyzer will be able to distinguish between positive and negative class.
 
 \begin{figure}[h!]
     \centering
@@ -347,7 +360,7 @@ Next, stemming\footnote{\texttt{org.apache.lucene.analysis.PorterStemFilter}} ha
 \subsubsection{$n$-grams}\label{sec:ngrams}
 Now, let's see what happens if we divide the words into tuples of length $n$. This is called $n$-gram filtering\footnote{\texttt{org.apache.lucene.analysis.ngram.NGramTokenFilter}}. We tried 6 different values for $n = \{2, 3, 5, 6, 8\}$.
 
-For all $n$, the results are terrible (see figures \ref{fig:ngram2}, \ref{fig:ngram3}, \ref{fig:ngram5}, \ref{fig:ngram6}, \ref{fig:ngram8}). We have no idea if this is due to how we've built our queries, or if it comes from the way we're using the data. Our best guess would be that $n$-grams are technically only interesting to use if you were to allow wildcards and the queries on which we test don't use them.
+For all $n$, the results are terrible (see respective figures \ref{fig:ngram2}, \ref{fig:ngram3}, \ref{fig:ngram5}, \ref{fig:ngram6}, \ref{fig:ngram8}). We have no idea if this is due to how we've built our queries, or if it comes from the way we're using the data. Our best guess would be that $n$-grams are technically only interesting to use if you were to allow wildcards and the queries on which we test don't use them.
 
 The empty plots you see are, in fact, PR-curves that have a precision close to 0, no matter the value for the recall.
 
@@ -387,9 +400,9 @@ It is clear we get better results without the usage of $n$-grams, which is why w
 \subsection{Manual Thesaurus-Based Query Expansion}\label{sec:synonyms}
 A thesaurus is a list of synonyms. For each term in our dictionary, we may create such a list to associate the words with. Theoretically, this should increase our general recall, but may decrease precision, especially when we're talking about homonyms and such.
 
-As a last improvement, we create such a filter\footnote{\texttt{org.apache.lucene.analysis.synonym.SynonymFilter}} and add it to the analyzer. This way, for each word we see, a set of synonyms will be associated with it, using a \texttt{SynonymMap}\footnote{\texttt{org.apache.lucene.analysis.synonym.SynonymMap}}. Use used an offline dictionary of thesaurus, \cite{synonyms}, which is built with approximately 169,000 English words.
+As a last improvement, we create such a filter\footnote{\texttt{org.apache.lucene.analysis.synonym.SynonymFilter}} and add it to the analyzer. This way, for each word we see, a set of synonyms will be associated with it, using a \texttt{SynonymMap}\footnote{\texttt{org.apache.lucene.analysis.synonym.SynonymMap}}. Use used an offline dictionary of thesaurus, \cite{synonyms}, which is built with approximately $169\,000$ English words and is two-directional.
 
-Unfortunately, the performance results give a terrible result (see also figure \ref{fig:synonyms}).
+Unfortunately, the performance results give a terrible result (see also figure \ref{fig:synonyms}). We believe this is because most words listed in this dictionary do not apply to the search queries we're testing out.
 \begin{figure}[htp]
 	\centering
 	\includegraphics[width=\textwidth]{images/customAna-synonyms}

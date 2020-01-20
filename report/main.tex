@@ -132,7 +132,7 @@ Here, we would search for a query \texttt{q} and return at most \texttt{cnt} doc
 
 Allow us to emphasize that this quote comes unedited from their own website, basically stating that Lucene does not always works the way you want it to work, an issue we have experienced on numerous occasions during this project.
 
-\subsubsection{Similarity Scoring}
+\subsubsection{Similarity Scoring}\label{sec:ss}
 From \cite{lucene}, we can also conclude how its scoring actually works internally. From the course, we know there must be some similarity checking formula at work. We find that Lucene makes use of the \textsf{VSM score}, better known as the \textsf{cosine simularity} (with $V(q)$ and $V(d)$ weighed query vectors):
 $$cosine\_similarity(q, d) = \frac{V(q)\cdot V(d)}{\vert V(q)\vert\cdot\vert V(d)\vert}$$
 Its scoring formula therefore becomes:
@@ -293,11 +293,23 @@ Do note that this graph is generated from all $20\,710$ queries to give a genera
     \label{fig:initBP}
 \end{figure}
 
-% -> JOOST: Similarity scoring models
-% Analyze the result
-
 \subsection{Scoring Models}
-To check whether the scoring models have any influence on the performance, the different \texttt{Similarity} measures have been used: the default similarity, \texttt{TFIDFSimilarity}\footnote{\texttt{org.apache.lucene.search.similarities.TFIDFSimilarity}} and \texttt{BooleanSimilarity}\footnote{\texttt{org.apache.lucene.search.similarities.BooleanSimilarity}}. Remarkably, these measurements don't score/find any new documents, but rather optimize the scores of any documents that were already found with other methods.
+To check whether the scoring models have any influence on the performance, the different \texttt{Similarity} measures have been used: \texttt{TFIDFSimilarity}\footnote{\texttt{org.apache.lucene.search.similarities.TFIDFSimilarity}} and \texttt{BooleanSimilarity}\footnote{\texttt{org.apache.lucene.search.similarities.BooleanSimilarity}}. 
+
+Different similarity measurements have an impact on the performance of the system. Figure \ref{fig:bool} gives an overview of the boolean similairty where the terms score is equal to their query boost. The other measurement is the Tf-Idf similiartity; this scores the documents based on the cosine similarity in a VSM as described in section \ref{sec:ss}. The Tf-Idf have much better performance results, that's why we will use the scoring model Tf-Idf for analyzing the documents.
+
+\begin{figure}[htp]
+	\centering
+	\includegraphics[width=\textwidth]{images/Boolean-Standard}
+	\caption{An overview of the standard Analyzer using a Boolean Similarity measurement}
+	\label{fig:bool}
+\end{figure}
+\begin{figure}[htp]
+	\centering
+	\includegraphics[width=\textwidth]{images/Tfidf-standard}
+	\caption{An overview of the standard Analyzer using a Tf-Idf Similarity measurement}
+	\label{fig:tfidf}
+\end{figure}
 
 \section{Optimizations}\label{sec:optimizations}
 As was clear from figure \ref{fig:initBP}, we can do better. This is why we will try to optimize our algorithms, in the hope of obtaining better results. In order to achieve this goal, we will reimplement the \texttt{StandardAnalyzer} as a basis for our \texttt{MyCustomAnalyzer} and work from there.

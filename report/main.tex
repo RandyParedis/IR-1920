@@ -134,11 +134,7 @@ Here, we would search for a query \texttt{q} and return at most \texttt{cnt} doc
 
 Allow us to emphasize that this quote comes unedited from their own website, basically stating that Lucene does not always works the way you want it to work, an issue we have experienced on numerous occasions during this project (especially in section \ref{sec:rocchio}).
 
-<<<<<<< Updated upstream
 \subsubsection{Similarity Scoring}\label{sec:ss}
-=======
-\subsubsection{Similarity Scoring}\label{sec:sim}
->>>>>>> Stashed changes
 From \cite{lucene}, we can also conclude how its scoring actually works internally. From the course, we know there must be some similarity checking formula at work. We find that Lucene makes use of the \textsf{VSM score}, better known as the \textsf{cosine simularity} (with $V(q)$ and $V(d)$ weighed query vectors):
 $$cosine\_similarity(q, d) = \frac{V(q)\cdot V(d)}{\vert V(q)\vert\cdot\vert V(d)\vert}$$
 Its scoring formula therefore becomes:
@@ -148,7 +144,7 @@ Its scoring formula therefore becomes:
 \end{align*}
 
 \section{Query Building}\label{sec:query}
-Even though Lucene makes use of a Vector Space Model (VSM), it is by default completely hidden. On top of that, we haven't found any information (nor in the documentation, nor anywhere online) on how to search the dataset by vector. We would have to create our own scoring system, an idea we quickly discarded because of the massive size of our data\footnote{We also discarded this idea because we did not believe this was intended with the assignment. In fact, the fast and efficient workings of the similarity checking as described in section \ref{sec:sim} was a major influence in this decision.}. Instead, we decided to use the builtin binary query system, which is tested and optimized for searching\footnote{On top of that, it is impossible to obtain the VSM without giving such a query string.}.
+Even though Lucene makes use of a Vector Space Model (VSM), it is by default completely hidden. On top of that, we haven't found any information (nor in the documentation, nor anywhere online) on how to search the dataset by vector. We would have to create our own scoring system, an idea we quickly discarded because of the massive size of our data\footnote{We also discarded this idea because we did not believe this was intended with the assignment. In fact, the fast and efficient workings of the similarity checking as described in section \ref{sec:ss} was a major influence in this decision.}. Instead, we decided to use the builtin binary query system, which is tested and optimized for searching\footnote{On top of that, it is impossible to obtain the VSM without giving such a query string.}.
 
 To allow for simple manipulations of the queries we introduced the notion of a \texttt{QueryBuilder}. Based on a string with the valid search criteria, we create a query that follows the Lucene query syntax and remains conform with the inputted data. Even though this may seem as an unnecessary additional parsing step, it will become useful later on.
 
@@ -282,24 +278,28 @@ From the $20\,710$ different \textit{tag} combinations that were used as queries
 \subsubsection{PR and ROC}
 For each query in this set of $2\,099$ unique \textit{tag} combinations, we can now determine the top-$k$ precision, recall and fallout (as is shown in the lecture slides), which allows us to create the Precision-Recall (PR) Curve and the ROC-Curve for each query.
 
-Because this will yield a lot of curves, most of which without any significant features, we have decided to represent the overall information as an average of all of these curves.
+Because this will yield a lot of curves, most of which without any significant features, we have decided to represent the PR and ROC as an upper bound (i.e. the curve that is generally higher than all values). Note that this may give a skewed view of our results, but it seemed the most doable option. We tried using (weighed) averages, minimals, differences..., but unfortunately all of these resulted in plots with strange artifacts. An example of such a plot is shown in figure \ref{fig:artifact}.
+
+\begin{figure}[htp]
+	\centering
+	\includegraphics[width=\textwidth]{images/artifact}
+	\caption{PR/ROC plots with artifacts due to maximization}
+	\label{fig:artifact}
+\end{figure}
 
 \subsubsection{Initial Score}
 Using the \texttt{StandardAnalyzer} of Lucene\footnote{Which does a lot behind the scenes, including (but not limited to) removing stopwords and lowercase transformations}, the scores are computed as described above. This gives us an idea how well Lucene initially performs.
 
 Using the averaged PR- and ROC-curves to visualize the results, we can conclude from Figure \ref{fig:initBP}, Lucene is doing an ok job for the task at hand, but nothing spectacular.
 
-Do note that this graph is generated from all $20\,710$ queries to give a general picture, but that, for time constraints, we reduced this list to the first $1\,000$ queries in our further experimentation.
-
-\begin{figure}[h!]
+\begin{figure}[htp]
     \centering
     \includegraphics[width=\textwidth]{images/StandardAnalyzer}
-    \caption{Results initial Benchmark Performance. $AUC = 0.74$}
+    \caption{Results initial Benchmark Performance.}
     \label{fig:initBP}
 \end{figure}
 
-<<<<<<< Updated upstream
-\subsection{Scoring Models}
+\subsection{Scoring Models}\label{sec:scmodels}
 To check whether the scoring models have any influence on the performance, the different \texttt{Similarity} measures have been used: \texttt{TFIDFSimilarity}\footnote{\texttt{org.apache.lucene.search.similarities.TFIDFSimilarity}} and \texttt{BooleanSimilarity}\footnote{\texttt{org.apache.lucene.search.similarities.BooleanSimilarity}}. 
 
 Different similarity measurements have an impact on the performance of the system. Figure \ref{fig:bool} gives an overview of the boolean similairty where the terms score is equal to their query boost. The other measurement is the Tf-Idf similiartity; this scores the documents based on the cosine similarity in a VSM as described in section \ref{sec:ss}. The Tf-Idf have much better performance results, that's why we will use the scoring model Tf-Idf for analyzing the documents.
@@ -316,13 +316,6 @@ Different similarity measurements have an impact on the performance of the syste
 	\caption{An overview of the standard Analyzer using a Tf-Idf Similarity measurement}
 	\label{fig:tfidf}
 \end{figure}
-=======
-% -> JOOST: Similarity scoring models
-% Analyze the result
-
-\subsection{Scoring Models}\label{sec:scmodels}
-To check whether the scoring models have any influence on the performance, the different \texttt{Similarity} measures have been used: the default similarity, \texttt{TFIDFSimilarity}\footnote{\texttt{org.apache.lucene.search.similarities.TFIDFSimilarity}} and \texttt{BooleanSimilarity}\footnote{\texttt{org.apache.lucene.search.similarities.BooleanSimilarity}}. Remarkably, these measurements don't score/find any new documents, but rather optimize the scores of any documents that were already found with other methods.
->>>>>>> Stashed changes
 
 \section{Optimizations}\label{sec:optimizations}
 As was clear from figure \ref{fig:initBP}, we can do better. This is why we will try to optimize our algorithms, in the hope of obtaining better results. In order to achieve this goal, we will reimplement the \texttt{StandardAnalyzer} as a basis for our \texttt{MyCustomAnalyzer} and work from there.
@@ -332,25 +325,25 @@ As discussed in depth in section \ref{sec:query}, we will transform our fields s
 
 This is done via adding a \texttt{PatternReplaceFilter}\footnote{\texttt{org.apache.lucene.analysis.pattern.PatternReplaceFilter}} and a \texttt{TrimFilter}\footnote{\texttt{org.apache.lucene.analysis.miscellaneous.TrimFilter}} in our \texttt{Analyzer}.
 
-In figure \ref{fig:alphanumeric}, you can find that the application of these filters yielded a worse result.
-\begin{figure}[h!]
+In figure \ref{fig:alphanumeric}, you can find that there was no significant difference compared to the original plot.
+\begin{figure}[htp]
     \centering
     \includegraphics[width=\textwidth]{images/customAna-trim}
-    \caption{Results Benchmark Performance with Initial Filters. $AUC = 0.68$}
+    \caption{Results Benchmark Performance with Initial Filters.}
     \label{fig:alphanumeric}
 \end{figure}
 
 \subsubsection{Word Delimiter}\label{sec:word-delimiter}
 The \texttt{StandardTokenizer} will be extended with a \texttt{WordDelimiterGraphFilter}\footnote{\texttt{org.apache.lucene.analysis.miscellaneous.WordDelimiterGraphFilter}}. This will split the words into multiple subwords and performs optional transformations on subword groups. \cite{lucene}
 
-For example, if someone wants to search for \texttt{``Macbook''}, but the user types \texttt{``Mac Book''}. The WordDelimiter will catch this query because the word \texttt{``Macbook''} will internally saved as \{``\texttt{Mac}'', ``\texttt{Book}'', ``\texttt{Macbook}''\}. This way, we can cope with different cases of compound words.
+For example, if someone wants to search for ``\texttt{Macbook}'', but the user types ``\texttt{Mac Book}''. The WordDelimiter will catch this query because the word ``\texttt{Macbook}'' will internally saved as \{``\texttt{Mac}'', ``\texttt{Book}'', ``\texttt{Macbook}''\}. This way, we can cope with different cases of compound words.
 
-At first, it sounds like a good idea, but, unfortunately, it doesn't have a huge impact on the performance. It even results in the same PR- and ROC-cuves as Figure \ref{fig:alphanumeric}!
+At first, it sounds like a good idea, but, unfortunately, it doesn't have a huge impact on the performance. It even results in the same PR- and ROC-cuves as Figure \ref{fig:alphanumeric}! We believe this is because this kind of filter does not apply for our current set of queries.
 
 \subsubsection{Stemming}\label{sec:stemming}
-Next, stemming\footnote{\texttt{org.apache.lucene.analysis.PorterStemFilter}} has been added to the analyzer such that multiple variants of a word are mapped to the same word (i.e. plurals are mapped to its singular). This already has an impact on the performance, there is an increase of 3\% (compared to the previous plots) that the analyzer will be able to distinguish between positive and negative class.
+Next, stemming\footnote{\texttt{org.apache.lucene.analysis.PorterStemFilter}} has been added to the analyzer such that multiple variants of a word are mapped to the same word (i.e. plurals are mapped to its singular). Strangely enough, there is no performance increase on this front, as you may be able to deduce from figure \ref{fig:stemming}. (Yes, it looks once more like the very same plot, possibly because of the way we generate the plots.)
 
-\begin{figure}[h!]
+\begin{figure}[htp]
     \centering
     \includegraphics[width=\textwidth]{images/customAna-stem}
     \caption{Results Analyzer extended with Stemming}
@@ -358,9 +351,9 @@ Next, stemming\footnote{\texttt{org.apache.lucene.analysis.PorterStemFilter}} ha
 \end{figure}
 
 \subsubsection{$n$-grams}\label{sec:ngrams}
-Now, let's see what happens if we divide the words into tuples of length $n$. This is called $n$-gram filtering\footnote{\texttt{org.apache.lucene.analysis.ngram.NGramTokenFilter}}. We tried 6 different values for $n = \{2, 3, 5, 6, 8\}$.
+Now, let's see what happens if we divide the words into tuples of length $n$. This is called $n$-gram filtering\footnote{\texttt{org.apache.lucene.analysis.ngram.NGramTokenFilter}}. We tried 6 different values for $n = \{2, 3, 4, 5, 6, 8\}$.
 
-For all $n$, the results are terrible (see respective figures \ref{fig:ngram2}, \ref{fig:ngram3}, \ref{fig:ngram5}, \ref{fig:ngram6}, \ref{fig:ngram8}). We have no idea if this is due to how we've built our queries, or if it comes from the way we're using the data. Our best guess would be that $n$-grams are technically only interesting to use if you were to allow wildcards and the queries on which we test don't use them.
+For all $n$, the ROC curve is almost identical to the previous ones, but it's the PR curve that's giving an interesting result. In figure \ref{fig:ngram4}, you will find an example of such a plot (for $n = 4$). We have no idea if this result is due to how we've built our queries, or if it comes from the way we're using the data. Our best guess would be that $n$-grams are technically only interesting to use if you were to allow wildcards and the queries on which we test don't use them.
 
 The empty plots you see are, in fact, PR-curves that have a precision close to 0, no matter the value for the recall.
 
@@ -368,33 +361,9 @@ It is clear we get better results without the usage of $n$-grams, which is why w
 
 \begin{figure}[htp]
     \centering
-    \includegraphics[width=\textwidth]{images/customAna-n2}
-    \caption{An overview of the extended Analyzer for $n$-gram filtering, where $n = 2$. $AUC = 0.5$}
-    \label{fig:ngram2}
-\end{figure}
-\begin{figure}[htp]
-	\centering
-	\includegraphics[width=\textwidth]{images/customAna-n3}
-	\caption{An overview of the extended Analyzer for $n$-gram filtering, where $n = 3$. $AUC = 0.5$}
-	\label{fig:ngram3}
-\end{figure}
-\begin{figure}[htp]
-	\centering
-	\includegraphics[width=\textwidth]{images/customAna-n5}
-	\caption{An overview of the extended Analyzer for $n$-gram filtering, where $n = 5$. $AUC = 0.46$}
-	\label{fig:ngram5}
-\end{figure}
-\begin{figure}[htp]
-	\centering
-	\includegraphics[width=\textwidth]{images/customAna-n6}
-	\caption{An overview of the extended Analyzer for $n$-gram filtering, where $n = 6$. $AUC = 0.46$}
-	\label{fig:ngram6}
-\end{figure}
-\begin{figure}[htp]
-\centering
-\includegraphics[width=\textwidth]{images/customAna-n8}
-\caption{An overview of the extended Analyzer for $n$-gram filtering, where $n = 8$. $AUC = 0.60$}
-\label{fig:ngram8}
+    \includegraphics[width=\textwidth]{images/customAna-n4}
+    \caption{An overview of the extended Analyzer for $n$-gram filtering, where $n = 4$.}
+    \label{fig:ngram4}
 \end{figure}
 
 \subsection{Manual Thesaurus-Based Query Expansion}\label{sec:synonyms}
@@ -402,26 +371,19 @@ A thesaurus is a list of synonyms. For each term in our dictionary, we may creat
 
 As a last improvement, we create such a filter\footnote{\texttt{org.apache.lucene.analysis.synonym.SynonymFilter}} and add it to the analyzer. This way, for each word we see, a set of synonyms will be associated with it, using a \texttt{SynonymMap}\footnote{\texttt{org.apache.lucene.analysis.synonym.SynonymMap}}. Use used an offline dictionary of thesaurus, \cite{synonyms}, which is built with approximately $169\,000$ English words and is two-directional.
 
-Unfortunately, the performance results give a terrible result (see also figure \ref{fig:synonyms}). We believe this is because most words listed in this dictionary do not apply to the search queries we're testing out.
+To our surprise there was a slight increase in performance (approximately 3\% in terms of AUC), meaning that the some synonyms were actually needed to score better. This is shown in figure \ref{fig:synonyms}.
 \begin{figure}[htp]
 	\centering
-	\includegraphics[width=\textwidth]{images/customAna-synonyms}
-	\caption{An overview of the extended Analyzer for manual thesaurus-based query expansion. $AUC = 0.52$}
+	\includegraphics[width=\textwidth]{images/customAna-synonym}
+	\caption{An overview of the extended Analyzer for manual thesaurus-based query expansion.}
 	\label{fig:synonyms}
 \end{figure}
 
 
 \subsection{Final Results}
-A final result of our benchmarking study can be found in figure \ref{fig:final}, where everything comes together: lower case conversion, trimming, removing of non-alphanumeric values, word delimiters, stemming, and thesaurus-based manual query-expansion.
+A final result of our benchmarking study can be found in figure \ref{fig:synonyms}, where everything comes together: lower case conversion, trimming, removing of non-alphanumeric values, word delimiters, stemming, and thesaurus-based manual query-expansion.
 
 Note that $n$-grams are not included in this result.
-
- \begin{figure}[h!]
-     \centering
-     \includegraphics[width=\textwidth]{images/customAna-stem}
-     \caption{Results Benchmarking with word delimiters and stemming.}
-     \label{fig:final}
- \end{figure}
 
 \section{Rocchio Algorithm}\label{sec:rocchio}
 Next, we wanted to apply the \textsf{Rocchio} algorithm for pseudo-relevance feedback. It's principle is simple: we search for a query, mark some documents as ``\textit{relevant}'' and change the angle of our query vector so it is located in the center of the cluster of relevant documents\footnote{Note that this method assumes all relevant documents are located in the same cluster.}.

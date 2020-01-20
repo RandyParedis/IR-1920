@@ -37,7 +37,7 @@ first = True
 cnt = 0
 
 
-def avg(p1: np.ndarray, r1: np.ndarray, p2: np.ndarray, r2: np.ndarray):
+def avg(p1: np.ndarray, r1: np.ndarray, p2: np.ndarray, r2: np.ndarray, um = False, fun=None):
     if p1 is None or r1 is None:
         return p2, r2
     if p2 is None or r2 is None:
@@ -60,10 +60,23 @@ def avg(p1: np.ndarray, r1: np.ndarray, p2: np.ndarray, r2: np.ndarray):
         else:
             image2.append(p2[i2])
 
-    if image1 > image2:
-        image = image1
+    if um:
+        if image1 > image2:
+            image = image1
+        else:
+            image = image2
     else:
-        image = image2
+        image = [0] * len(image1)
+        for i in range(len(image)):
+            if fun is None:
+                if np.isnan(image1[i]) and not np.isnan(image2[i]):
+                    image[i] = image2[i]
+                elif np.isnan(image2[i]) and not np.isnan(image1[i]):
+                    image[i] = image1[i]
+                elif not np.isnan(image2[i]) and not np.isnan(image1[i]):
+                    image[i] = (image1[i] + image2[i]) / 2
+            else:
+                image[i] = fun(image1[i], image2[i])
 
     return np.asarray(image), np.asarray(basis)
 
@@ -78,7 +91,7 @@ with progressbar.ProgressBar(max_value=id) as bar:
                 docscore[key] = (results[key].get(str(i), 0.0), 1 if key in relevant[query] else 0)
 
             p, r, f, t, _ = Plot.pr_roc_info2(docscore)
-            pavg, ravg = avg(pavg, ravg, p, r)
+            pavg, ravg = avg(pavg, ravg, p, r, True)
             tavg, favg = avg(tavg, favg, t, f)
             cnt += 1
         bar.update(i)

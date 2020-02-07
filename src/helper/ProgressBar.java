@@ -1,3 +1,5 @@
+package helper;
+
 public class ProgressBar {
     private int current;
     private int max;

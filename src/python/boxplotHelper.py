@@ -16,7 +16,7 @@ import math
 
 
 class BoxplotAlgorithm(Enum):
-    """Helper enum for creating boxplots.
+    """helper.Helper enum for creating boxplots.
 
     Boxplots are created with 5 values:
         [min, Q1, median, Q3, max]
@@ -185,7 +185,7 @@ def histogram(series: list, b: int):
 
 
 def histostep(xj, b: int, q: list, n: list, N: int):
-    """Helper function for the histogram function.
+    """helper.Helper function for the histogram function.
 
     This function was extracted to make it easier for the algorithm
     to be used without knowledge of the entire series.

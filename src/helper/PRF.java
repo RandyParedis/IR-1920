@@ -1,3 +1,5 @@
+package helper;
+
 import org.apache.lucene.index.Fields;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Terms;

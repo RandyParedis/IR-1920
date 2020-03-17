@@ -1,20 +1,24 @@
-1. Webdevelopment (django, etc.)
-2. Recursion
-3. Standard library (find_if, etc.)
-4. Templates
-5. Loops
-6. Visual controls
-7. Tokens
-8. Unicode and ASCII
-9. File operations
-10. Types (int, string)
-11. Functions
-12. Classes
-13. Errors
-14. Arrays and lists
-15. Internet (protocols, sockets, etc.)
-16. Images (pixels, image manipulation, etc.)
-17. Operator overloading
-18. Tree structures
-19. Assertions and exceptions
-20. Testing (unittesting)
+Web development in Python
+Recursion
+Standard library c++
+Templates usage c++
+Loops
+Visual controls
+Tokens
+Unicode and ASCII
+File operations
+Types (int, string)
+Functions
+Private member Classes
+Errors
+Arrays and lists
+Internet (protocols, sockets)
+Images (pixels, image manipulation)
+Operator overloading
+Tree structures
+Assertions and exceptions
+Testing (unittesting)
+Shared library c++
+Python sklearn
+Python
+C++

@@ -15,7 +15,8 @@ public class Main {
         StandardAnalyzer analyzer = new StandardAnalyzer();
 
         SearchEngine engine = new SearchEngine(loc, analyzer);
-        engine.index();
+        // TODO: change this so it uses the actual files instead of a subset.
+//        engine.index();
 
         QueryLoader queryLoader = new QueryLoader(engine.getDirectory(), engine.getReader(), analyzer);
         Query query = queryLoader.getQuery("test this string", SUGGESTIONS);

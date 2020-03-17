@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Preventing a complete rebuild using branches with GIT and Visual Studio 2005</Title>
+<Body>&lt;p&gt;One of the problem I faced when using branches in GIT was that it was very easy when switching branches to cause visual studio 2005 to cause a complete rebuild of the source because of the time/date being changed when switching branches.&lt;/p&gt;&lt;p&gt;My typical layout is this.&lt;br&gt;svn/remote&lt;br&gt;master&lt;br&gt;test&lt;/p&gt;&lt;p&gt;When switch between either the test and the master branch even though both of them shared exactly the same timestamp on the project. It would cause visual studio 2005 to rebuild the complete project again.&lt;/p&gt;&lt;p&gt;To resolve this issue, my solution was to create another GIT repository but to make a new repository that pulled from the main repository c:/myPrimary &#x27;test&#x27; branch. This way, even though both master and test branches had their own folder via the extra repository this resolved having to do a complete recompilation of the source code when switching between the two.&lt;/p&gt;&lt;p&gt;Just checking if anyone else have had this problem and the solution they have come up with resolving it. Please note, a complete recompilation of the source code is in the area of 20 minutes.&lt;/p&gt;</Body>
+<Tags>c++,svn,git,visual-studio-2005,visual-c++-2005</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;git only touches files which actually change when switching branches, so only translation units that include files that are different between the two branches should have their timestamp updated when switching between the two branches.&lt;/p&gt;&lt;p&gt;Visual Studio 2005 is generally very good at incremental builds, but it is very easy in C++ to build up overly inter-dependent include paths if you aren&#x27;t careful to manage a project&#x27;s complexity.&lt;/p&gt;&lt;p&gt;Have you tried analysing your source file dependencies to see if a set of frequently changed header files is causing a large subset of object files to be rebuilt?&lt;/p&gt;</Body>
+</answer>
+</qroot>

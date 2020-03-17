@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Python Simulation Inconsistency</Title>
+<Body>&lt;p&gt;I have made a simulator using Python for a game called Final Fantasy XII. The purpose of this simulator is to see how much &quot;gil&quot; (in-game currency) you can get from one particular enemy.&lt;/p&gt;&lt;p&gt;This should output around 23000 from our experiance, but what happens with this is, &lt;strong&gt;&lt;em&gt;it outputs 24000 usually, but sometimes 29000.&lt;/em&gt;&lt;/strong&gt; Considering it takes 1000 samples, it is impossible for that to be coincident. I think this code has problems with random generator, but I have no idea.&lt;/p&gt;&lt;p&gt;Are there reasons python simulator sometimes goes wrong?&lt;/p&gt;&lt;pre&gt;&lt;code&gt;import random# defining variables, dictionaries and functions herefor t in range (1, test + 1):    for n in range (1, dustia + 1):        c = c + 1 # first, increase the chain counter        r = random.random()        # deciding a thing using &quot;if r &amp;lt; [probability]&quot; here        # ....        # apparently this part caused the problem        r = random.random()        if m == 1 and r &amp;lt; 0.4:            m = 0        elif m == 0 and r &amp;lt; 0.05:            m = 1        r1 = random.random() # RNG for book        r2 = random.random() # RNG for staff        rr1 = random.random() # amount of books        rr2 = random.random() # amount of staff        # deciding another thing using r &amp;lt; [probability] here#summing up samples and calculating average here&lt;/code&gt;&lt;/pre&gt;</Body>
+<Tags>python,python-3.x,simulation,simulator</Tags>
+</question>
+</qroot>

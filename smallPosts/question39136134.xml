@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>importlib can&#x27;t find module</Title>
+<Body>&lt;p&gt;&lt;strong&gt;cat test.py&lt;/strong&gt; &lt;/p&gt;&lt;pre&gt;&lt;code&gt;from importlib import import_modulebar = import_module(&#x27;bar&#x27;, package=&#x27;project&#x27;)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;ls project/&lt;/strong&gt;&lt;/p&gt;&lt;pre&gt;&lt;code&gt;__init__.py  __init__.pycbar.pybar.pyc&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;python test.py&lt;/strong&gt;&lt;/p&gt;&lt;pre&gt;&lt;code&gt;Traceback (most recent call last):  File &quot;test.py&quot;, line 5, in &amp;lt;module&amp;gt;    bar = import_module(&#x27;bar&#x27;, package=&#x27;project&#x27;)  File &quot;/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/importlib/__init__.py&quot;, line 37, in import_module    __import__(name)ImportError: No module named bar&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Listing imported modules (sys.modules) doesn&#x27;t show any module &lt;em&gt;project&lt;/em&gt;.&lt;/p&gt;&lt;p&gt;I can import &lt;em&gt;bar&lt;/em&gt; using the python shell.&lt;/p&gt;&lt;p&gt;Any ideas?&lt;/p&gt;</Body>
+<Tags>python,python-importlib</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;It needs a dot in front of bar .. :-(&lt;/p&gt;&lt;pre&gt;&lt;code&gt;bar = import_module(&#x27;.bar&#x27;, package=&#x27;project&#x27;)&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;The documentation for &lt;a href=&quot;https://docs.python.org/2/library/importlib.html&quot; rel=&quot;nofollow&quot;&gt;import_lib&lt;/a&gt; says that &lt;/p&gt;&lt;blockquote&gt;  &lt;p&gt;If the name is specified in relative terms, then the package argument must be specified to the package which is to act as the anchor for resolving the package name (e.g. import_module(&#x27;..mod&#x27;, &#x27;pkg.subpkg&#x27;) will import pkg.mod). &lt;/p&gt;&lt;/blockquote&gt;&lt;p&gt;Thus the expression can also be written as &lt;/p&gt;&lt;pre&gt;&lt;code&gt;bar = import_module(&#x27;..bar&#x27;,package=&#x27;project.bar&#x27;)&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

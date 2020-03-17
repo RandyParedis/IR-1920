@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Is it possible to query different DNS nameservers programmatically in C++, ignoring system settings?</Title>
+<Body>&lt;p&gt;For my task, I need to block some hostnames, but since some websites may reply with different IP addresses to different DNS queries (for example, Google DNS and any other DNS server), I&#x27;d like to resolve same hostname using different DNS servers to get as many possible IP addresses as possible.&lt;/p&gt;&lt;p&gt;In short: I&#x27;d like to resolve &quot;example.com&quot; to IP using DNS #A and resolve &quot;example.com&quot; to IP using DNS #B without making any serious changes to my network configuration (or better without making any changes at all).&lt;/p&gt;&lt;p&gt;I&#x27;ve looked at &lt;a href=&quot;https://pocoproject.org/docs/Poco.Net.DNS.html&quot; rel=&quot;nofollow noreferrer&quot;&gt;Poco::Net::DNS&lt;/a&gt; and &lt;a href=&quot;https://c-ares.haxx.se&quot; rel=&quot;nofollow noreferrer&quot;&gt;c-ares&lt;/a&gt;, however they both seem to use OS DNS settings and don&#x27;t allow to point queries to other DNS servers (correct me if I&#x27;m wrong).&lt;/p&gt;</Body>
+<Tags>c++,dns,poco,c-ares</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Yes. DNS is a protocol that is on top the TCP protocol, so you can do DNS queries anywhere you can send and receive TCP packets (assuming there are no firewall rules that prevent this or other network problems).&lt;/p&gt;&lt;p&gt;However, C++ does not have a standard library for DNS protocol. Neither does C++ have a standard library for sending or receiving TCP packets (although, this is considered for addition in C++20). You can depend on the operating system specific API for network communication (or as always, you can use a library that wraps the system API).&lt;/p&gt;</Body>
+</answer>
+</qroot>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Time for row extraction in np.array</Title>
+<Body>&lt;p&gt;When optimizing part of a code in python I observed the following : &lt;/p&gt;&lt;pre&gt;&lt;code&gt;x = np.random.randn(100, 20)a = np.arange(20)%timeit x&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;23 nano sec&lt;/p&gt;&lt;pre&gt;&lt;code&gt;%timeit x[a]&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;1.7 micro sec&lt;/p&gt;&lt;p&gt;While x[a] is a smaller array, it takes more time to reach. Do you please know what can cause this ? Similar results are observed if instead of x, I ask for x.T.dot(x) and x[a].T.dot(x[a]).&lt;/p&gt;</Body>
+<Tags>python,numpy,row,extraction,timeit</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;&lt;code&gt;%timeit x&lt;/code&gt; times how long it takes to do nothing with &lt;code&gt;x&lt;/code&gt;. It&#x27;s pretty easy to do nothing.&lt;/p&gt;&lt;p&gt;&lt;code&gt;%timeit x[a]&lt;/code&gt; times how long it takes to actually do a thing with &lt;code&gt;x&lt;/code&gt;, that thing being dynamically work out what the indexing operation means and then copy the 20 specified rows into a new array. Doing things is a lot harder than doing nothing.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;While your headline testcase is flawed, &lt;code&gt;x&lt;/code&gt; being just a reference, your observation stands if less extreme for&lt;/p&gt;&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; timeit(lambda: x[a], number=1000000)1.8212362979538739&amp;gt;&amp;gt;&amp;gt; timeit(lambda: x.copy(), number=1000000)1.2187692462466657&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;What we are seeing here is the cost of advanced indexing. &quot;Conventional&quot; slice indexing costs significantly less but still has an overhead:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; np.all(x[:20] == x[a])True&amp;gt;&amp;gt;&amp;gt; timeit(lambda: x[:20].copy(), number=1000000)0.7956113098189235&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

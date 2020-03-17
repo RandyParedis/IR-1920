@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>I can&#x27;t convert a JSON format file into a python format file</Title>
+<Body>&lt;p&gt;I&#x27;m doing pythonAPI exercises, and this is my completed API address：&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;http://api.juheapi.com/japi/toh?key=10245c2b75fa03d527204967ef7291cb&amp;amp;v=1.0&amp;amp;month=07&amp;amp;day=05&quot; rel=&quot;nofollow noreferrer&quot;&gt;http://api.juheapi.com/japi/toh?key=10245c2b75fa03d527204967ef7291cb&amp;amp;v=1.0&amp;amp;month=07&amp;amp;day=05&lt;/a&gt;&lt;/p&gt;&lt;p&gt;If you use the browser to open, the correct JSON file is displayed.but i cant&#x27;t get correct result using the following codecode .&lt;/p&gt;&lt;pre&gt;&lt;code&gt;page = urllib.urlopen(url)html = page.read() dic_json = json.loads(html)print dic_json&lt;/code&gt;&lt;/pre&gt;</Body>
+<Tags>python,json</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;There is nothing error in the json. It successfully parse json to python dict. You should take a look on python &lt;a href=&quot;https://docs.python.org/2/howto/unicode.html&quot; rel=&quot;nofollow noreferrer&quot;&gt;unicode&lt;/a&gt;. When you try to print a unicode in python 2 you will find like this, but when open in browser it will be correct non-ASCII character.&lt;/p&gt;&lt;p&gt;Python2 store non-ASCII character into like this format.&lt;/p&gt;&lt;p&gt;To read this particular dict , you can do something like this.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;for x,y in dic_json.items():    print x,&quot;:&quot;, y&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Python Pandas - How to merge two dataframes that have two different columns to two list columns</Title>
+<Body>&lt;p&gt;I have two dataframes.&lt;/p&gt;&lt;p&gt;df1 :&lt;/p&gt;&lt;pre&gt;&lt;code&gt;key  column_a AA   AAB      AA   AAC      AB   ABA      AB   ABK      &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;df2:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;key  column_bAA   AAAAB   ABAAB   ABKAC   ACC&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I wanted to merge them but the column_a and column_b would become a list.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;key  column_a       column_bAA   [&#x27;AAB&#x27;,&#x27;AAC&#x27;]  [&#x27;AAA&#x27;]AB   [&#x27;ABA&#x27;,&#x27;ABK&#x27;]  [&#x27;ABA&#x27;,&#x27;ABK&#x27;]AC   NaN            [&#x27;ACC&#x27;]&lt;/code&gt;&lt;/pre&gt;</Body>
+<Tags>python,pandas,dataframe,merge</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;If converting to lists, you lose the vectorised functionality which goes with using NumPy arrays held in contiguous memory blocks.&lt;/p&gt;&lt;p&gt;Solution with &lt;a href=&quot;http://pandas.pydata.org/pandas-docs/stable/generated/pandas.concat.html&quot; rel=&quot;nofollow noreferrer&quot;&gt;&lt;code&gt;concat&lt;/code&gt;&lt;/a&gt;, &lt;a href=&quot;http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.groupby.html&quot; rel=&quot;nofollow noreferrer&quot;&gt;&lt;code&gt;groupby&lt;/code&gt;&lt;/a&gt; and aggregate lambda function - remove &lt;code&gt;NaN&lt;/code&gt;s and create &lt;code&gt;list&lt;/code&gt;s:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;df = pd.concat([df1, df2]).groupby(&#x27;key&#x27;).agg(lambda x: x.dropna().tolist())print (df)       column_a    column_bkey                        AA   [AAB, AAC]       [AAA]AB   [ABA, ABK]  [ABA, ABK]AC           []       [ACC]&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Last if need replace empty lists to &lt;code&gt;NaN&lt;/code&gt;s use &lt;a href=&quot;http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.where.html&quot; rel=&quot;nofollow noreferrer&quot;&gt;&lt;code&gt;DataFrame.where&lt;/code&gt;&lt;/a&gt;:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;df = df.where(df.astype(bool))print (df)       column_a    column_bkey                        AA   [AAB, AAC]       [AAA]AB   [ABA, ABK]  [ABA, ABK]AC          NaN       [ACC]&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

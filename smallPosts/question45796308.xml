@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Python, making a function</Title>
+<Body>&lt;p&gt;I&#x27;m struggling a lot with my code. Now my teacher wants me to make a function out of this and I&#x27;m really trying but I can&#x27;t figure it out. So I need to make a function out of this and then call it again further down. Can someone please help me or give me some tips :) :)&lt;/p&gt;&lt;pre&gt;&lt;code&gt;opengraph = False while opengraph is not True:    if len(sys.argv) == 2:        name = sys.argv[1]        g = openmap(name)        opengraph = True    else:        try:            name = raw_input(&#x27;Please enter a file: &#x27;)            g = openmap(name)            opengraph = True        except:            print &#x27;Not able to read the file you wrote, try another time.&#x27;origdest = raw_input(&#x27;Enter origin and destination (quit to exit): &#x27;)&lt;/code&gt;&lt;/pre&gt;</Body>
+<Tags>python,function,return</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;There are tons of references, on the internet, on how you can do this. Like this &lt;a href=&quot;https://www.learnpython.org/en/Functions&quot; rel=&quot;nofollow noreferrer&quot;&gt;one&lt;/a&gt;, or this &lt;a href=&quot;https://www.tutorialspoint.com/python/python_functions.htm&quot; rel=&quot;nofollow noreferrer&quot;&gt;one&lt;/a&gt;, or this &lt;a href=&quot;http://anh.cs.luc.edu/python/hands-on/3.1/handsonHtml/functions.html&quot; rel=&quot;nofollow noreferrer&quot;&gt;one&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Anyways.. you need to use &lt;code&gt;def&lt;/code&gt;, give it a name and its input parameters, like this:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;def MyFunction(input1, input2):   # &amp;lt;Rest of the code here&amp;gt;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Don&#x27;t forget identation and if you are expecting your function to return something you need to insert a:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;return output1, output2, output3&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;in the end.&lt;/p&gt;&lt;p&gt;Once you function is defined, you just need to call it in your main code and pass the correct input arguments if there is any.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;output1, output2, output3 = MyFunction(input1, input2)&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;I hope this link to this tutorial helps, functions must be defined and then called to execute. In Python, functions syntactically look like this...&lt;/p&gt;&lt;pre&gt;&lt;code&gt;def nameOfFunction (parameters):    code to perform task/tasks...# Call your function...nameOfFunction(parameter)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Follow this link to go to the tutorial and good luck! &lt;a href=&quot;https://www.tutorialspoint.com/python/python_functions.htm&quot; rel=&quot;nofollow noreferrer&quot;&gt;Link to tutorial&lt;/a&gt;&lt;/p&gt;</Body>
+</answer>
+</qroot>

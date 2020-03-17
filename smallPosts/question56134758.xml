@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Adding credentials to env using `cat` with python-dotenv</Title>
+<Body>&lt;p&gt;I am trying to get my credentials into env when using python-dotenv. I previously used &lt;/p&gt;&lt;pre&gt;&lt;code&gt;export CREDS=`cat $PATH_TO_CREDS_JSON` &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;in my .zshrc file.&lt;/p&gt;&lt;p&gt;I have attempted to use the &lt;code&gt;cat&lt;/code&gt; command as before but it is saved as a string.&lt;/p&gt;&lt;p&gt;Printing it led to the string value of &lt;code&gt;cat $PATH_TO_CREDS&lt;/code&gt; being saved to the env variable.&lt;/p&gt;&lt;p&gt;I have tried it with different quotes and without quotes.&lt;/p&gt;&lt;p&gt;This is the code I have in my main called python file.&lt;/p&gt;&lt;pre class=&quot;lang-py prettyprint-override&quot;&gt;&lt;code&gt;from dotenv import load_dotenvpath = path.join(path.dirname(path.realpath(__file__)), &quot;devlocal/.env&quot;)load_dotenv(dotenv_path=path, override=True, verbose=True)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;My .env file is &lt;/p&gt;&lt;pre&gt;&lt;code&gt;CREDS=`cat $PATH_TO_CREDS_JSON`&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;this.&lt;/p&gt;&lt;p&gt;I would expect &lt;code&gt;os.getenv(&#x27;CREDS&#x27;)&lt;/code&gt; to result in a json formatted file containing my credentials. Sadly it just returns the string of the command.&lt;/p&gt;</Body>
+<Tags>python,python-3.x,command-line,dotenv</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;You should define each value of your credentials separately in your .env file.For example if your json looks like this:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;{&quot;username&quot;: &quot;example1&quot;, &quot;password&quot;: &quot;example2&quot;}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Then your .env should look like this:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;USERNAME=example1PASSWORD=example2&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You can then join them up like this:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;import json...creds = json.dumps({&quot;username&quot;: os.getenv(&#x27;USERNAME&#x27;), &quot;password&quot;: os.getenv(&#x27;PASSWORD&#x27;)})&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

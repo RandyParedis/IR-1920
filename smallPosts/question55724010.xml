@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Pytest django ModuleNotFoundError: No module named *</Title>
+<Body>&lt;p&gt;What could be the problem, pytest raises - ModuleNotFoundError: No module named &#x27;order&#x27;, but django server runs perfectly&lt;/p&gt;&lt;p&gt;*settings.py&lt;code&gt;INSTALLED_APPS = [..., &quot;order&quot;]&lt;/code&gt;&lt;/p&gt;&lt;p&gt;Structure:&lt;/p&gt;&lt;p&gt;&lt;code&gt;app/    order/       apps.py       __init__.py    settings.py    __init__.py    manage.pytests/pytest.ini&lt;/code&gt;&lt;/p&gt;&lt;p&gt;It works if use INSTALLED_APPS = [..., &quot;app.order&quot;], how could I use just &quot;order&quot;?&lt;/p&gt;</Body>
+<Tags>python,django,pytest</Tags>
+</question>
+</qroot>

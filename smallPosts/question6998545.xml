@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>How can I make python 2.6 my default in Mac OS X Lion?</Title>
+<Body>&lt;p&gt;I just upgraded to lion and with it came Python 2.7.  I need to use 2.6 as my default python as the project I primarily work on uses 2.6.&lt;/p&gt;</Body>
+<Tags>python,macos,osx-lion</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;You have a few options:&lt;/p&gt;&lt;ol&gt;&lt;li&gt;&lt;strike&gt;Change /usr/bin/python to a link to /usr/bin/python2.6&lt;/strike&gt;&lt;/li&gt;&lt;li&gt;Put /System/Library/Frameworks/Python.framework/Versions/2.6/bin in your path before /usr/bin&lt;/li&gt;&lt;li&gt;Explicitly tell your scripts to use /usr/bin/python2.6&lt;/li&gt;&lt;/ol&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;Apple has provided two very simple ways to change the default python on OS X 10.6 Snow Leopard and 10.7 Lion.  It&#x27;s all detailed in the Apple man page for python(1):&lt;/p&gt;&lt;pre&gt;&lt;code&gt;$ man python$ which python/usr/bin/python$ python -VPython 2.7.1## temporarily change version#$ export VERSIONER_PYTHON_VERSION=2.6$ python -VPython 2.6.6$ unset VERSIONER_PYTHON_VERSION$ python -VPython 2.7.1## persistently change version#$ defaults write com.apple.versioner.python Version 2.6$ python -VPython 2.6.6&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;After running the following:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;defaults write com.apple.versioner.python Version 2.6&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;To make sure the packages you install with &#x27;sudo&#x27; are installed for the correct Python version, also set the versioner option as a superuser:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;sudo su# Enter passworddefaults write com.apple.versioner.python Version 2.6exit&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

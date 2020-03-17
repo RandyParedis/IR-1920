@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>How to synchronize and combine results from multiple threads in C++?</Title>
+<Body>&lt;p&gt;I have a data feed continuously feeding data packet in. There are 5 threads(A, B, C, D, E) processing the data packages. Note the 5 threads have totally different speed and they generate 5 different features(each thread generate 1 feature) for every incoming data package.&lt;/p&gt;&lt;p&gt;The 5 threads are at different pace: when A has finished analyzing first 10 packages, B might only have finished package 1, package 2, and C might have not even finish a single package at all. &lt;/p&gt;&lt;p&gt;My task is to match the results from 5 threads, and start the final analysis when all the 5 features for the first 10 data package are available.&lt;/p&gt;&lt;p&gt;My question is: - How to combine the results from different threads making sure the analysis thread is only triggered when a certain amount of result are available? - I seems that I need a aggregator thread checking the availability of different buffers. I am thinking in terms of lock/condition. How could I implement such a condition involving different buffers?&lt;/p&gt;&lt;p&gt;Totally newbie in multithreading. Any suggestion is welcomed.&lt;/p&gt;&lt;p&gt;I am using GNU C++ with Boost library. &lt;/p&gt;</Body>
+<Tags>c++,multithreading,boost,synchronization,performance</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Have yourself an &quot;aggregator&quot; thread: this thread would get its input from the worker threads (through non-blocking thread-safe queues I suggest) and once a &quot;batch&quot; is ready, push it to your &quot;analyzer&quot; thread.&lt;/p&gt;&lt;p&gt;Queues offer the advantage of not blocking any of the workers: the &quot;aggregator&quot; just has to poll the worker queues (through a &lt;em&gt;condition&lt;/em&gt; section). You can control the rate of polling to your liking.&lt;/p&gt;&lt;p&gt;This solution goes around the problem of &quot;synchronize all&quot; situations.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;Barriers are the canonical &quot;synchronize all&quot; operation.&lt;/p&gt;&lt;p&gt;However, it sounds like you want to have a &quot;count result&quot; variable in a critical section that is incremented when a certain amount is done. Then, you want to do a &quot;block until variable is equal to x&quot;. That can be accomplished with a spin-lock against the count result variable.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;Have a container that stores results and a function like this (psuedo code):&lt;/p&gt;&lt;pre&gt;&lt;code&gt;void storeResult(Result result) {    Mutex m(&quot;ResultContainerMutex&quot;);    container.push_back(result);    if(container.size() &amp;gt; ANALYSIS_SIZE) {        StartAnalysisThread(container.copy());        container.clear();    }}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Since the mutex is only protecting the add to container operation which is fairly quick it shouldn&#x27;t cause excessive serialization.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;You may want to check the &lt;a href=&quot;http://en.wikipedia.org/wiki/Producer-consumer_problem&quot; rel=&quot;nofollow noreferrer&quot;&gt;Producer-consumer problem&lt;/a&gt;&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;Use semaphores, and extra boolean &#x27;done&#x27; variables. Every time a thread is done, it FIRST write its answers, THEN its &#x27;done&#x27; variable, then calls a &#x27;check&#x27; function that checks all treads &#x27;done&#x27; variables and if they&#x27;re all true trigger the analysis thread. &lt;/p&gt;&lt;p&gt;depending on your performance trade-offs, you probably want just the slowest &#x27;work&#x27; thread to ever call the &#x27;check&#x27; function, so the fast ones won&#x27;t keep locking its &#x27;done&#x27; variable for reading. This, of course, depends on knowing which is the slowest.&lt;/p&gt;&lt;p&gt;I don&#x27;t know your reset policy: do you want to wait for 10 fresh inputs every time or analyze the 10 most recent continuously? &lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;Some pseudocode: &lt;/p&gt;&lt;pre&gt;&lt;code&gt;worker thread:    -&amp;gt; do work,      -&amp;gt; publish result to queue   -&amp;gt; 10 reached, signal my condvar aggregator thread:    -&amp;gt; wait on all condvars.    -&amp;gt; lock all result queues, swap in new empty ones.     -&amp;gt; do aggregation processing. &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The reason for creating new queues is that your aggregation processing may result in significant amounts of locking, and invalidation if items are removed - if you put new queues on your worker threads, you need to worry less about locking (especially as the aggregator doesn&#x27;t need to share it&#x27;s results BACK with the workers). &lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;With your current design your are limited by the slowest computation, the other threads won&#x27;t be used enough.&lt;/p&gt;&lt;p&gt;If you want to process a lot of packets, I would instead split the work like this :&lt;/p&gt;&lt;p&gt;Distribute data packets to N identical thread which compute the 5 result in sequence for the packets they receive.&lt;/p&gt;&lt;p&gt;Each thread puts its result packets in a thread safe fifo.&lt;/p&gt;&lt;p&gt;Your main thread reads the result and if needed reorders them using packet numbers&lt;/p&gt;</Body>
+</answer>
+</qroot>

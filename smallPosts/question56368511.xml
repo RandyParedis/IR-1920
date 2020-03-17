@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>How to find the highest value of the each row with number of columns and print them?</Title>
+<Body>&lt;p&gt;I have a csv file that has over 1000 rows and 50 columns. Each row has values (i.e. 0.554562) and each column has the same type of values:&lt;/p&gt;&lt;p&gt;As an example of my csv file ():&lt;/p&gt;&lt;pre&gt;&lt;code&gt;       Albany  Ukraine  Germany  Swiss   Englandkevin  0.5655  0.5777   0.3232   0.1212  0.9595brayan 0.4655  0.2777   0.1232,  0.9212  0.5595alex   0.1655  0.2777   0.3232   0.1212  0.9795&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now I want to find the highest values in each row and create new column and added there like:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;        Albany Ukraine Germany Swiss  England highestkevin   0.5655 0.5777  0.3232  0.1212 0.9595  0.9595brayan  0.4655 0.2777  0.1232  0.9212 0.5595  0.9212alex    0.1655 0.2777  0.3232  0.1212 0.9795  0.9795&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I already checked a few posts here such as &lt;a href=&quot;https://stackoverflow.com/questions/44743512/finding-the-sum-of-each-column-and-combined-them-to-find-the-top-3-highest-value&quot;&gt;1&lt;/a&gt; &lt;a href=&quot;https://stackoverflow.com/questions/41990566/numpy-python-find-the-highest-value-from-a-column-for-each-unique-value-in-anot&quot;&gt;2&lt;/a&gt;, but none of them helped me.&lt;/p&gt;&lt;p&gt;It would be great if you can provide your help with code that I can run in my side and learn. Thanks&lt;/p&gt;&lt;p&gt;Addition: Also is there any way to say like Kevin with the highest prob of [0.9595] is belong to England?&lt;/p&gt;</Body>
+<Tags>python,pandas,csv,numpy,dataframe</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Work on &lt;code&gt;axis=1&lt;/code&gt; (rows) and assign a new column using &lt;code&gt;max&lt;/code&gt;&lt;/p&gt;&lt;pre&gt;&lt;code&gt;df[&quot;highest&quot;] = df.max(axis=1)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Using &lt;code&gt;idxmax&lt;/code&gt; will tell you &lt;em&gt;where&lt;/em&gt; the max lies&lt;/p&gt;&lt;pre&gt;&lt;code&gt;top_prob = df.idxmax(axis=1)&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

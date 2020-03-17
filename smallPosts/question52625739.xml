@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Why does WinApi typedef basic datatypes?</Title>
+<Body>&lt;p&gt;So I was reading through some WinApi files and found these:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;#define CALLBACK    __stdcall#define WINAPI      __stdcall#define WINAPIV     __cdecl#define APIENTRY    WINAPI#define APIPRIVATE  __stdcall#define PASCAL      __stdcall#define FAR                 far#define NEAR                neartypedef float               FLOAT;typedef int                 INT;typedef unsigned int        UINT;#define VOID voidtypedef char CHAR;typedef short SHORT;typedef long LONG;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I also found this on Gdiplus&#x27; files:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;typedef float REAL;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Why do libraries do this?Why do they want to typedef the most basic things with a new name of just the same but in all caps?Why do they define the same things multiple times?Seems really useless to me and just more confusing and annoying.&lt;/p&gt;</Body>
+<Tags>c++,c,winapi,typedef</Tags>
+</question>
+</qroot>

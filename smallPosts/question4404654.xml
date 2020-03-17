@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>debugging python web service</Title>
+<Body>&lt;p&gt;I am using the instructions found &lt;a href=&quot;http://www.diveintopython.net/http_web_services/user_agent.html&quot; rel=&quot;noreferrer&quot;&gt;here&lt;/a&gt;, to try to inspect the HTTP commands being sent to my webserver.&lt;/p&gt;&lt;p&gt;However, I am not seeing the HTTP commands being printed on the console as suggested in the tutorial. Does anyone know how to display/debug  the HTTP commands at the CLI?&lt;/p&gt;&lt;p&gt;I am running Python 2.6.5 on Linux Ubuntu&lt;/p&gt;</Body>
+<Tags>python,urllib2</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;The tutorial information seems to be deprecated. &lt;/p&gt;&lt;p&gt;Correct way to debug with &lt;code&gt;urllib2&lt;/code&gt; nowadays is:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;import urllib2request = urllib2.Request(&#x27;http://diveintomark.org/xml/atom.xml&#x27;)opener = urllib2.build_opener(urllib2.HTTPHandler(debuglevel=1))    feeddata = opener.open(request).read()&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Debugging with &lt;code&gt;urllib&lt;/code&gt; works the old way though.&lt;/p&gt;</Body>
+</answer>
+</qroot>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Scrapy Error: Ignoring response &lt;404 ...&gt; : HTTP status code is not handled or not allowed</Title>
+<Body>&lt;p&gt;I am new to scrapy and this is probably quite trivial. AnywayI get the following error:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;INFO: Ignoring response &amp;lt;404 http://www.geographie.unimuenchen.de/department/fiona/studium/fuer_studierende/termine/index.html/&amp;gt;:HTTP status code is not handled or not allowed&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I have tried to change the user agent in the settings.py file without success. Does anyone have another idea?Thank you&lt;/p&gt;&lt;p&gt;my code:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;import scrapyclass DepartmentSpider(scrapy.Spider):    name = &#x27;department&#x27;    start_urls = [&#x27;http://www.geographie.uni-muenchen.de/department/fiona/studium/fuer_studierende/termine/index.html/&#x27;]    def parse(self, response):        for row in response.xpath(&#x27;//table[2]/tbody&#x27;):            yield {                &#x27;Art&#x27; : row.xpath(&#x27;td[1]//text()&#x27;).extract_first(),                &#x27;Belegfrist&#x27;: row.xpath(&#x27;td[2]//text()&#x27;).extract_first(),                &#x27;Klausur&#x27; : row.xpath(&#x27;td[3]//text()&#x27;).extract_first(),            }&lt;/code&gt;&lt;/pre&gt;</Body>
+<Tags>python-3.x,scrapy,httprequest</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;You have slash in the end of url in &lt;code&gt;start_urls&lt;/code&gt;. Without it everything should work fine.&lt;/p&gt;</Body>
+</answer>
+</qroot>

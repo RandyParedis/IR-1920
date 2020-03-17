@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Concept of vptr and vtable in C++</Title>
+<Body>&lt;p&gt;Why only default constructor only able to create vptr(Virtual Table Pointer) and vtable(Virtual Table)? Why parameter constructor not able to&lt;/p&gt;</Body>
+<Tags>c++,default-constructor,vtable,vptr</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;First, vtables and vptrs are not specified by the C++ language standard.&lt;/p&gt;&lt;p&gt;They&#x27;re an implementation detail, although as far as I know all extant C++ implementation use that technique to implement virtual function dispatch.&lt;/p&gt;&lt;p&gt;With such an implementation, &lt;em&gt;all&lt;/em&gt; constructors for a class with virtual member functions, necessarily establish the object&#x27;s vptr. Things wouldn&#x27;t work without it. So &amp;hellip;&lt;/p&gt;&lt;blockquote&gt;  &lt;p&gt;&lt;strong&gt;&amp;rdquo;&lt;/strong&gt; Why parameter constructor not able to&lt;/p&gt;&lt;/blockquote&gt;&lt;p&gt;&amp;hellip; is simply an incorrect assumption.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;Assuming the implementation uses vtables (a  pretty common implementation choice, as noted by &quot;Cheers and hth - Alf&quot;), the creation/population of vtables and invoking constructors are distinct operations.&lt;/p&gt;&lt;p&gt;However, all instances of a given (non-abstract) class will - once constructed fully - have the same set of vtables   (a class that inherits from multiple bases may have more than one vtable).    There will certainly not be a different vtable depending on how the object is constructed (e.g. what parameters are passed to constructors, which constructor is invoked, etc).&lt;/p&gt;</Body>
+</answer>
+</qroot>

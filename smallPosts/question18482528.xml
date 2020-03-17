@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Joystick Simulink s-function using mmsystem.h</Title>
+<Body>&lt;p&gt;I am trying to develop an s-function block to get Joystick input in Simulink. While it seems pretty straight forward with mmsystem.h, now I got lots of nonsense samples between real values. I basically use S-Function Builder with no inputs and an output that has the values from joystick. I use continuous sample mode. I have the below code in my Outputs tab.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;JOYINFOEX joyInfoEx;joyGetPosEx(0, &amp;amp;joyInfoEx);y0[0] = joyInfoEx.dwXpos;y0[1]=  joyInfoEx.dwYpos;y0[2] = joyInfoEx.dwZpos;y0[3] = joyInfoEx.dwRpos;y0[4]= joyInfoEx.dwPOV;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;My Continuous Derivatives and Discrete Update tabs are empty. But what I get when I run this s-fiction is something like below.&lt;/p&gt;&lt;p&gt;&lt;img src=&quot;https://i.stack.imgur.com/DpicP.jpg&quot; alt=&quot;enter image description here&quot;&gt;&lt;/p&gt;&lt;p&gt;I ask for any ideas or experience to tackle this problem.&lt;/p&gt;</Body>
+<Tags>c++,matlab,winapi,simulink,joystick</Tags>
+</question>
+</qroot>

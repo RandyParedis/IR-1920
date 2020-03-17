@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>MSVC 2010 error with Boost on /MT</Title>
+<Body>&lt;p&gt;I am currently having issue compiling my project with MSVC 2010 when /MT is enable in Code generation.&lt;/p&gt;&lt;p&gt;1&gt;LINK : fatal error LNK1104: cannot open file &#x27;libboost_thread-vc100-mt-sgd-1_51.lib&#x27;&lt;/p&gt;&lt;p&gt;If i do /MD it works fine but i want to do /MT so i can run the program on any pc.&lt;/p&gt;&lt;p&gt;i cannot seem to find the file &quot;libboost_thread-vc100-mt-sgd-1_51.lib&quot; even on the boost main website : &lt;a href=&quot;http://sourceforge.net/projects/boost/files/boost-binaries/1.51.0-x64/&quot; rel=&quot;nofollow&quot;&gt;http://sourceforge.net/projects/boost/files/boost-binaries/1.51.0-x64/&lt;/a&gt;&lt;/p&gt;&lt;p&gt;using bjam i tried : .\b2 --with-thread variant=release link=static threading=multi runtime-link=static &lt;/p&gt;&lt;p&gt;and still no go, same error as before...any idea how i can fix this?&lt;/p&gt;</Body>
+<Tags>visual-c++</Tags>
+</question>
+</qroot>

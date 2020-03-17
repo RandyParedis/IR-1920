@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Copying Python object types like PyInstance and PyFunction</Title>
+<Body>&lt;p&gt;I am new to the world of Python C API.&lt;/p&gt;&lt;p&gt;I have been stuck at a particular scenario involving instance and function object types.I need to deep copy both the instance and function object types.&lt;/p&gt;&lt;p&gt;Here, pcoOriginalValue is type PyObject*.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;PyObject* pcoInstanceCopy;if( true == PyInstance_Check(pcoOriginalValue)){  //I need to deep copy the contents of pcoOriginalValue to pcoInstanceCopy here.}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Same goes for,&lt;/p&gt;&lt;pre&gt;&lt;code&gt;PyObject* pcoFunctionCopy;if( true == PyFunction_Check(pcoOriginalValue)){  //I need to deep copy the contents of pcoOriginalValue to pcoFunctionCopy here.}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Any references or pointers would be great.&lt;/p&gt;&lt;p&gt;Thanks &lt;/p&gt;</Body>
+<Tags>python,c++,visual-c++</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;While you can always call &lt;a href=&quot;https://docs.python.org/2/library/copy.html#copy.deepcopy&quot; rel=&quot;nofollow&quot;&gt;copy.deepcopy&lt;/a&gt; standard library function from your C code, it seems you want to implement the actual deep copying yourself.&lt;/p&gt;&lt;p&gt;My quick (and poor) comment is that you first understand how to do that in Pure Python, and then translate your code to CPython C API calls. You may use the &lt;a href=&quot;http://hg.python.org/cpython/file/9fc4a1ebe652/Lib/copy.py#l137&quot; rel=&quot;nofollow&quot;&gt;current copy.deepcopy implementation&lt;/a&gt; as a starting point.&lt;/p&gt;</Body>
+</answer>
+</qroot>

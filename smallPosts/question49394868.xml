@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>How to test if a file is readable in python without opening the file?</Title>
+<Body>&lt;p&gt;Would like to test if a file is readable in python on a linux system by checking its attributes/permissions.&lt;/p&gt;&lt;p&gt;New to python and I am looking for the equivalent of the following from  perl/bash.&lt;/p&gt;&lt;p&gt;[[ -r ${filename} ]]&lt;/p&gt;&lt;p&gt;or&lt;/p&gt;&lt;p&gt;if ( -r $filename ) {...}&lt;/p&gt;&lt;p&gt;I just do an open on the file to check if its readable:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;def isFileReadable2 (filename):    # check to see if file is readable    # by trying to open a file in readonly mode    # if an exception occurs,    # then either the file didnt exist, or file was NOT readable    try:        import stat        mode = os.stat(filename).st_mode        fh = open (filename, &#x27;r&#x27;)    except IOError as err:        print (&quot;Error opening file {}:{}\n&quot;. format (filename, err))    else:        fh.close ()        return True    return False&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I did notice that stat_result&#x27;s bit pattern corresponded to the filespermissions, i.e. st_mode=32832 translates to 0b1000000001000000,which in turn tells me that this file is user executable only, and notreadable at all, which happens to be correct.&lt;/p&gt;&lt;p&gt;So, while I could check using the proper bit masks, is there a betterportable interface to the os.stat_result object? and in particular the st_modevalue?&lt;/p&gt;&lt;p&gt;Thought of using os.fstat, but that returns the same stat_result object.&lt;/p&gt;&lt;p&gt;tia,&lt;/p&gt;</Body>
+<Tags>python</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;You can use &lt;a href=&quot;https://docs.python.org/2/library/os.html#os.access&quot; rel=&quot;nofollow noreferrer&quot;&gt;the function &lt;code&gt;os.access&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;</Body>
+</answer>
+</qroot>

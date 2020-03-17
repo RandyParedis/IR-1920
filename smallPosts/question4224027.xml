@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Program stops after cin</Title>
+<Body>&lt;p&gt;Hi there I am writing this program but I can&#x27;t get it to even start to see if the other code has problems. &lt;/p&gt;&lt;p&gt;I have this:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;    int main(){    int answer;    int test;    cout &amp;lt;&amp;lt; &quot;Please Enter the number to be tested: &quot;;    cin &amp;gt;&amp;gt; test; //Gets number to be tested        cout &amp;lt;&amp;lt; &quot;here&quot;;    answer = factor(test);    cout &amp;lt;&amp;lt; &quot;The answer is:&quot; &amp;lt;&amp;lt; answer;    return 0;}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;now then. It will print out the first cout, and then it gets to the cin, takes the number but then won&#x27;t do anything. Won&#x27;t even print the second cout. Any ideas?&lt;/p&gt;&lt;p&gt;I&quot;m pretty new and haven&#x27;t really done much so any extra treating me like an idiot explanations are welcomed. :D Thanks.&lt;/p&gt;</Body>
+<Tags>c++,cin</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;I guess &lt;code&gt;&amp;lt;&amp;lt; endl;&lt;/code&gt;is missing in your &lt;code&gt;cout&lt;/code&gt; lines. That causes the output buffer not not be flushed and nothing to appear on the screen. Although that might be dependent on the platform you are running it on. It &lt;em&gt;might&lt;/em&gt; work on some systems that flush the output buffer permanently.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;int main(){int answer;int test;cout &amp;lt;&amp;lt; &quot;Please Enter the number to be tested: &quot;;cin &amp;gt;&amp;gt; test; //Gets number to be tested    cout &amp;lt;&amp;lt; &quot;here&quot; &amp;lt;&amp;lt; endl;answer = factor(test);cout &amp;lt;&amp;lt; &quot;The answer is:&quot; &amp;lt;&amp;lt; answer &amp;lt;&amp;lt; endl;return 0;}&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;Maybe there is something wrong with the factor function? An infinite loop?Then cout &amp;lt;&amp;lt; &quot;here&quot; &amp;lt;&amp;lt; endl; (to flush the output) should at least print &quot;here&quot;.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;Looks like the program is waiting for the input at the terminal . Once you provide the input and then press &quot;Enter&quot;  it will automatically consider the input and the next cout statement works fine ... Check the below code segment ... ( nothing modified except the dummy implementation for factor, which is not the topic of discussion here ) &lt;/p&gt;&lt;pre&gt;&lt;code&gt;enter code here&lt;/code&gt;&lt;/pre&gt;&lt;h1&gt;include &lt;/h1&gt;&lt;p&gt;using namespace std;&lt;/p&gt;&lt;p&gt;int factor(int t) {        return t;}&lt;/p&gt;&lt;pre&gt;&lt;code&gt;int main()&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;{    int answer;    int test;    cout &amp;lt;&amp;lt; &quot;Please Enter the number to be tested: &quot;;    cin &gt;&gt; test; //Gets number to be tested        cout &amp;lt;&amp;lt; &quot;here&quot;;    answer = factor(test);    cout &amp;lt;&amp;lt; &quot;The answer is:&quot; &amp;lt;&amp;lt; answer;    return 0;}&lt;/p&gt;&lt;p&gt;O/p is : $ ./a.outPlease Enter the number to be tested: 1234hereThe answer is:1234user@ubuntu:~$ ./a.outPlease Enter the number to be tested: 1234hereThe answer is:1234$&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;I got the same results when I was hitting enter on the keypad right after my input.  If I hit return then the program runs fine.  I thought enter and return are the same thing?&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;pre&gt;&lt;code&gt;This is how it work &quot;here &quot; your screen doesnot be static by putting system(&quot;pause&quot;) you can do it ,on the other hand i have just made the function defination dummi still happen anything check there]#include&amp;lt;iostream&amp;gt;using namespace std;int factor(int x){    return x;}int main(){    int answer;    int test;    cout &amp;lt;&amp;lt; &quot;Please Enter the number to be tested: &quot;;    cin &amp;gt;&amp;gt; test; //Gets number to be tested    cout &amp;lt;&amp;lt; &quot;here&quot;;    answer = factor(test);    cout &amp;lt;&amp;lt; &quot;The answer is:&quot; &amp;lt;&amp;lt; answer;    **system(&quot;pause&quot;);**}&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

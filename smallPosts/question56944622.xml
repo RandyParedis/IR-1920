@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Is it safe to omit &quot;struct&quot; keyword for structures in C header in C++?</Title>
+<Body>&lt;p&gt;I know in C++ the &lt;code&gt;struct&lt;/code&gt; keyword can be safely omitted for structures, but I&#x27;m not sure if the same rule can be safely apply to the structures inherited from C headers. To be more specific, those structures form socket interface, e.g., &lt;code&gt;sockaddr_in&lt;/code&gt;, &lt;code&gt;sockaddr_in6&lt;/code&gt;...etc&lt;/p&gt;&lt;p&gt;So, can I safely omit &lt;code&gt;struct&lt;/code&gt; keyword for all the structures including those from C interfaces when I&#x27;m using C++?&lt;/p&gt;&lt;p&gt;I&#x27;ve done some searching on this one, but can&#x27;t find any clear answer.&lt;/p&gt;&lt;ol&gt;&lt;li&gt;Here is a similar question, but did not mention those old C structure&lt;a href=&quot;https://stackoverflow.com/questions/8422775/why-does-c-need-struct-keyword-and-not-c&quot;&gt;Why does C need &amp;quot;struct&amp;quot; keyword and not C++?&lt;/a&gt;&lt;/li&gt;&lt;li&gt;Another one here&lt;a href=&quot;https://stackoverflow.com/questions/51871652/c-struct-keyword-usage&quot;&gt;C++ struct keyword usage&lt;/a&gt;, but the question did not received a detailed or sure answer.&lt;/li&gt;&lt;/ol&gt;&lt;p&gt;I did try to take out the &lt;code&gt;struct&lt;/code&gt; keyword from one of my C++ source and it compiled without any error. But I would like to know if it&#x27;s safe in all cases.&lt;/p&gt;</Body>
+<Tags>c++,sockets,struct</Tags>
+</question>
+</qroot>

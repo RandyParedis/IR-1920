@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Why is the default value of a function 1?</Title>
+<Body>&lt;p&gt;I noticed that the constructor with parentheses behaves differently, at least for floats and ints.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;// int a, b{}, c = T(), d = T{}, e();float a, b{}, c = T(), d = T{}, e();endl(std::cout &amp;lt;&amp;lt; a &amp;lt;&amp;lt; &quot;, &quot; &amp;lt;&amp;lt; b &amp;lt;&amp;lt; &quot;, &quot; &amp;lt;&amp;lt; c &amp;lt;&amp;lt; &quot;, &quot; &amp;lt;&amp;lt; d &amp;lt;&amp;lt; &quot;, &quot; &amp;lt;&amp;lt; e);// 0, 0, 0, 0, 1&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;It&#x27;s not a default constructor, the parentheses were parsed as part of the type. I printed the types, and &lt;code&gt;e&lt;/code&gt; has type &lt;code&gt;float (&amp;amp;)()&lt;/code&gt; (or just &lt;code&gt;float()&lt;/code&gt; with proper forwarding), so I think it&#x27;s a default-constructed function. The result of calling it has a type, but calling it results in the linker error you&#x27;d expect. Its value would be 0 if it were a function pointer. Why would its value be 1, or how does it end up as 1 when it&#x27;s printed?&lt;/p&gt;</Body>
+<Tags>c++,function,c++14,function-pointers,default-value</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;It&#x27;s not a function pointer, it&#x27;s literally a function (albeit an undefined one).&lt;/p&gt;&lt;p&gt;By streaming the expression &lt;code&gt;e&lt;/code&gt;, which decays, you&#x27;re &lt;em&gt;creating&lt;/em&gt; a pointer to that function, and said pointer is valid because it points to the function you&#x27;ve declared called &lt;code&gt;e&lt;/code&gt;. Hence, &lt;code&gt;1&lt;/code&gt;.&lt;/p&gt;&lt;p&gt;You&#x27;re right to say that if you declared a function pointer to begin with, and made it &lt;code&gt;nullptr&lt;/code&gt;, you&#x27;d see &lt;code&gt;0&lt;/code&gt; instead by streaming it. But functions and function pointers are two different things.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;pre&gt;&lt;code&gt;float e();&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This declares e as a function that returns float and takes no arguments. So This decays to a function pointer which decays to bool which prints 1 unless &lt;code&gt;boolalpha&lt;/code&gt; is set.&lt;/p&gt;</Body>
+</answer>
+</qroot>

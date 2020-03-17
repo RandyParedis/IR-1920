@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Rapid Json Writer Exception</Title>
+<Body>&lt;p&gt;I am using Rapidjson C++ Library. When I write Json array, In some cases I might write in a wrong order. For Ex., see the below case.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;Writer.StartObject();   Writer.StartArray();     Writer.String(&quot;red&quot;);     Writer.String(&quot;Blue&quot;);   Writer.EndArray();Writer.EndObject();&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The above code is correct. But In some cases, If I write the code in a wrong order like as below.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;Writer.StartObject(); Writer.StartObject();   Writer.StartArray();     Writer.String(&quot;red&quot;);     Writer.String(&quot;Blue&quot;);   Writer.EndArray();Writer.EndObject();&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I know the code is wrong. It should have two consecutive Plain Object. It is an RunTime Error. But I should handle the exception at runtime. I studied RapidJson Library Document. But I couldn&#x27;t find How to handle this runtime exception in RapidJson Library. Is there anyway to Handle the exception in Rapidjson? Or do any other library available to handle the above Exception?&lt;/p&gt;</Body>
+<Tags>c++,json,rapidjson</Tags>
+</question>
+</qroot>

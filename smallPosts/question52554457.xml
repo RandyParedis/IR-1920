@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>What are the outputs of the Object Detection API of Tensorflow?</Title>
+<Body>&lt;p&gt;I used Tensorflow&#x27;s Object Detection API found in &lt;a href=&quot;https://github.com/tensorflow/models/tree/master/research/object_detection&quot; rel=&quot;nofollow noreferrer&quot;&gt;https://github.com/tensorflow/models/tree/master/research/object_detection&lt;/a&gt;. I used &lt;code&gt;summarize_graph&lt;/code&gt; and verified that the outputs are &lt;code&gt;detection_boxes&lt;/code&gt;, &lt;code&gt;detection_scores&lt;/code&gt;, &lt;code&gt;detection_classes&lt;/code&gt;, and &lt;code&gt;num_detections&lt;/code&gt;.&lt;/p&gt;&lt;p&gt;What are these? Which of these contains the coordinates of the detection box of the detected objects?&lt;/p&gt;&lt;p&gt;I displayed the shape of each of the output and found their sizes:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;code&gt;detection_boxes.shape = (1,300,4)&lt;/code&gt;&lt;/li&gt;&lt;li&gt;&lt;code&gt;detection_scores.shape = (1, 300)&lt;/code&gt;&lt;/li&gt;&lt;li&gt;&lt;code&gt;detection_classes.shape = (1, 300)&lt;/code&gt;&lt;/li&gt;&lt;li&gt;&lt;code&gt;num_detections.shape = (1,)&lt;/code&gt;&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;when tested on one image that contains 8 playing cards. The classes considered were the numbers A, 2, 3, 4, 5, &amp;amp; 6.&lt;/p&gt;</Body>
+<Tags>python,tensorflow,image-processing,video-processing</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;They represent exactly what the names suggest:&lt;/p&gt;&lt;p&gt;detection_boxes: coordinates of the predicted objects. Usually they represent: xmin,xmax,ymin,ymax.&lt;/p&gt;&lt;p&gt;detection_scores: exactly the score of each prediction, i.e., the model is 69% sure that certain image represent a A card.&lt;/p&gt;&lt;p&gt;detection_classes: a label that represent the prediction.&lt;/p&gt;&lt;p&gt;num_detections: the number of detections that the model was able to predict given a certain threshold. &lt;/p&gt;</Body>
+</answer>
+</qroot>

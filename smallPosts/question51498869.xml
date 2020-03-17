@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>inter-rater agreement with more than 2 raters</Title>
+<Body>&lt;p&gt;I conducted an annotation process with 5 people, where they each analyzed 100 Tweets and classified each Tweet as being either positive (1) or negative (0). Which measure of inter-rater agreement is appropriate in this case? I know Cohen&#x27;s Kappa only handles two raters, and I can&#x27;t seem to find another appropriate measure.&lt;/p&gt;</Body>
+<Tags>python</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Fleiss%27_kappa&quot; rel=&quot;nofollow noreferrer&quot;&gt;Fleiss Kappa&lt;/a&gt; is a variant (kind-of) of Cohen Kappa fr multiple raters&lt;/p&gt;</Body>
+</answer>
+</qroot>

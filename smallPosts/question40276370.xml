@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>python redis queue enqueues only 1 job</Title>
+<Body>&lt;p&gt;A super simple use case - put image download jobs with redis queue&lt;/p&gt;&lt;pre&gt;&lt;code&gt;# main.pyfrom redis import Redisfrom rq import Queuefrom tasks import download_assetqueue = Queue(connection=Redis())if __name__ == &#x27;__main__&#x27;:  image_urls = [&#x27;https://image.com/image1.png&#x27;, &#x27;https://image.com/image2.png&#x27;]  job1 = queue.enqueue(download_asset, image_urls[0], result_ttl=5000)  print job1  job2 = queue.enqueue(download_asset, image_urls[1], result_ttl=5000)  print job2  import time; time.sleep(3)  print job1.result  print job2.result&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;when I run &lt;code&gt;python main.py&lt;/code&gt;, &lt;/p&gt;&lt;pre&gt;&lt;code&gt;&amp;lt;Job 8de87fc3-0480-4181-bb57-182773eaa4dd: tasks.download_asset(&#x27;https://image.com/image1.png&#x27;)&amp;gt;&amp;lt;Job 6e334cc7-e2a5-46cb-b28a-7f8df6921c44: tasks.download_asset(&#x27;https://image.com/image2.png&#x27;)&amp;gt;NoneNone&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;the results are none but I do see the 2nd image downloaded into the folder.and in the worker log&lt;/p&gt;&lt;pre&gt;&lt;code&gt;01:48:26 default: tasks.download_asset(&#x27;https://image.com/image2.png&#x27;) (6e334cc7-e2a5-46cb-b28a-7f8df6921c44)download image01:48:26 Job OK01:48:26 Result is kept for 5000 seconds01:48:2601:48:26 *** Listening on default...&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;only 1 job was processed&lt;/p&gt;&lt;p&gt;Workers were stared using &lt;code&gt;rq worker&lt;/code&gt;. &lt;/p&gt;&lt;p&gt;download code:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;def download_asset(url):  print &#x27;download image&#x27;  media_file = urllib2.urlopen(url)  file_name = url.split(&#x27;/&#x27;)[-1]  with open(file_name, &#x27;w&#x27;) as f:    f.write(media_file.read())&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;one thing I noticed was if I put sleep.time(3) between the enqueue, the 1st still does NOT get enqueued &lt;/p&gt;</Body>
+<Tags>python,redis,queue</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;silly me, I have another worker from another project that&#x27;s pulling jobs from the same redis queue&lt;/p&gt;</Body>
+</answer>
+</qroot>

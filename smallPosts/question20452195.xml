@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Name of variable passed as argument</Title>
+<Body>&lt;p&gt;I want to do something along the lines of&lt;/p&gt;&lt;pre&gt;&lt;code&gt;static PyObject* printArgs(PyObject* self, PyObject* args) {    PyObject * oarg1 = NULL;    PyArg_ParseTuple(args,&quot;O&quot;,&amp;amp;oarg1);    return -- magic --}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Such that calling modulename.printArgs(a) returns &#x27;a&#x27;.&lt;/p&gt;&lt;p&gt;Is this possible? The best I could think of is looking through locals() for a variable that points to whatever I got in args, but if there&#x27;s more than one name for the value I could get the wrong name.&lt;/p&gt;</Body>
+<Tags>python,python-c-api</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Not really possible. In no way is it guaranteed that the parameter even has a name, it could be an anonymous expression. As such, this is not a limitation of the API, it is a fundamental issue with what you are trying to achieve. Can you give some motivation for the printArgs function?&lt;/p&gt;</Body>
+</answer>
+</qroot>

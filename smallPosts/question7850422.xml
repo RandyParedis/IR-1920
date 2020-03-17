@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Check if surface has been freed before SDL_FreeSurface</Title>
+<Body>&lt;p&gt;When using &lt;code&gt;SDL_Surface&lt;/code&gt;s to handle images, I run into the problem that running &lt;code&gt;SDL_FreeSurface(SDL_Surface *)&lt;/code&gt; (&lt;a href=&quot;http://sdl.beuc.net/sdl.wiki/SDL_FreeSurface&quot; rel=&quot;nofollow&quot;&gt;doc&lt;/a&gt;) twice on the same pointer yields a segmentation fault. &lt;/p&gt;&lt;p&gt;I understand why that happens, but I need to know how I can avoid that. I&#x27;d like to check the state of the pointer (find out if its pointing to an existing surface) and then Free the surface only if necessary.&lt;/p&gt;&lt;p&gt;How can I do that?&lt;/p&gt;</Body>
+<Tags>c++,memory-management,pointers,sdl</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;You write a class that encapsulates an SDL_Surface pointer which frees the surface in it&#x27;s destructor.  Also, make sure you properly implement or disable the copy constructor and the assignment operator.  (see &lt;a href=&quot;https://stackoverflow.com/questions/4172722/what-is-the-rule-of-three&quot;&gt;The rule of 3&lt;/a&gt;)Then, you never work directly with SDL_Surface pointers again.&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/blindley/Zik-Multimedia-Library&quot; rel=&quot;nofollow noreferrer&quot;&gt;Here&#x27;s an example of a wrapper around SDL that I was working on a while ago.&lt;/a&gt;&lt;/p&gt;&lt;p&gt;I stopped work once I learned about &lt;a href=&quot;http://www.sfml-dev.org/&quot; rel=&quot;nofollow noreferrer&quot;&gt;SFML&lt;/a&gt;.&lt;/p&gt;</Body>
+</answer>
+</qroot>

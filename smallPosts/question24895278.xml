@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Extract substring from filename in Python?</Title>
+<Body>&lt;p&gt;I have a directory full of files that have date strings as part of the filenames:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;file_type_1_20140722_foo.txtfile_type_two_20140723_bar.txtfiletypethree20140724qux.txt&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I need to get these date strings from the filenames and save them in an array:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;[&#x27;20140722&#x27;, &#x27;20140723&#x27;, &#x27;20140724&#x27;]&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;But they can appear at various places in the filename, so I can&#x27;t just use substring notation and extract it directly. In the past, the way I&#x27;ve done something similar to this in Bash is like so:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;date=$(echo $file | egrep -o &#x27;[[:digit:]]{8}&#x27; | head -n1)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;But &lt;a href=&quot;https://stackoverflow.com/questions/24538909/efficiently-computing-floating-point-arithmetic-hundreds-of-thousands-of-times-i&quot;&gt;I can&#x27;t use Bash for this because it sucks at math&lt;/a&gt; (I need to be able to add and subtract floating point numbers). I&#x27;ve tried &lt;code&gt;glob.glob()&lt;/code&gt; and &lt;code&gt;re.match()&lt;/code&gt;, but both return empty sets:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; dates = [file for file in sorted(os.listdir(&#x27;.&#x27;)) if re.match(&quot;[0-9]{8}&quot;, file)]&amp;gt;&amp;gt;&amp;gt; print dates&amp;gt;&amp;gt;&amp;gt; []&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I know the problem is it&#x27;s looking for complete file names that are eight digits long, but I have no idea how to make it look for substrings instead. Any ideas?&lt;/p&gt;</Body>
+<Tags>python,regex</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Your regular expression looks good, but you should be using re.search instead of re.match so that it will search for that expression anywhere in the string:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;import rer = re.compile(&quot;[0-9]{8}&quot;)m = r.search(filename)if m:    print m.group(0)&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;&lt;code&gt;re.match&lt;/code&gt; matches from the beginning of the string. &lt;code&gt;re.search&lt;/code&gt; matches the pattern anywhere.Or you can try this:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;extract_dates = re.compile(&quot;[0-9]{8}&quot;).findalldates = [dates[0] for dates in sorted(    extract_dates(filename) for filename in os.listdir(&#x27;.&#x27;)) if dates]&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; import re&amp;gt;&amp;gt;&amp;gt; import os&amp;gt;&amp;gt;&amp;gt; [date for file in os.listdir(&#x27;.&#x27;) for date in re.findall(&quot;(\d{8})&quot;, file)][&#x27;20140722&#x27;, &#x27;20140723&#x27;]&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Note that if a filename has a 9-digit substring, then only the first 8 digits will be matched. If a filename contains a 16-digit substring, there will be 2 non-overlapping matches.&lt;/p&gt;</Body>
+</answer>
+</qroot>

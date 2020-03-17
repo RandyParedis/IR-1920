@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>changing the plot of a graph based on the items of a dictionary using radiobuttons</Title>
+<Body>&lt;p&gt;I have a dictionary containing a number of items. I would like to create single graph with the number of radio buttons equaling the number of items in the dictionary. The radio button options would be the keys of the dictionary, and the associated values would be plotted accordingly every time you selected a different radio button. For example: &lt;/p&gt;&lt;pre&gt;&lt;code&gt;from matplotlib.widgets import Slider, Button, RadioButtonsdata = {&#x27;A&#x27; : [1,2,4,6,7,8,10],&#x27;B&#x27; : [1,2,4,6,4,3,7], &#x27;C&#x27; : [3,2,1,6,2,3,4]}axcolor = &#x27;lightgoldenrodyellow&#x27;rax = plt.axes([0.025, 0.5, 0.15, 0.15], facecolor=axcolor)radio = RadioButtons(rax, data.keys(), active=0)def chooseGraph(graph):    [plt.plot(data[names]) for names in data.keys()]radio.on_clicked(chooseGraph)plt.show()&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;When I execute this code, I get the radio buttons, but no graph. When I select a button, all 3 datasets are plotted over the top of the radio button, and changing the buttons just changes the colour. &lt;/p&gt;&lt;p&gt;Thanks for your help in advance!&lt;/p&gt;</Body>
+<Tags>python-2.7,matplotlib,radio-button,nsdictionary</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;You need to create an axes to which to plot the data, else it will choose the currently active axes, which is the axes with the radio buttons in it.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;import matplotlib.pyplot as pltfrom matplotlib.widgets import RadioButtonsdata = {&#x27;A&#x27; : [1,2,4,6,7,8,10],&#x27;B&#x27; : [1,2,4,6,4,3,7], &#x27;C&#x27; : [3,2,1,6,2,3,4]}fig, ax = plt.subplots()ax.plot(data[&quot;A&quot;])rax = fig.add_axes([0.025, 0.5, 0.15, 0.15])radio = RadioButtons(rax, sorted(data.keys()), active=0)def chooseGraph(graph):    ax.clear()    ax.plot(data[graph])    fig.canvas.draw_idle()radio.on_clicked(chooseGraph)plt.show()&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

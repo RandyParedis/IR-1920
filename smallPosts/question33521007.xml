@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Strings and user input C++</Title>
+<Body>&lt;p&gt;I&#x27;m supposed to read an integer &lt;em&gt;n&lt;/em&gt; from the user, which is the followed by &lt;em&gt;n&lt;/em&gt; words, and then what follows after that is a sequence of words and punctuation terminated by the word END. For example:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;2 foo d  foo is just food without the d . END&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The &lt;em&gt;n&lt;/em&gt; words are to be &quot;redacted&quot; from the second line. So it would show up as:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;*** is just food without the * . &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I think I can figure out the redacting part. I just cannot seem to figure out how to read the words in... any help is much appreciated!&lt;/p&gt;&lt;pre&gt;&lt;code&gt;#include &amp;lt;iostream&amp;gt;#include &amp;lt;string&amp;gt;using namespace std;int main(){int n;cin &amp;gt;&amp;gt; n;string *redact = new string[n]for(int i = 0; i &amp;lt; n; ++i)    cin &amp;gt;&amp;gt; redact[i] // this part works!return 0;}&lt;/code&gt;&lt;/pre&gt;</Body>
+<Tags>c++</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Following code will cater the purpose.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;#include &amp;lt;iostream&amp;gt;#include &amp;lt;string&amp;gt;#include &amp;lt;set&amp;gt;int main(){  int n;  std::cin &amp;gt;&amp;gt; n;  std::set&amp;lt;std::string&amp;gt; redact;  std::string word;  for(int i = 0; i &amp;lt; n; ++i)  {    std::cin &amp;gt;&amp;gt; word;    redact.insert(word);  } while( std::cin&amp;gt;&amp;gt; word &amp;amp;&amp;amp; word != &quot;END&quot; ) {      if ( redact.find(word) == redact.end() )        std::cout&amp;lt;&amp;lt;word&amp;lt;&amp;lt;&#x27; &#x27;; } std::cout&amp;lt;&amp;lt;&#x27;\n&#x27;;return 0;}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I believe you are a learning C++, please note a point use &lt;code&gt;typesafe&lt;/code&gt;, &lt;code&gt;bound-safe&lt;/code&gt; and &lt;code&gt;scope-safe&lt;/code&gt; C++. &lt;/p&gt;&lt;p&gt;So, no &lt;code&gt;new&lt;/code&gt; &lt;code&gt;delete&lt;/code&gt; unless you can call yourself an &lt;code&gt;adept&lt;/code&gt;. Use the algorithms and containers provided by C++, instead of inventing your own. &lt;/p&gt;</Body>
+</answer>
+</qroot>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>64Bit NIST Biometric Image Software</Title>
+<Body>&lt;p&gt;I am currently looking at using the NIST .Net project and including it into my 64Bit WCF Service. The problem is that the NBIS.Net project is a C++ 32 bit project which wont work in IIS7. &lt;/p&gt;&lt;p&gt;If I change the project to 64Bit and rebuild it I get these errors below. All LNK2028 errors.&lt;/p&gt;&lt;blockquote&gt;  &lt;p&gt;error LNK2028: unresolved token (0A000007) &quot;extern &quot;C&quot; int __cdecl wsq_encode_mem....&lt;/p&gt;&lt;/blockquote&gt;&lt;p&gt;Is there a way to compile the C++ project as 64Bit? Please note I have no C++ experience.&lt;/p&gt;&lt;p&gt;NBIS project: &lt;a href=&quot;http://www.nist.gov/itl/iad/ig/bws.cfm&quot; rel=&quot;nofollow&quot;&gt;http://www.nist.gov/itl/iad/ig/bws.cfm&lt;/a&gt;&lt;/p&gt;</Body>
+<Tags>c++</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Leave it in 32bits, on the iis, app pools, your app pool, advance settings, enable 32bits apps&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;If this is still of any interest, I have a working 64 bit version of NBIS 5.0 running on Windows. I had to compile it with new build configuration unter VS2012, but it works.&lt;/p&gt;&lt;p&gt;I can provide the build configuration and some extra files that are needed to make it compile on Windows.&lt;/p&gt;</Body>
+</answer>
+</qroot>

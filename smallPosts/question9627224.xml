@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Create a Procfile to declare the command to launch the web process:</Title>
+<Body>&lt;p&gt;I have created a Procfile file, however I keep getting the following.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;(venv)Micheles-MacBook-Pro:bed4ted michele$ foreman start/usr/local/foreman/lib/foreman/procfile.rb:31:in `read&#x27;: Is a directory - Procfile (Errno::EISDIR)from /usr/local/foreman/lib/foreman/procfile.rb:31:in `parse_procfile&#x27;from /usr/local/foreman/lib/foreman/procfile.rb:17:in `initialize&#x27;from /usr/local/foreman/lib/foreman/engine.rb:24:in `new&#x27;from /usr/local/foreman/lib/foreman/engine.rb:24:in `initialize&#x27;from /usr/local/foreman/lib/foreman/cli.rb:81:in `new&#x27;from /usr/local/foreman/lib/foreman/cli.rb:81:in `engine&#x27;from /usr/local/foreman/lib/foreman/cli.rb:33:in `start&#x27;from /usr/local/foreman/vendor/gems/thor-0.14.6/lib/thor/task.rb:22:in `send&#x27;from /usr/local/foreman/vendor/gems/thor-0.14.6/lib/thor/task.rb:22:in `run&#x27;from /usr/local/foreman/vendor/gems/thor-0.14.6/lib/thor/invocation.rb:118:in `invoke_task&#x27;from /usr/local/foreman/vendor/gems/thor-0.14.6/lib/thor.rb:263:in `dispatch&#x27;from /usr/local/foreman/vendor/gems/thor-0.14.6/lib/thor/base.rb:389:in `start&#x27;from /usr/bin/foreman:15&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I may be making a completely junior mistake, but I cannot see it at all. I&#x27;ve checked other questions that have been posted on stackoverflow, but I am still at a loss. Any ideas?&lt;/p&gt;</Body>
+<Tags>python,django,heroku</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;If you&#x27;re using python, make sure you&#x27;re using the cedar stack.&lt;br&gt;second, the procfile must be named &quot;Procfile&quot;, not &quot;procfile&quot; or &quot;Procfile.rb&quot; and it must be in the root of your project (next to requirements.txt)&lt;/p&gt;&lt;p&gt;Hopefully that should get you 90% of the way there.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;It looks like foreman is getting confused while trying to parse your Procfile. What output do you get when you run &lt;code&gt;foreman check&lt;/code&gt;?&lt;/p&gt;&lt;p&gt;Based on one of your comments this may be an issue with the formatting of your Procfile line. Foreman expects every process in a Procfile to be in the format &lt;code&gt;name:command&lt;/code&gt; (&lt;a href=&quot;http://ddollar.github.com/foreman/#PROCFILE&quot; rel=&quot;nofollow&quot;&gt;see the manual&lt;/a&gt;). Does your Procfile line start with the text &lt;code&gt;web:&lt;/code&gt; or some other name? If not try adding that.&lt;/p&gt;&lt;p&gt;Also, what command are you using to run this? &lt;code&gt;foreman run&lt;/code&gt;?&lt;/p&gt;</Body>
+</answer>
+</qroot>

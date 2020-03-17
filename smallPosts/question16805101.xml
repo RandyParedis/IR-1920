@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Anybody knows how to solve this error?</Title>
+<Body>&lt;p&gt;OLSR class file&lt;br&gt;  OLSR.cc&lt;/p&gt;&lt;pre&gt;&lt;code&gt;OLSR::link_sensing(OLSR_msg&amp;amp; msg, const nsaddr_t &amp;amp;receiver_iface, const nsaddr_t &amp;amp;sender_iface, const int &amp;amp;index){OLSR_hello&amp;amp; hello = msg.hello();double now = CURRENT_TIME;bool updated = false;bool created = false;OLSR_link_tuple* link_tuple = state_.find_link_tuple(sender_iface);if (link_tuple == NULL){    // We have to create a new tuple    link_tuple = new OLSR_link_tuple;    link_tuple-&amp;gt;nb_iface_addr() = sender_iface;    link_tuple-&amp;gt;local_iface_addr() = receiver_iface;    //For testing only    if(sender_iface == 168427530 &amp;amp;&amp;amp; receiver_iface == 169082900 ) //Error occur at this line    {        link_tuple-&amp;gt;link_quality_metric() = 0.9;    }&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;OLSR header file    OLSR.h&lt;/p&gt;&lt;pre&gt;&lt;code&gt;virtual bool        link_sensing(OLSR_msg&amp;amp;, const nsaddr_t &amp;amp;, const nsaddr_t &amp;amp;, const int &amp;amp;);&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;error get: Description&lt;br&gt;no match for &#x27;operator==&#x27; in &#x27;receiver_iface == 169082900&#x27;  &lt;/p&gt;</Body>
+<Tags>c++</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;The error message is clear.&lt;/p&gt;&lt;blockquote&gt;  &lt;p&gt;no match for &#x27;operator==&#x27; in &#x27;receiver_iface == 169082900&#x27;&lt;/p&gt;&lt;/blockquote&gt;&lt;p&gt;means, the compiler does not understand what you mean by &lt;code&gt;==&lt;/code&gt; in&lt;/p&gt;&lt;pre&gt;&lt;code&gt;receiver_iface == 169082900&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;That is, it does not know how to compare &lt;code&gt;receiver_iface&lt;/code&gt; and &lt;code&gt;169082900&lt;/code&gt;.&lt;/p&gt;&lt;p&gt;&lt;code&gt;receiver_iface&lt;/code&gt; is of type &lt;code&gt;nsaddr_t&lt;/code&gt; (whatever that is) and &lt;code&gt;169082900&lt;/code&gt; is of type &lt;code&gt;int&lt;/code&gt;.&lt;/p&gt;&lt;p&gt;So you should define the following function before the code that causes the error:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;bool operator== (const nsaddr_t &amp;amp;left, int right){    // whatever you consider appropriate}&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

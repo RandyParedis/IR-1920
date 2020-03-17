@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>How to send arbitrary download request to proper handler</Title>
+<Body>&lt;p&gt;I&#x27;m building a Qt application and using the QNetworkAccessManager to manager my http requests. Due to the asyncronous nature of QNetworkAccessManager you have to bind a slot to recieve the QNetworkReply when it&#x27;s done. &lt;/p&gt;&lt;p&gt;I&#x27;m new to multithreaded design so I&#x27;m not sure how to handle this. I will have 3 seperate types of network replies which need to be parsed in the bound slot and then passed to the correct handler. One will extract a link, the 2nd will extract a picture, and the third will parse a post request&#x27;s reply to verify that it was successful. All of this takes place within a QWidget subclass. &lt;/p&gt;&lt;p&gt;So, I&#x27;m wondering how this is normally handled. As I see it, based purely on intuition as I&#x27;ve done little reading on this specific subject, I would think there are two ways to handle this. One would be to rebind the network manager&#x27;s finished() signal depending on the call and the other would be to use some sort of state flags and check those to see what the reply is expected to be. What is the preferred method, not necessarily between these two, that&#x27;s just all I could think of myself, someone more experienced may well have a better solution.&lt;/p&gt;&lt;p&gt;Now, I&#x27;m also fairly new to c++, so if the later is the better way what&#x27;s the best way to handle flags in this case? Would I use a bitset, an enum/flag setting function, or something else? Thanks guys!&lt;/p&gt;</Body>
+<Tags>c++,multithreading,qt,network-programming</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;If you know the type of reply you&#x27;re going to get as a result of doing specific request you can connect &lt;a href=&quot;http://doc.qt.nokia.com/latest/qnetworkreply.html#finished&quot; rel=&quot;nofollow&quot;&gt;void QNetworkReply::finished ()&lt;/a&gt; signal to suitable handler.&lt;/p&gt;</Body>
+</answer>
+</qroot>

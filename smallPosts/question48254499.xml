@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Linker error when printing MPIR mpf_class</Title>
+<Body>&lt;p&gt;I am trying to use the &lt;a href=&quot;http://mpir.org/&quot; rel=&quot;nofollow noreferrer&quot;&gt;MPIR&lt;/a&gt; library in a Qt Project. Here is a code snippet:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;#include &amp;lt;QCoreApplication&amp;gt;#include &amp;lt;iostream&amp;gt;#include &quot;mpir.h&quot;#include &quot;mpirxx.h&quot;int main(int argc, char *argv[]){    QCoreApplication a(argc, argv);    mpf_class x, y, z;    x = &quot;4325345345634534535345345&quot;;    y = &quot;45&quot;;    z = x - y;    return a.exec();}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The above code compiles without any issues. However, when I try to print the value of the mpf_class like this:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;std::cout &amp;lt;&amp;lt; z;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I get the following error:&lt;/p&gt;&lt;blockquote&gt;  &lt;p&gt;main.obj:-1: error: LNK2019: unresolved external symbol &quot;__declspec(dllimport) class std::basic_ostream &gt; &amp;amp; __cdecl operator&amp;lt;&amp;lt;(class std::basic_ostream &gt; &amp;amp;,struct __mpf_struct const *)&quot; (__imp_??6@YAAEAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AEAV01@PEBU__mpf_struct@@@Z) referenced in function main&lt;/p&gt;&lt;/blockquote&gt;&lt;p&gt;In case it helps, I built the libraries using the following commands in the X64 bit version of &lt;a href=&quot;http://www.msys2.org/&quot; rel=&quot;nofollow noreferrer&quot;&gt;MSYS2&lt;/a&gt;:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;./configure --disable-static --enable-shared --enable-cxxmake&lt;/code&gt;&lt;/pre&gt;</Body>
+<Tags>c++,qt,mpir</Tags>
+</question>
+</qroot>

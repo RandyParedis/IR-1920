@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>wxFormBuilder Toolbar Spacing</Title>
+<Body>&lt;p&gt;I am creating a layout using wxFormBuilder. I have a frame, wxBoxSizer (wxToolBar and wxListBook in it) and a wxMenuBar with a wxMenu in it, like so: &lt;a href=&quot;http://i.imgur.com/Ibw6b.png&quot; rel=&quot;nofollow&quot;&gt;http://i.imgur.com/Ibw6b.png&lt;/a&gt;&lt;/p&gt;&lt;p&gt;I then view the XRC Window and it seems ok: &lt;a href=&quot;http://i.imgur.com/elEpq.png&quot; rel=&quot;nofollow&quot;&gt;http://i.imgur.com/elEpq.png&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Then, I add a tool to the toolbar, like so: &lt;a href=&quot;http://i.imgur.com/qq0Od.png&quot; rel=&quot;nofollow&quot;&gt;http://i.imgur.com/qq0Od.png&lt;/a&gt;&lt;/p&gt;&lt;p&gt;The problem shows up when I then check the XRC Window and I see that there is a blank space between the menubar and the toolbar: &lt;a href=&quot;http://i.imgur.com/jfqGK.png&quot; rel=&quot;nofollow&quot;&gt;http://i.imgur.com/jfqGK.png&lt;/a&gt;&lt;/p&gt;&lt;p&gt;How can I remove this gap? Thanks.&lt;/p&gt;</Body>
+<Tags>c++,user-interface,wxwidgets,wxformbuilder</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Normal, default frame toolbar shouldn&#x27;t be added to the sizer managing the rest of the frame elements because it&#x27;s already handled by &lt;code&gt;wxFrame&lt;/code&gt; itself automatically, so if you just need a toolbar positioned in the standard location (as opposed to having a toolbar in the middle of a window or something like that) you just shouldn&#x27;t do this. I&#x27;m still not sure where does the gap come from but I am pretty sure that it will disappear once you stop adding toolbar to the sizer.&lt;/p&gt;</Body>
+</answer>
+</qroot>

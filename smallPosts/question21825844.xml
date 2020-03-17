@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Bigram Collocations for spelling correction ,Python</Title>
+<Body>&lt;p&gt;I&#x27;m building a spelling correction algorithm based on peter norvig&#x27;s code. Adding my own cases led to an increase in efficiency (since I have no reference text like big.txt and the text consists of mostly non english words).&lt;br&gt;I noticed that the word &quot;golden&quot; was autocorrected to &quot;garden&quot; (because garden has a higher freq of occurrence in the text). So i&#x27;ve decided to add bigram collocations to the text. This will allow golden to remain golden when it appears in combination with some word with which it usually occurs. I am implementing it and I need some help. here&#x27;s a piece of the code:  &lt;/p&gt;&lt;pre&gt;&lt;code&gt;import nltkfrom nltk.collocations import *bigram_measures = nltk.collocations.BigramAssocMeasures()finder = BigramCollocationFinder.from_words(tokenized) #create bigram pairs in text called tokenizedfinder.apply_freq_filter(3) #bigrams which occur less than 3 times will not be considered. &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The next thing I want to do is add an exception, that if it appears in &quot;finder&quot; then the word isn&#x27;t supposed to be replaced. How could I use it.?&lt;br&gt;(if the problem statement doesn&#x27;t clarify much, I&#x27;ll edit it on request)&lt;/p&gt;</Body>
+<Tags>python-2.7,replace,nltk,spell-checking,n-gram</Tags>
+</question>
+</qroot>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Is it possible to stop Django from creating .pyc files, whilst in development?</Title>
+<Body>&lt;p&gt;Is it possible to stop Django from creating the .pyc files? I know it&#x27;s Python that creates them when modules are imported, but is there some way of turning them off?&lt;/p&gt;&lt;p&gt;Totally understand why they&#x27;re created, etc, and will want them when I go live, but currently they just clutter up the directory and it bothers me - so please, no &quot;you shouldn&#x27;t want to turn them off&quot;. I also know how I could stop them appearing, etc, etc. I really just want to know how I can stop them being created.&lt;/p&gt;&lt;p&gt;Oh and I&#x27;m on Linux, of course.&lt;/p&gt;&lt;p&gt;Thanks.&lt;/p&gt;</Body>
+<Tags>python,django,linux</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Edit your dispatcher, so the &lt;a href=&quot;http://en.wikipedia.org/wiki/Shebang_(Unix)&quot; rel=&quot;nofollow&quot;&gt;hashbang&lt;/a&gt; reads:&lt;/p&gt;&lt;p&gt;&lt;code&gt;#!/usr/bin/env python -B&lt;/code&gt;&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;You can try setting the &lt;strong&gt;PYTHONDONTWRITEBYTECODE&lt;/strong&gt; environment variable:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;a href=&quot;http://docs.python.org/using/cmdline.html#miscellaneous-options&quot; rel=&quot;noreferrer&quot;&gt;Python Command line and environment&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;blockquote&gt;  &lt;p&gt;PYTHONDONTWRITEBYTECODE&lt;/p&gt;    &lt;p&gt;If this is set, Python won’t try to write .pyc or .pyo files on the import of source modules.&lt;/p&gt;    &lt;p&gt;New in version 2.6.&lt;/p&gt;&lt;/blockquote&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;You can use this, where applicable:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;import syssys.dont_write_bytecode = True&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;Very late reply but I got here after Googling. You can try this:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;python -B manage.py [any other commands/options]&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;For example:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;python -B manage.py sql yourapp&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;However, this doesn&#x27;t work for some reason:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;python -B manage.py runserver 0.0.0.0:5000&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

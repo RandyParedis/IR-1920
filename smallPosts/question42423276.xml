@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Python complex object indexing - trouble accessing specific nested element</Title>
+<Body>&lt;p&gt;This is a training example that may or may not have application in the real world.  I have simplified it just to illustrate the problem.  Once built, I was having difficulty finding the right syntax to index a sub element.  Hoping someone can crack this ... just for the learning value.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;import numpy as npimport pandas as pd# some simple arrays:simp1=np.array([[1,2,3,4,5]])simp2=np.array([[10,9,8,7,6]])simp3=[11,12,13]trueSimp1=np.array([10,9,8,7,6])crazyList = [simp1, simp2, simp3, trueSimp1]&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We can access the first element of the last object with:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;crazyList[3][0]&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We can view the whole first object with:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;crazyList[0]&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;But how to get just a sub-element within the first object?  I tried many failed ideas of [0][1], [0,1], [[0]], [[0][1]] etc... and can&#x27;t seem to find the right one to get at it.  Just for the learning, I would like add this answer to the notes I am building.&lt;/p&gt;</Body>
+<Tags>python,indexing</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;For learnings&#x27; sake, you should know that this list is ideally a structure you would never ever have to deal with. &lt;/p&gt;&lt;p&gt;Your issue is that the first element in &lt;code&gt;crazyList&lt;/code&gt; has an empty level of nesting (notice the extra square brackets). That is, the &lt;code&gt;ndarray&lt;/code&gt; contains another &lt;code&gt;ndarray&lt;/code&gt; containing the actual elements. &lt;/p&gt;&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; crazyList[0]array([[1, 2, 3, 4, 5]])&amp;gt;&amp;gt;&amp;gt; type(crazyList[0][0])numpy.ndarray&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Hence to access individual elements, you need to index the additional layer. &lt;/p&gt;&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; crazyList[0][0][1]2&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

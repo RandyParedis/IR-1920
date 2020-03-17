@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Input into site using Mechanize (Python)</Title>
+<Body>&lt;p&gt;I&#x27;m trying to make a dictionary program using dictionary.com for the source but I can&#x27;t find the name of the search box in the source code &lt;/p&gt;&lt;pre&gt;&lt;code&gt;from mechanize import Browserinp = raw_input(&quot;Enter Word: &quot;)Word = (inp)SEARCH_PAGE = &quot;http://dictionary.reference.com/&quot;browser = Browser()browser.open( SEARCH_PAGE )browser.select_form( nr=0 ) browser[&#x27;name of search form&#x27;] = Wordbrowser.submit()&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Can anyone help me make this work or help me find the name of the search bar in the HTML source?&lt;/p&gt;</Body>
+<Tags>python,html,browser,mechanize</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;You can look through the forms with the method Browser.forms().Each of these forms has a variable called controls,a list of controls in the form.Each control in this list has a &quot;name&quot; variable.You can use these names to index with the browser, as you already know.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;from mechanize import Browserinp = raw_input(&quot;Enter Word: &quot;)Word = (inp)SEARCH_PAGE = &quot;http://dictionary.reference.com/&quot;browser = Browser()browser.open( SEARCH_PAGE )form = list(browser.forms())[0]                        #The first formprint formnames = map(lambda n: n.name, form.controls)print namesbrowser.select_form( nr=0 ) browser[names[0]] = Wordtxt = browser.submit().read()#txt has the html from dictionary.reference.com&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

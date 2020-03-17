@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>how to get list of processes that are bind to console window that I&#x27;m running in that would work also in windows 2000?</Title>
+<Body>&lt;p&gt;The only thing I found is &lt;a href=&quot;http://msdn.microsoft.com/en-us/library/ms683170%28v=VS.85%29.aspx&quot; rel=&quot;nofollow&quot;&gt;GetConsoleProcessList&lt;/a&gt;. The thing here is that this function doesn&#x27;t work in Windows 2000. Is there any way to get around this issue, so it would work in all systems since win2k ? Is there another function that does similar thing ? &lt;/p&gt;</Body>
+<Tags>c++,windows,winapi,console,windows-2000</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;The &lt;code&gt;GetConsoleProcessList&lt;/code&gt;  function is only available on Windows XP/2003 and higher. Not on Windows 2000.&lt;/p&gt;</Body>
+</answer>
+</qroot>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>wxToggleButton::GetValue() crashes</Title>
+<Body>&lt;p&gt;Access violation error on togglebutton-&gt;getValue during runtime in wxwidgets?&lt;/p&gt;&lt;pre&gt;&lt;code&gt; fxButtonYesNo = new wxToggleButton( this, wxID_ANY, wxT(&quot;OFF&quot;) ); fxButtonYesNo-&amp;gt;Connect( wxEVT_COMMAND_TOGGLEBUTTON_CLICKED,            wxCommandEventHandler(fxButtonYesNoState) ); void fxButtonYesNoState( wxCommandEvent&amp;amp; event )   { bool fxPressedValue = fxButtonYesNo-&amp;gt;GetValue();     if(fxPressedValue)      { fxTextPre-&amp;gt;SetLabel(&quot;FX ON &quot;); }      else { fxTextPre-&amp;gt;SetLabel(&quot;FX OFF &quot;); &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;} }&gt;&lt;/p&gt;</Body>
+<Tags>c++,wxwidgets</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Ok, the error was found! The Connect function to the togglebutton was not complete and hence an access violation error! The complete Connect function is:&lt;/p&gt;&lt;p&gt;fxButtonYesNo-&gt;Connect( wxEVT_COMMAND_TOGGLEBUTTON_CLICKED, wxCommandEventHandler(fxButtonYesNoState), nulltpr, this );&lt;/p&gt;</Body>
+</answer>
+</qroot>

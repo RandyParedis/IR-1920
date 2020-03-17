@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Unintentionally overwriting Python 2.7 standard module - how to prevent?</Title>
+<Body>&lt;p&gt;I wanted to add some stuff to Python&#x27;s logging module, so I created a separate module under package name &quot;my&quot;, which is inside the project&#x27;s directory (which is the first entry in &lt;code&gt;sys.path&lt;/code&gt;). I also have another module of mine, which lives in that same space:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;mymy.loggingmy.something&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now I wanted to log stuff in &lt;code&gt;my.something&lt;/code&gt; and added &lt;code&gt;import logging&lt;/code&gt; to the file - but it seems Python loads &lt;code&gt;my.logging&lt;/code&gt; instead of the standard module. &lt;/p&gt;&lt;p&gt;When reading the Python documentation (section 6.1.2. The Module Search Path), I thought I was safe:&lt;/p&gt;&lt;blockquote&gt;  &lt;p&gt;When a module named spam is imported, the interpreter first searches for a built-in module with that name. If not found, it then searches for a file named spam.py in a list of directories given by the variable sys.path.&lt;/p&gt;&lt;/blockquote&gt;&lt;p&gt;So a &quot;standard module&quot; is not a &quot;built-in module&quot;? I guess then, that I have to move the &lt;code&gt;my&lt;/code&gt; modules out of the current directory - ? Other possibilities?&lt;/p&gt;</Body>
+<Tags>python,module,python-import</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;When it says &quot;built-in module&quot;, that line of docs is referring to modules actually compiled directly into the Python executable. You can see which ones those are in &lt;a href=&quot;https://docs.python.org/3/library/sys.html#sys.builtin_module_names&quot; rel=&quot;nofollow noreferrer&quot;&gt;&lt;code&gt;sys.builtin_module_names&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;What you need to do is turn off implicit relative imports, which can be done on a per-file basis with the &lt;code&gt;absolute_import&lt;/code&gt; future statement:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;from __future__ import absolute_import&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

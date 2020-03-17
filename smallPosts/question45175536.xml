@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>excluding bias for prediction in NN</Title>
+<Body>&lt;p&gt;I have a continuous dataset, for which I built a neural network. Before running the NN, I have scaled the training data and added bias after each layer. I am pretty happy with training result, however, I am  facing a problem, when trying to build a predict method.&lt;/p&gt;&lt;p&gt;As I have said, the training data was scaled. The problem is, if I run un-scaled testing data with training weights, whole model will act differently and testing score will of course produce different result. &lt;/p&gt;&lt;p&gt;My question is, how to exclude bias from prediction model? Do I need to remove every weight out manually or are there and good practises around?&lt;/p&gt;</Body>
+<Tags>python,neural-network</Tags>
+</question>
+</qroot>

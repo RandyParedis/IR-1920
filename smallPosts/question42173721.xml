@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>cvxopt errors out when multiplying a scalar to a matrix</Title>
+<Body>&lt;pre&gt;&lt;code&gt;Python 3.5.2 |Anaconda custom (64-bit)| (default, Jul  2 2016, 17:53:06) [GCC 4.4.7 20120313 (Red Hat 4.4.7-1)] on linuxType &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.&amp;gt;&amp;gt;&amp;gt; from cvxopt import matrix&amp;gt;&amp;gt;&amp;gt; 2 * matrix(1.0, (1, 4))Intel MKL FATAL ERROR: Cannot load libmkl_avx.so or libmkl_def.so&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;When running the above scripts I get an Intel MKL Fatal Error. The test that is mentioned in issues with similar error passed. The test is&lt;/p&gt;&lt;pre&gt;&lt;code&gt;python -c &#x27;import sklearn.linear_model.tests.test_randomized_l1&#x27;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I ran python with &lt;code&gt;LD_DEBUG=symbols&lt;/code&gt; and see the below error in the logs&lt;/p&gt;&lt;pre&gt;&lt;code&gt;/opt/anaconda3/lib/python3.5/site-packages/cvxopt/../../../libmkl_avx.so: error: symbol lookup error: undefined symbol: mkl_sparse_optimize_bsr_trsm_i8 (fatal)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Does anyone know how to fix this? I am interested in retaining the mkl option and not the nomkl one&lt;/p&gt;&lt;p&gt;NOTE &lt;code&gt;mkl&lt;/code&gt; is installed  and at newest version and so is &lt;code&gt;scikit-learn&lt;/code&gt;&lt;/p&gt;</Body>
+<Tags>python,anaconda,intel-mkl,cvxopt</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;The mkl package is probably missing in your anaconda installation.&lt;/p&gt;&lt;p&gt;a) You could try to upgrade anaconda completely:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;conda upgrade anaconda&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;b) Alternatively you could explicitly install mkl:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;conda install mkl&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I have not checked a), but used b). In this case you might need to upgrade also sklearn module:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;conda upgrade scikit-learn&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;I ran into this while running the examples on &lt;a href=&quot;http://scikit-learn.org/stable/modules/linear_model.html&quot; rel=&quot;nofollow noreferrer&quot;&gt;http://scikit-learn.org/stable/modules/linear_model.html&lt;/a&gt;. Apparently a bunch of libraries are not being loaded automatically. Here are the manual loads I&#x27;m using so far, others will probably be needed depending on what you are doing. For me it did fix the one test case in the question.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;CONDA_LIB=$CONDA_PREFIX/../../libLIBS=$CONDA_LIB/libmkl_intel_thread.so:$CONDA_LIB/libmkl_avx.so:$CONDA_LIB/libmkl_core.so:$CONDA_LIB/libiomp5.so:/lib/libgomp.soLD_PRELOAD=$LIBS python&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

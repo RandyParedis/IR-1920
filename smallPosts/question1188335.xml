@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Why default return value of main is 0 and not EXIT_SUCCESS?</Title>
+<Body>&lt;p&gt;The ISO 1998 c++ standard specifies that not explicitly using a return statement in the main is equivalent to use &lt;code&gt;return 0&lt;/code&gt;. But what if an implementation has a different standard &quot;no error&quot; code, for example &lt;code&gt;-1&lt;/code&gt;?&lt;/p&gt;&lt;p&gt;Why not use the standard macro &lt;code&gt;EXIT_SUCCESS&lt;/code&gt; that would be replaced either by &lt;code&gt;0&lt;/code&gt; or &lt;code&gt;-1&lt;/code&gt; or any other value depending on the implementation?&lt;/p&gt;&lt;p&gt;C++ seems to force the semantic of the program, which is not the role of a language which should only describe how the program behaves. Moreover the situation is different for the &quot;error&quot; return value: only &lt;code&gt;EXIT_FAILURE&lt;/code&gt; is a standard &quot;error&quot; termination flag, with no explicit value, like &quot;1&quot; for example.&lt;/p&gt;&lt;p&gt;What are the reasons of these choices?&lt;/p&gt;</Body>
+<Tags>c++,return,standards,main</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;0 is the standard (success) exit code on all POSIX systems, and all systems I know!  I think it has been this way sinc time begain (or at least since Unix did...) So it&#x27;s for this reason I would say.&lt;/p&gt;&lt;p&gt;What system do you know that is different?&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;The standard is simply making a determination on what must be the value when not explicitly set. It is up to the developers to either explicitly set the return value or assume an appropriate semantic for the default. I don&#x27;t think the language is trying to force any semantics on to the developers.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;If you were also thinking about why the error code for success is 0 instead of any other value, I would add that it might have been historically for performance reasons, as comparing with 0 have been sightly faster (I think in modern architectures might be the same as with any number) and usually you don&#x27;t check for a particular error code, just if it was success or any error (so it makes sense to use the fastest comparison for that).&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;Returning zero from &lt;code&gt;main()&lt;/code&gt; does essentially the same as what you&#x27;re asking. Returning zero from &lt;code&gt;main()&lt;/code&gt; does not have to return zero to the host environment.  &lt;/p&gt;&lt;p&gt;From the C90/C99/C++98 standard document:&lt;/p&gt;&lt;blockquote&gt;  &lt;p&gt;If the value of status is zero or &lt;code&gt;EXIT_SUCCESS&lt;/code&gt;, an implementation-defined form of the status successful termination is returned.&lt;/p&gt;&lt;/blockquote&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;0 as the return code for success, and postive integers as errors is the standard in C and Unix. This scheme was chosen because normally one doesn&#x27;t care why a program &lt;strong&gt;succeeded&lt;/strong&gt;, just that it did. On the other hand, there are lots of ways for a program to fail with an error, and one is often interested in this information. Hence it makes sense to use a scalar value for success, and a range of values for error. Using positive integers is a memory-saving C convention, as they allow the error code to be defined as an unsigned int.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;Actually, &lt;code&gt;return 0&lt;/code&gt; won&#x27;t necessarily return 0! I&#x27;m quoting the C standard here, because it&#x27;s what I know best.&lt;/p&gt;&lt;p&gt;About &lt;code&gt;return&lt;/code&gt; in &lt;code&gt;main()&lt;/code&gt;:&lt;/p&gt;&lt;blockquote&gt;  &lt;p&gt;5.1.2.2.3 Program termination&lt;/p&gt;    &lt;p&gt;If the return type of the main function is a type compatible with &lt;code&gt;int&lt;/code&gt;, a return from the initial call to the &lt;code&gt;main&lt;/code&gt; function is equivalent to calling the &lt;code&gt;exit&lt;/code&gt; function with the value returned by the &lt;code&gt;main&lt;/code&gt; function as its argument;&lt;/p&gt;&lt;/blockquote&gt;&lt;p&gt;About &lt;code&gt;exit()&lt;/code&gt;:&lt;/p&gt;&lt;blockquote&gt;  &lt;p&gt;7.20.4.3 The exit function&lt;br&gt;    Synopsis  &lt;/p&gt;&lt;pre&gt;&lt;code&gt;#include &amp;lt;stdlib.h&amp;gt;void exit(int status);&lt;/code&gt;&lt;/pre&gt;    &lt;p&gt;[...]&lt;br&gt;  Finally, control is returned to the host environment. If the value of &lt;code&gt;status&lt;/code&gt; is zero or  &lt;code&gt;EXIT_SUCCESS&lt;/code&gt;, an implementation-defined form of the status &lt;em&gt;successful termination&lt;/em&gt; is  returned.&lt;/p&gt;&lt;/blockquote&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;Computer language standards say what a program written in the language has to do, and what will happen.  In this case, the C and C++ standards say that returning 0 signals success, among other things.&lt;/p&gt;&lt;p&gt;Language implementations allow programs to run on particular implementations.  It&#x27;s the job of the implementor to figure out how to make I/O work according to the standard, or to give the OS the correct result code.&lt;/p&gt;&lt;p&gt;What a program does and what the OS sees do not have to be the same thing.  All that is necessary is that the program works as the standard says on the given OS.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;OS/360 and successors use a numeric exit code, &lt;code&gt;0&lt;/code&gt; usually being success, &lt;code&gt;4&lt;/code&gt; for warnings (such as a compiler that generated warning message), &lt;code&gt;8&lt;/code&gt; for error, and &lt;code&gt;12&lt;/code&gt; for especially bad errors(such as being unable to open SYSPRINT, the standard output unit).&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;By browsing &lt;code&gt;cstdlib&lt;/code&gt; I ended up with two lines:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;#define EXIT_SUCCESS 0#define EXIT_FAILURE 1&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;So &lt;code&gt;EXIT_SUCCESS&lt;/code&gt; equals &lt;code&gt;0&lt;/code&gt;, and &lt;code&gt;EXIT_FAILURE&lt;/code&gt; equals &lt;code&gt;1&lt;/code&gt;, which means it doesn&#x27;t matter, thought.&lt;/p&gt;&lt;p&gt;Checked on Linux (OpenSuse) and ended up with the same thing.&lt;/p&gt;</Body>
+</answer>
+</qroot>

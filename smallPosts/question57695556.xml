@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Why doesn&#x27;t this code run in cmd but does in the python shell?</Title>
+<Body>&lt;p&gt;When running this code with the Python Shell from IDLE, it works perfectly: the message gets printed character by character&lt;/p&gt;&lt;p&gt;But when I put this code in a &lt;em&gt;.py&lt;/em&gt; file and run it with the executable program py.exe, the only thing that happens is that a window pops up and closes itself, but nothing shows up in it. &lt;/p&gt;&lt;p&gt;I also tried to add at the end the line: &lt;code&gt;time.sleep(5)&lt;/code&gt; but I still couldn&#x27;t see the message printed.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;import timemessage = &#x27;Hello, welcome to the game...&#x27;for i in message:    print(i, end=&#x27;&#x27;)    time.sleep(0.04)&lt;/code&gt;&lt;/pre&gt;</Body>
+<Tags>python,shell,cmd</Tags>
+</question>
+</qroot>

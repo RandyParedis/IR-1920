@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>How do you check for multiple specific words in a string?</Title>
+<Body>&lt;p&gt;I am working on a text-based game, and want the program to search for multiple specific words in order in the user&#x27;s answer. For example, I wan&#x27;t to find the words &quot;Take&quot; and &quot;item&quot; in a user&#x27;s response without making the user type specifically &quot;Take item&quot;.&lt;/p&gt;&lt;p&gt;I know that you can use&lt;/p&gt;&lt;pre&gt;&lt;code&gt;    if this in that&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;to check if this word is in that string, but what about multiple words with fluff in between?&lt;/p&gt;&lt;p&gt;The code I am using now is&lt;/p&gt;&lt;pre&gt;&lt;code&gt;if (&quot;word1&quot; and &quot;word2&quot; and &quot;word3) in ans:&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;but this is lengthy and won&#x27;t work for every single input in a text-based game. What else works?&lt;/p&gt;</Body>
+<Tags>python-2.7</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;A regex based solution might be to use &lt;code&gt;re.match&lt;/code&gt;:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;input = &quot;word1 and word2 and word3&quot;match = re.match(r&#x27;(?=.*\bword1\b)(?=.*\bword2\b)(?=.*\bword3\b).*&#x27;, input)if match:    print(&quot;MATCH&quot;)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The regex pattern used makes use of positive lookaheds which assert that each word appears in the string.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;We might here want to design a library with keys and values, then look up for our desired outputs, if I understand the problem correctly: &lt;/p&gt;&lt;pre&gt;&lt;code&gt;word_action_library={   &#x27;Word1&#x27;:&#x27;Take item for WORD1&#x27;,   &#x27;Some other words we wish before Word1&#x27;:&#x27;Do not take item for WORD1&#x27;,   &#x27;Before that some WOrd1 and then some other words&#x27;:&#x27;Take items or do not take item, if you wish for WORD1&#x27;,   &#x27;Word2&#x27;:&#x27;Take item for WORD2&#x27;,   &#x27;Some other words we wish before Word2&#x27;:&#x27;Do not take item for WORD2&#x27;,   &#x27;Before that some WOrd2 and then some other words&#x27;:&#x27;Take items or do not take item, if you wish for WORD2&#x27;,   }print list(value for key,value in word_action_library.iteritems() if &#x27;word1&#x27; in key.lower())print list(value for key,value in word_action_library.iteritems() if &#x27;word2&#x27; in key.lower())&lt;/code&gt;&lt;/pre&gt;&lt;h3&gt;Output&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;[&#x27;Take items or do not take item, if you wish for WORD1&#x27;, &#x27;Do not take item for WORD1&#x27;, &#x27;Take item for WORD1&#x27;][&#x27;Take items or do not take item, if you wish for WORD2&#x27;, &#x27;Do not take item for WORD2&#x27;, &#x27;Take item for WORD2&#x27;]&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

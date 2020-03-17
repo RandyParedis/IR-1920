@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Making a STL Queue of pointer types in C++</Title>
+<Body>&lt;p&gt;I can&#x27;t quite seem to figure out why this doesn&#x27;t work. I tried to make a queue of pointer types and it failed. I have a class Room, and I want to make a queue of pointers to Room.. so I did:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;queue&amp;lt;*Room&amp;gt; bfsRooms;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;this gave me the error:&lt;/p&gt;&lt;blockquote&gt;  &lt;p&gt;`*&#x27; cannot appear in a constant-expression&lt;/p&gt;&lt;/blockquote&gt;&lt;p&gt;Does this mean it is impossible to make a STL queue of pointers?&lt;/p&gt;</Body>
+<Tags>c++,pointers,stl,queue</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;No it should be fine, you should really link the exact code and exact error so we can help you better.&lt;/p&gt;&lt;p&gt;That said a queue of pointers would look something like this:&lt;/p&gt;&lt;pre&gt;&lt;code&gt; Room r; std::queue&amp;lt;Room*&amp;gt; rooms; rooms.push(&amp;amp;r);&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;EDIT: it is worth noting that if these pointer own their objects they point to you should really encapsulate the pointer in a smart pointer, something like:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;std::queue&amp;lt;std::unique_ptr&amp;lt;Room&amp;gt;&amp;gt; rooms;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This abide by the RAII principle and will automatically clean up resources.&lt;/p&gt;</Body>
+</answer>
+</qroot>

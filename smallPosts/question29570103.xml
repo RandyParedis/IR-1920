@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Sphinx docs for composite data types</Title>
+<Body>&lt;p&gt;Is there a standard or best practice in Sphinx for providing more exact specifications for composite Python data types? For example, I have a function that returns a &lt;code&gt;dict&lt;/code&gt; mapping &lt;code&gt;str&lt;/code&gt; to &lt;code&gt;str&lt;/code&gt; and am using &lt;code&gt;numpydoc&lt;/code&gt; style. Should I do something like:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;Returns-------out : dict of str to str&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;or possibly &lt;code&gt;dict of str: str&lt;/code&gt;?&lt;/p&gt;&lt;p&gt;For lists where the type of content is known, I&#x27;ve noticed that NumPy uses the format&lt;/p&gt;&lt;pre&gt;&lt;code&gt;foo : list of int&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Is there a standard or best practice to follow for this common use case?&lt;/p&gt;</Body>
+<Tags>python,python-sphinx</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;I&#x27;m not sure if it&#x27;s a best practice but I usually do something like &lt;code&gt;:returns: dict( str=str )&lt;/code&gt;. I think it&#x27;s really what works best for you and your project. If you use something like PyCharm, it will recommend the &quot;best&quot; option for your doc strings, but it will slowly stop recommending things as it notices you do things differently. Stuff like PEP8 are more like guidelines (trying to do my best Pirates of the Caribbean impression here) and not so much hard set rules. The most important thing is whether or not you can read it.&lt;/p&gt;&lt;p&gt;One really good source of inspiration is Python&#x27;s own documentation. If ever you&#x27;re looking through it and you notice a nice looking page, look on the left side bar and click &lt;strong&gt;Show Source&lt;/strong&gt; and then just copy that style...I do it all the time :)&lt;/p&gt;</Body>
+</answer>
+</qroot>

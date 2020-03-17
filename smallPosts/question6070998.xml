@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Python terminal emulation</Title>
+<Body>&lt;p&gt;I&#x27;d like to have an xterm-compatible virtual terminal running inside a Python app.I&#x27;ll need to run ncurses-based applications inside it, feed it with user&#x27;s input and read its output.&lt;/p&gt;&lt;p&gt;So far I&#x27;ve found python-vte, but it only provides a GTK+ widget (libvte has the required VtePty class, but Python bindings don&#x27;t) and has an unacceptable libgtk dependency.&lt;/p&gt;&lt;p&gt;Is there any other way to perform a teminal emulation in Python?&lt;/p&gt;</Body>
+<Tags>python,xterm,terminal-emulator,pty</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Have you looked at &lt;a href=&quot;http://sourceforge.net/projects/termemulator/&quot; rel=&quot;nofollow&quot;&gt;this&lt;/a&gt; VT100 terminal emulator, also described in blog form &lt;a href=&quot;http://sivachandran.blogspot.com/2008/04/termemulator-10-released.html&quot; rel=&quot;nofollow&quot;&gt;here&lt;/a&gt;? It&#x27;s not an xterm emulator, but perhaps it can be leveraged for your purposes.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;After all, I&#x27;ve found the &lt;a href=&quot;https://github.com/selectel/pyte&quot; rel=&quot;noreferrer&quot;&gt;pyte&lt;/a&gt;, which is exactly what I wanted.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;I have been running a &lt;a href=&quot;http://www.codelearn.org&quot; rel=&quot;nofollow&quot;&gt;Rails Tutorial&lt;/a&gt; site &amp;amp; have deployed &lt;a href=&quot;https://github.com/liftoff/GateOne/&quot; rel=&quot;nofollow&quot;&gt;Gateone&lt;/a&gt; terminal emulator for users to execute commands. Later we devloped our own Terminal emulation. Check &lt;a href=&quot;http://github.com/pocha/terminal-codelearn&quot; rel=&quot;nofollow&quot;&gt;http://github.com/pocha/terminal-codelearn&lt;/a&gt; .&lt;/p&gt;&lt;p&gt;If you just need to execute command as a user, then probably you just need &lt;a href=&quot;http://docs.python.org/2/library/pty.html&quot; rel=&quot;nofollow&quot;&gt;http://docs.python.org/2/library/pty.html&lt;/a&gt;&lt;/p&gt;</Body>
+</answer>
+</qroot>

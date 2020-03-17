@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Modify lists defined by other lists</Title>
+<Body>&lt;p&gt;I am trying to make a game but cant figure out how to modify the list without affecting another one. My code is &lt;/p&gt;&lt;pre&gt;&lt;code&gt;list1 = [1,2,3,4,5,6,7,8,9,0]list2 = list1for i in range(len(list2)):    list2.remove(i)print (list1)print (list2)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;and the result is&lt;/p&gt;&lt;pre&gt;&lt;code&gt;[][]&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;How can i make it so the two are not connected (I need to combine lists but there removed once the program restarts)&lt;/p&gt;</Body>
+<Tags>python</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;You can make &lt;code&gt;list2&lt;/code&gt; a new object:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;list2 = list(list1)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;So the output would be:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;[1, 2, 3, 4, 5, 6, 7, 8, 9, 0][]&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;Make a copy of the first list:&lt;/p&gt;&lt;p&gt;&lt;code&gt;list2 = list(list1)&lt;/code&gt;&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;This is good:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;list2 = list(list1)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Or here&#x27;s the way I usually do it:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;list2 = list1[:]&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The first is using the list constructor.  The second is using a slice.  I haven&#x27;t bothered to check which is faster.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;You can use the copy module&lt;/p&gt;&lt;pre&gt;&lt;code&gt;list1 = [1,2,3,4,5,6,7,8,9,0]import copylist2 = copy.copy(list1)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Any change in the list1 will not effect list2 and vice versa. If your list is a compound list i.e. contains list as elements, you need to use deepcopy as follows:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;list2 = copy.deepcopy(list1) &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;For more use cases see &lt;a href=&quot;http://docs.python.org/2/library/copy.html&quot; rel=&quot;nofollow&quot;&gt;http://docs.python.org/2/library/copy.html&lt;/a&gt;&lt;/p&gt;</Body>
+</answer>
+</qroot>

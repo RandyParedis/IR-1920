@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>I want to have all the tweets of a userid not the latest 200 from twitter in python</Title>
+<Body>&lt;p&gt;I am using the python-twitter module to get the tweets of my friends. I used the following code:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;import twitterCONSUMER_KEY = &#x27;&#x27;CONSUMER_SECRET = &#x27;&#x27;OAUTH_TOKEN = &#x27;&#x27;OAUTH_TOKEN_SECRET = &#x27;&#x27;auth = twitter.oauth.OAuth(OAUTH_TOKEN, OAUTH_TOKEN_SECRET,                           CONSUMER_KEY, CONSUMER_SECRET)twitter_api = twitter.Twitter(auth=auth)count = 0for tweets in twitter_api.statuses.user_timeline(screen_name=&quot;thekiranbedi&quot;,count=500):    try:        print tweets[&#x27;text&#x27;]        count += 1    except Exception:        passprint count&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;But as the result says, the value of count remains 200, so I am getting only the 200 recent tweets from the id with &lt;code&gt;screen_name=&#x27;thekiranbedi&lt;/code&gt;. But I want all the tweets. How can that be done?&lt;/p&gt;</Body>
+<Tags>python,twitter,twitter-oauth,python-twitter</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;That is a limitation of Twitter API, not of python-twitter module:&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://dev.twitter.com/rest/reference/get/statuses/user_timeline&quot; rel=&quot;nofollow&quot;&gt;https://dev.twitter.com/rest/reference/get/statuses/user_timeline&lt;/a&gt;&lt;/p&gt;&lt;blockquote&gt;  &lt;p&gt;count - Specifies the number of tweets to try and retrieve, up to a maximum of 200 per distinct request. &lt;/p&gt;&lt;/blockquote&gt;&lt;p&gt;So as I understood you have to use &#x27;since_id&#x27; and &#x27;max_id&#x27; arguments to collect next portion of tweets.&lt;/p&gt;</Body>
+</answer>
+</qroot>

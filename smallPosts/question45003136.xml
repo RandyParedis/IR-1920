@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>OperationalError in Django app: models.py</Title>
+<Body>&lt;p&gt;There&#x27;s an OperationalError in my models.py code.Can anyone pinpoint the problem?I have tried deleting the cache (along with previous migrations) and doing them over -doesn&#x27;t help the issue.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;from django.db import models# Create your models here.class Topic(models.Model):    &quot;&quot;&quot;A post within a blog.&quot;&quot;&quot;    text = models.CharField(max_length=200)    date_added = models.DateTimeField(auto_now_add=True)    def __str__(self):        &quot;&quot;&quot;Return a string representation of a model.&quot;&quot;&quot;        return self.textclass Post(models.Model):    &quot;&quot;&quot;Class for Blog Post entries.&quot;&quot;&quot;    topic = models.ForeignKey(Topic)    text = models.TextField()    date_added = models.DateTimeField(auto_now_add=True)    class Meta:        verbose_name_plural = &#x27;posts&#x27;    def __str__(self):        &quot;&quot;&quot;Return a string representation of the model.&quot;&quot;&quot;        return self.text[:50] + &quot;...&quot;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;It gives me the following errors, if this helps:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;OperationalError at /admin/blogs/post/no such table: blogs_post&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;admin.py:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;from django.contrib import admin# Register your models here.from blogs.models import Topic, Postadmin.site.register(Topic)admin.site.register(Post)&lt;/code&gt;&lt;/pre&gt;</Body>
+<Tags>python,django</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;If you changed a class name, then you probably have objects with the old class name that the migration can&#x27;t find the table for.&lt;/p&gt;&lt;p&gt;Delete the &lt;code&gt;db.sqlite3&lt;/code&gt; file at project folder. Delete all previous migrations. Then &lt;code&gt;makemigrations&lt;/code&gt; then &lt;code&gt;migrate&lt;/code&gt;. This basically resets everything and deletes all the objects. You have to recreate your Superuser afterwards also.&lt;/p&gt;&lt;p&gt;Hope this helps,.&lt;/p&gt;</Body>
+</answer>
+</qroot>

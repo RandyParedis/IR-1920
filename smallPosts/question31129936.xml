@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Cannot access file on pythonanywhere</Title>
+<Body>&lt;p&gt;I have a django project that worked perfectly on my local server returning a response. I am now trying to run it on pythonanywhere, it keeps saying no such directory or file. I initially used the &lt;code&gt;os.path.dirname(&quot;__file__&quot;)&lt;/code&gt; but then I changed it into the absolute address, i.e. &quot;/home/username/projectname/filename&quot; to no avail. That latter method is the only one others on the web are suggesting, but it still isn&#x27;t working. Is there a special syntax to access files in pythonanywhere? or do you have any suggestions? Thanks.&lt;/p&gt;&lt;p&gt;The following is the line that throws the error:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;with open(&quot;home/&amp;lt;username&amp;gt;/&amp;lt;project&amp;gt;/layer.pem&quot;, &quot;r&quot;) as rsa_priv_file:&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Directory structure:&lt;img src=&quot;https://i.stack.imgur.com/YEXD2.jpg&quot; alt=&quot;Directory structure&quot;&gt;&lt;/p&gt;</Body>
+<Tags>python,django,pythonanywhere</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;If this &lt;code&gt;with open(&quot;home/&amp;lt;username&amp;gt;/&amp;lt;project&amp;gt;/layer.pem&quot;, &quot;r&quot;) as rsa_priv_file:&lt;/code&gt; is the actual code you&#x27;re using, then you&#x27;re missing a &lt;code&gt;/&lt;/code&gt; at the beginning. What you&#x27;re actually asking for with that code is not the absolute path to layer.pem, but a relative path rooted in the current directory.&lt;/p&gt;&lt;p&gt;Also, the &lt;code&gt;os.path.dirname(&quot;__file__&quot;)&lt;/code&gt; is not working because you quoted the &lt;code&gt;__file__&lt;/code&gt;. What you&#x27;re asking for is the dirname of a file called &quot;&lt;code&gt;__file__&lt;/code&gt;&quot; (which will be an empty string), not the dirname of the current file.&lt;/p&gt;</Body>
+</answer>
+</qroot>

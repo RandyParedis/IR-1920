@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Why does my program keep throwing an index out of range error?</Title>
+<Body>&lt;p&gt;I programme in C# and have programmed in python previously but that was years ago and to a very basic level. Someone I know has created the following code to but it keeps throwing an list index out of range error and I do not know why. The code is supposed to ask the user for a username and password, loop through every line in a file and check if the username and password match the username and password from any lines. The files stores a username and password pair on one line with a space in between them. Different username and password pairs are placed on separate lines. &lt;/p&gt;&lt;p&gt;The code throws the error when an incorrect password and/or username is inputted which is not in the file.&lt;/p&gt;&lt;p&gt;The code is as follows:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;       file = open(&quot;user_details.txt&quot;,&quot;r&quot;)       lines = file.readlines()       file.close()       while True:          username = input(&quot;Please enter your username &quot;)          password = input(&quot;Please enter your password &quot;)          for line in lines:               login_info = line.split()              if username == login_info[0] and password == login_info[1]:                  print(&quot;Correct credentials!&quot;)                  return True          print(&quot;Incorrect credentials.&quot;)&lt;/code&gt;&lt;/pre&gt;</Body>
+<Tags>python</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;The file had empty lines in it. The program was currently being tested and the person who wrote the code accidentally pressed enter and created a blank line in the file. By removing this, the code worked. This is because the line.split() was unsuccessful for blank lines so accessing the first and last elements from the list gave an error.&lt;/p&gt;</Body>
+</answer>
+</qroot>

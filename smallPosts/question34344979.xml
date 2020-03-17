@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>How can I distribute custom Python scripts, including dependencies and other resources?</Title>
+<Body>&lt;p&gt;My project contains:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;My own custom Python files&lt;/li&gt;&lt;li&gt;Unique package-specific generated Python code&lt;/li&gt;&lt;li&gt;Resources (e.g. binaries)&lt;/li&gt;&lt;li&gt;Dependencies on 3rd party modules (e.g. numpy)&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;The generated Python code makes things tricky, and separates this use case from a typical Python package where everyone gets the same code. I may create several packages to be distributed to different clients. Each package will have different/unique generated Python code, but use identical versions of my custom Python scripts and 3rd party dependencies. For example I may make a &quot;package builder&quot; script, which generates the unique Python code and bundles the dependencies together, depending on the builder arguments.&lt;/p&gt;&lt;p&gt;I want to distribute my Python scripts, including the resources and dependencies. The receiver of this package cannot download the 3rd party dependencies using a requirements.txt and pip; all dependencies and binaries must be included in this package.&lt;/p&gt;&lt;p&gt;The way I envision the client using this package is that they simply unzip the archive I provide, set their PYTHONPATH to the unzipped directory, and invoke my custom Python file to start the process.&lt;/p&gt;&lt;p&gt;If I&#x27;m going about this the wrong way I&#x27;d appreciate suggestions.&lt;/p&gt;</Body>
+<Tags>python,package,distutils,software-distribution,python-wheel</Tags>
+</question>
+</qroot>

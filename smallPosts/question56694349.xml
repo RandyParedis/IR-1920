@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>How to fix this python %s placeholder arrangement</Title>
+<Body>&lt;p&gt;I need to iterate through input file pairs, &lt;em&gt;R1&lt;/em&gt; and &lt;em&gt;R2&lt;/em&gt;, which will be processed together and each appended with a &quot;.trim&quot; file extension. &lt;/p&gt;&lt;p&gt;I have a limited knowledge of python and glob, which have worked well for similar tasks using paired inputs but a single output. I am completely stumped as to why this doesn&#x27;t work, though I&#x27;m sure it&#x27;s an easy fix. &lt;/p&gt;&lt;pre class=&quot;lang-py prettyprint-override&quot;&gt;&lt;code&gt;#!/usr/bin/pythonimport globimport osfiles = glob.glob(&quot;ATAC*R1*.fastq.gz&quot;)for ifile in files:        os.system(&quot;cutadapt -a CTGTCTCTTATACACATCT -A CTGTCTCTTATACACATCT -a AGATGTGTATAAGAGA -o %s.trim -p %s.trim %s %s&quot; % (ifile, ifile.replace(&quot;R1&quot;,&quot;R2&quot;), ifile, ifile.replace(&quot;R1&quot;,&quot;R2&quot;))&lt;/code&gt;&lt;/pre&gt;&lt;pre&gt;&lt;code&gt;Error:  line 7                                                                                                                                                                                            ^SyntaxError: invalid syntax&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This should work as follows:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;ATAC2-1_R1_.fastq.gz and ATAC2-1_R1_.fastq.gz -&amp;gt; ATAC2-1_R1_.fastq.gz.trim and ATAC2-1_R1_.fastq.gz.trim. &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;There are several R1 and R2 pairs that I would like to iterate through.Thanks for the help!&lt;/p&gt;</Body>
+<Tags>python,placeholder</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Instead of trying to do this with %s placeholders, I would try .format(), like so:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;&quot;cutadapt -a CTGTCTCTTATACACATCT -A CTGTCTCTTATACACATCT -a AGATGTGTATAAGAGA -o {0}.trim -p {1}.trim {2} {3}&quot;.format(ifile, ifile.replace(&quot;R1&quot;,&quot;R2&quot;), ifile, ifile.replace(&quot;R1&quot;,&quot;R2&quot;))&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;The only issue is that you&#x27;re missing an ending parenthesis:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;    os.system(&quot;cutadapt -a CTGTCTCTTATACACATCT -A CTGTCTCTTATACACATCT -a AGATGTGTATAAGAGA -o %s.trim -p %s.trim %s %s&quot; % (ifile, ifile.replace(&quot;R1&quot;,&quot;R2&quot;), ifile, ifile.replace(&quot;R1&quot;,&quot;R2&quot;)))&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You just need to add the ending parenthesis and you should stop experiencing that syntax error.&lt;/p&gt;</Body>
+</answer>
+</qroot>

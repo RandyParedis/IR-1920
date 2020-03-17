@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>I want the user to enter a number and if that number is not in the list provided the program will ask him to enter that number again</Title>
+<Body>&lt;pre&gt;&lt;code&gt;list = [1, 2, 3, 4, 5, 6]number = input(&quot;Please enter a number: &quot;)number = int(number)while True:    if number != (any element of the list):        number = input(&quot;Please enter a number: &quot;)    else:        break &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I want the user to enter a number and if that number is not in the list provided the program will ask him to enter that number again until he gets it write &lt;/p&gt;</Body>
+<Tags>python</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;First you must initalize variable &quot;number&quot;E.g.: &lt;/p&gt;&lt;pre&gt;&lt;code&gt;number = -1  # Init value should be value not included in list&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;List variable name, can&#x27;t be &quot;list&quot;. &lt;a href=&quot;https://docs.python.org/2/library/functions.html#list&quot; rel=&quot;nofollow noreferrer&quot;&gt;List&lt;/a&gt; is the name of Python builtin class.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;pre&gt;&lt;code&gt;list = [1, 2, 3, 4, 5, 6]number = input(&quot;Please enter a number: &quot;)while True:    if number not in list:        number = input(&quot;Please enter a number: &quot;)    else:        break&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;should do the trick.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;You can simply use the &lt;code&gt;in&lt;/code&gt; statement to reach your goal. &lt;br&gt;Your code can be similar to this:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;list = [1, 2, 3, 4, 5, 6]number = input(&quot;Please enter a number: &quot;)number = int(number)while True:    if not number in list:        number = input(&quot;Please enter a number: &quot;)        number = int(number)    else:        break&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Remember that you can have an exception not handled, I mean, if user insert something different to a number, your code raises an exception. &lt;br&gt;Please consider to handle this with a &lt;code&gt;try except&lt;/code&gt; statement&lt;/p&gt;</Body>
+</answer>
+</qroot>

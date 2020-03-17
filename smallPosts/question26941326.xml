@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>libtorrent-python problems, &quot;no such file or directory&quot; when there clearly is</Title>
+<Body>&lt;p&gt;First of all, here&#x27;s the code&lt;/p&gt;&lt;pre&gt;&lt;code&gt;#!/usr/bin/env python3.4import libtorrent as ltimport osfs = lt.file_storage()lt.add_files(fs, &quot;/var/mirror/packages/&quot;) # There are two files in this directoryt = lt.create_torrent(fs, flags = 1&amp;amp;8&amp;amp;16) # 1 = Optimization, 8 = Symbolic links, 16 = calculate file hashes.t.add_tracker(&quot;udp://tracker.[private].com:80&quot;)print(os.path.isdir(&quot;/var/mirror/packages/&quot;))lt.set_piece_hashes(t,&quot;/var/mirror/packages/&quot;)print(t.generate())&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;And here&#x27;s what happens when I run it&lt;/p&gt;&lt;pre&gt;&lt;code&gt;TrueTraceback (most recent call last):  File &quot;./test.py&quot;, line 9, in &amp;lt;module&amp;gt;    lt.set_piece_hashes(t,&quot;/var/mirror/packages/&quot;)RuntimeError: No such file or directory&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;a href=&quot;http://www.libtorrent.org/reference-Create_Torrents.html#overview&quot; rel=&quot;nofollow&quot;&gt;This&lt;/a&gt; is the page I got this from&lt;/p&gt;&lt;p&gt;I have browsed around the bindings, but I can&#x27;t find the &lt;code&gt;set_piece_hashes&lt;/code&gt; sources. It returns the same error code when I change the path to &lt;code&gt;&quot;.&quot;&lt;/code&gt; or &lt;code&gt;&quot;/&quot;&lt;/code&gt; (keeping the add_files path the same)&lt;/p&gt;&lt;p&gt;Anyone know what I&#x27;m doing wrong? I can&#x27;t find any sort of documentation other than the site I linked above&lt;/p&gt;</Body>
+<Tags>python,libtorrent</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Turns out &lt;code&gt;set_piece_hashes&lt;/code&gt; wants the parent directory of the directory you created the filestore with. After I fixed that, I now get another error, which is a known bug in libtorrent &lt;a href=&quot;https://code.google.com/p/libtorrent/issues/detail?id=549&amp;amp;q=python&quot; rel=&quot;nofollow&quot;&gt;here&lt;/a&gt;&lt;/p&gt;</Body>
+</answer>
+</qroot>

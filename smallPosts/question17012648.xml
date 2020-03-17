@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>what does function &quot;int (*function())[10];&quot; mean?</Title>
+<Body>&lt;p&gt;I read a piece of code and find there is a function like that.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;int (*function())[10]{ ...}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I am confused. What does this function mean and what will it return?&lt;/p&gt;</Body>
+<Tags>c++,c</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;It is the definition of a function that returns a pointer to an array of 10 integers.&lt;/p&gt;&lt;p&gt;Remember that the return value is a &lt;em&gt;pointer&lt;/em&gt;, not an actual array. Arrays cannot be returned from functions. Per paragraph 8.3.5/8 of the Standard:&lt;/p&gt;&lt;blockquote&gt;  &lt;p&gt;Functions shall not have a return type of type array or function, although they may have a return type of type pointer or reference to such things&lt;/p&gt;&lt;/blockquote&gt;&lt;p&gt;Here&#x27;s a simple example of how you would use it:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;int arr[10];     // an array of 10 intint (*ptr)[10]; // pointer to an array of 10 intint (*function())[10] // function returning a pointer to an array of 10 int{    return ptr;}int main(){    int (*p)[10] = function(); // assign to the pointer}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You can use this wherever you would normally use a pointer. But note that there are better alternatives than pointers altogether, like &lt;code&gt;std::shared_ptr&amp;lt;std::array&amp;lt;T, N&amp;gt;&amp;gt;&lt;/code&gt; or &lt;code&gt;std::shared_ptr&amp;lt;std::vector&amp;lt;T&amp;gt;&amp;gt;&lt;/code&gt;. &lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;The way to read it is to find the leftmost identifier and work your way out, remembering that &lt;code&gt;()&lt;/code&gt; and &lt;code&gt;[]&lt;/code&gt; bind before &lt;code&gt;*&lt;/code&gt;, so &lt;code&gt;*a[]&lt;/code&gt; is an array of pointers, &lt;code&gt;(*a)[]&lt;/code&gt; is a pointer to an array, &lt;code&gt;*f()&lt;/code&gt; is a function returning a pointer, and &lt;code&gt;(*f)()&lt;/code&gt; is a pointer to a function.  Thus,&lt;/p&gt;&lt;pre&gt;&lt;code&gt;      function          - function      function()        - is a function     *function()        - returning a pointer    (*function())[10]   - to a 10-element arrayint (*function())[10]   - of int&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;it means that is a function pointer and the argument is void and return int[10]&lt;/p&gt;</Body>
+</answer>
+</qroot>

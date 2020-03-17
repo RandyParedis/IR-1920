@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>issue with float from argv</Title>
+<Body>&lt;p&gt;I&#x27;m having a hard time converting a passed in argv[1] to a float number. I have been trying to basically pass in any int followed by a decimal and have it round up/down to the nearest whole number. (basic starter python project) I have been trying to play with float for a bit now and just cant figure it out. &lt;/p&gt;&lt;pre&gt;&lt;code&gt;import sysx = int(sys.argv[1])num = x + .5s = str(num())point = s.find(&#x27;.&#x27;)print s[:point]if __name__ == &quot;__main__&quot;:    x(int(sys.argv[1]))&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Edit(current code, after coffee and cleanup):&lt;/p&gt;&lt;pre&gt;&lt;code&gt;import sysdef x(argument):    num = argument + .5    s = str(num())    point = s.find(&#x27;.&#x27;)    print s[:point]if __name__ == &quot;__main__&quot;:    x(int(round(float(sys.argv[1]))))&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Finalized code(credit goes to: NPE)&lt;/p&gt;&lt;pre&gt;&lt;code&gt;import sysdef x(argument):    print &quot;Passed in value: &quot; + str(argument)    num = argument + .5    print &quot;Rounded whole number: &quot; + str(int(num))if __name__ == &quot;__main__&quot;:    x(float(sys.argv[1]))&lt;/code&gt;&lt;/pre&gt;</Body>
+<Tags>python,argv</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;It sounds like you&#x27;re looking for either&lt;/p&gt;&lt;pre&gt;&lt;code&gt;val = round(float(sys.argv[1]))&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;or&lt;/p&gt;&lt;pre&gt;&lt;code&gt;val = int(round(float(sys.argv[1])))&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;depending on what you&#x27;re expecting the type of &lt;code&gt;val&lt;/code&gt; to be.&lt;/p&gt;</Body>
+</answer>
+</qroot>

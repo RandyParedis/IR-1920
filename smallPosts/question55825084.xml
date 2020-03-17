@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>How to locate the element in AngularJS application?</Title>
+<Body>&lt;p&gt;I am automating the application with Selenium &lt;code&gt;webdriver&lt;/code&gt; (python). Application is built in AngularJS and have encountered a problem in location the element as below:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;&amp;lt;a title=&quot;Login/Sign Up&quot; href=&quot;&quot; id=&quot;login_box_button&quot; ng-touchstart=&quot;loginsignup()&quot; ng-hide=&quot;$storage.loggedInUser&quot;&amp;gt;Login/Sign Up&amp;lt;/a&amp;gt;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Please help me locate this. I have tried &lt;code&gt;Xpath&lt;/code&gt;, CSS but returned empty handed.&lt;/p&gt;&lt;p&gt;Tried using various &lt;code&gt;Xpaths&lt;/code&gt; and CSS selectors.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;driver.find_element_by_xpath(&quot;//a[@title=&#x27;Login/Sign Up&#x27; or @ng-touchstart=&#x27;loginsignup()&#x27;]&quot;).click()&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Its not working. Getting error as :&lt;/p&gt;&lt;pre&gt;&lt;code&gt;selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {&quot;method&quot;:&quot;xpath&quot;,&quot;selector&quot;:&quot;//a[@title=&#x27;Login/Sign Up&#x27; or @ng-touchstart=&#x27;loginsignup()&#x27;]&quot;}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;(Session info: chrome=73.0.3683.103)&lt;/p&gt;</Body>
+<Tags>python,angularjs</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;try this:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;driver.find_elements_by_xpath(&quot;//*[contains(text(), &#x27;Your link text&#x27;)]&quot;)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;with this code you can find text on the page, without having to set up complex xpath&lt;/p&gt;</Body>
+</answer>
+</qroot>

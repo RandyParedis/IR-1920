@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>assign various rows of a csv file to one value</Title>
+<Body>&lt;p&gt;So I have a csv file with the fields &lt;code&gt;station, year, temperature&lt;/code&gt; which looks like this: &lt;/p&gt;&lt;pre&gt;&lt;code&gt;A , 1978 , 27.5A , 1979 , 27.6B , 1978 , 25.5B , 1979 , 25.8&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;My goal is to make a graph which compares Temperature vs. time for various weather stations, how can I group all the values for A to be stored in some X and Y arrays to form a line and then all the values for B to be another line and so on?&lt;/p&gt;&lt;p&gt;Note: the actual file has over 1000 lines and not all the stations have info for the same number of years, so I can&#x27;t rely on patterns like grouping values every 20 years or anything like that, I&#x27;m still sort of new to python, thanks for your help.&lt;/p&gt;</Body>
+<Tags>python,csv,matplotlib,cycle</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;If you just search &#x27;python csv&#x27;, the first link would have brought you to something of great use: &lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://docs.python.org/2/library/csv.html#csv.reader&quot; rel=&quot;nofollow&quot;&gt;https://docs.python.org/2/library/csv.html#csv.reader&lt;/a&gt;&lt;/p&gt;&lt;p&gt;I added the function there to direct you even more but the python csv module lets you do exactly what you want and it&#x27;s very easy to use. In the example they give for reader, you can also access the variable row as a list for each element of the row just read in.&lt;/p&gt;</Body>
+</answer>
+</qroot>

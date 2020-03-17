@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Angular project and server files on localhost</Title>
+<Body>&lt;p&gt;&lt;code&gt;ng serve&lt;/code&gt; command runs a server instance on a &lt;code&gt;localhost&lt;/code&gt;. I would like to use some server-side scripts on the same &lt;code&gt;localhost&lt;/code&gt; and communicate between angular app and the &lt;code&gt;http&lt;/code&gt; server.&lt;/p&gt;&lt;p&gt;I have some issue by not knowing in which directory I should place Python scripts. So that I can run extend the functionality of Angular app, to gather data from localhost server?&lt;/p&gt;&lt;p&gt;EDIT:&lt;/p&gt;&lt;p&gt;I am visiting &lt;code&gt;http://localhost:4200/data.php&lt;/code&gt; in a browser, but I am always getting a 304 redirect. I figure this could be due to incorrect placing of php files. I&#x27;ve put it in &lt;code&gt;src&lt;/code&gt;, &lt;code&gt;..src&lt;/code&gt; and &lt;code&gt;app&lt;/code&gt; folder, but nothing seem to work.&lt;/p&gt;</Body>
+<Tags>python,angular</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;&lt;code&gt;Root&lt;/code&gt; directory if it is one or two files - like &lt;code&gt;configs&lt;/code&gt; etc. If you actually need a server side app maybe it&#x27;s better to make that the root project and have angular in a &lt;code&gt;view&lt;/code&gt; folder.&lt;/p&gt;</Body>
+</answer>
+</qroot>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Failure on allocating memory in C/C++</Title>
+<Body>&lt;p&gt;I have C implementation of an algorithm that includes shared library. The performance of the shared library is considerably different in C and C++ (performing much better in C++). Therefore, I have changed the shared library parts of the C implementation (&lt;em&gt;Imp-1&lt;/em&gt;) into C++ (&lt;em&gt;Imp-2&lt;/em&gt;) while keeping the rest of it same. I have compiled &lt;em&gt;Imp-1&lt;/em&gt; and &lt;em&gt;Imp-2&lt;/em&gt; by using gcc and g++ in Linux, respectively. In small sized problems both &lt;em&gt;Imp-1&lt;/em&gt; and &lt;em&gt;Imp-2&lt;/em&gt; perform exactly same. However, in a same large sized problem while &lt;em&gt;Imp-1&lt;/em&gt; solves it without any problem, &lt;em&gt;Imp-2&lt;/em&gt; returns &lt;strong&gt;std::bad_alloc&lt;/strong&gt; error. Interestingly, this error occurs when the memory usage increases to 4GB where the available memory is 35GB. &lt;/p&gt;&lt;p&gt;Why this error occurs? (Compiler, operating system, compiler option, etc.) &lt;/p&gt;&lt;p&gt;Best Regards.&lt;/p&gt;</Body>
+<Tags>c++,c</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;It seems that your gcc is a 64 bit compiler where as g++ is a 32 bit compiler. Even if you are running on a 32 bit system, unless you compile your program with a 64 bit compiler, your program cannot fully leverage the 64 bit addressing capabilities which would result a bad_alloc as you are experiencing if you want to address more than 4GB. &lt;/p&gt;&lt;p&gt;The reason I am confident that you are running a 32 bit compiled program on a 64 bit is the 4GB limit. Generally speaking, the memory is split as User/Kernal Space and on a 32 bit system the entire 4GB is not available, usually it is between 2GB and 3GB. As you can address the entire 4GB it seems you are running a 32 bit program on a 64 bit environment.&lt;/p&gt;</Body>
+</answer>
+</qroot>

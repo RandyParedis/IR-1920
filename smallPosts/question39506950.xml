@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Finding a sub string and deleting it using regex, python</Title>
+<Body>&lt;p&gt;I have a data set which looks like thus,&lt;/p&gt;&lt;pre&gt;&lt;code&gt;&quot;See the new #Gucci 5th Ave NY windows customized by @troubleandrew for the debut of the #GucciGhost collection.&quot;&quot;Before the #GucciGhost collection debuts tomorrow, read about the artist @troubleandrew&quot;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;So i am trying to get rid of all the @ AND the words attached to it. My dataset should look something like this.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;&quot;See the new #Gucci 5th Ave NY windows customized by for the debut of the #GucciGhost collection.&quot;    &quot;Before the #GucciGhost collection debuts tomorrow, read about the artist&quot;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;So i can use a simple replace statement to get rid of the &lt;code&gt;@&lt;/code&gt;. But the adjacent word is a problem.&lt;/p&gt;&lt;p&gt;I am using re to search/find the occurrence. But i am not able to delete this word. &lt;/p&gt;&lt;p&gt;P.S -- If it was a single word, it would have not been a problem. But there are multiple words here and there in my data set attached to &lt;code&gt;@&lt;/code&gt;&lt;/p&gt;</Body>
+<Tags>regex,python-2.7</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;You can use regex&lt;/p&gt;&lt;pre&gt;&lt;code&gt;import rea = [ &quot;See the new #Gucci 5th Ave NY windows customized by @troubleandrew for the debut of the #GucciGhost collection.&quot;,&quot;Before the #GucciGhost collection debuts tomorrow, read about the artist @troubleandrew&quot;]pat = re.compile(r&quot;@\S+&quot;) # \S+ all non-space charactersfor i in range(len(a)):    a[i] = re.sub(pat, &quot;&quot;, a[i]) # replace it with empty stringprint a&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This will give you what you want.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;Idiomatic version, subs extra space:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;import rea = [    &quot;See the new #Gucci 5th Ave NY windows customized by @troubleandrew for the debut of the #GucciGhost collection.&quot;,    &quot;Before the #GucciGhost collection debuts tomorrow, read about the artist @troubleandrew&quot;]rgx = re.compile(r&quot;\s?@\S+&quot;)b = [ re.sub(rgx, &quot;&quot;, row) for row in a ]print b&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;code&gt;\s?&lt;/code&gt;: &lt;code&gt;\s&lt;/code&gt; matches &lt;code&gt;&#x27; &#x27;&lt;/code&gt; and &lt;code&gt;?&lt;/code&gt; stands for &lt;code&gt;zero or one&lt;/code&gt; occurrence.&lt;/p&gt;</Body>
+</answer>
+</qroot>

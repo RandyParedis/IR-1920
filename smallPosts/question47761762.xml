@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>define a new column and give the values base on the each group in Python</Title>
+<Body>&lt;p&gt;&quot;Consider the following dataset:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;a    b    c   e1   21   99  e1   21   99  e2   22   99e3   23   99e1   23   99e3   24   99e4   27   99e1   25   99e2   29   99e4   22   99e2   23   99&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I want to have a new column based on the column &quot;a&quot; as bellow:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;a      b    c    de_11   21   99   1e_11   21   99   1e_21   22   99   2e_31   23   99   3e_11   23   99   1e_31   24   99   3e_41   27   99   4e_11   25   99   1e_21   29   99   2e_41   22   99   4e_21   23   99   2&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I need to add a new column d and give the same value if they belong to the same group.I do not know how filter my data by each group and set the same value for each group. here is my code which does not give me the right answer:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;i=0e=[] for name in df.groupby(&#x27;a&#x27;):  for j in range(len(name)):    e.append(i) i++df[&#x27;d&#x27;] = pd.Series(e)print(df)&lt;/code&gt;&lt;/pre&gt;</Body>
+<Tags>python,regex,pandas</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;One way to have both your requirements in one go would be:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;import regex as rerx = re.compile(r&#x27;(?V1)(?&amp;lt;=[a-z])(?=\d+)&#x27;)def splitter(row):    (char, number) = rx.split(row[&#x27;a&#x27;])    return pd.Series({&#x27;a&#x27;: &#x27;{}_{}{}&#x27;.format(char, number, number), &#x27;d&#x27;: number})df[[&#x27;a&#x27;, &#x27;d&#x27;]] = df.apply(splitter, axis = 1)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;hr&gt;Which yields using &lt;code&gt;df.head()&lt;/code&gt;:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;    a       b   c   d0   e_11    21  99  11   e_11    21  99  12   e_22    22  99  23   e_33    23  99  34   e_11    23  99  1&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;hr&gt;The idea here is to set up a &lt;code&gt;splitter&lt;/code&gt; function which splits between letters and numbers. The function is applied row-wise and gives back the new columns. You&#x27;ll need the newer &lt;code&gt;regex&lt;/code&gt; module for empty splits to work.&lt;/p&gt;</Body>
+</answer>
+</qroot>

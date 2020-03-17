@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Python variable scope confusion</Title>
+<Body>&lt;p&gt;I&#x27;m setting up a simple game and am having trouble accessing the Game class instance from the Player class instance:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;class Player():    global game    print game.board  # NameError: name &#x27;game&#x27; is not definedclass Game():    def __init__(self):        self.board = range(9)    p = Player()if __name__ == &quot;__main__&quot;:    game = Game()&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I&#x27;m sure this is a simple fix/misunderstanding on my part, but what am I missing?&lt;/p&gt;</Body>
+<Tags>python</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;A better approach is to use DI (dependency injection) in order to &quot;pass&quot; a &lt;code&gt;Game&lt;/code&gt; object to &lt;code&gt;Player&lt;/code&gt; upon init:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;class Player(object):    def __init__(self, game):        self.game = game      def print_player(self):        print self.game.boardclass Game(object):    def __init__(self):        self.board = range(9)if __name__ == &quot;__main__&quot;:    game = Game()    player = Player(game)    player.print_player() # prints [0, 1, 2, 3, 4, 5, 6, 7, 8]&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Relying on &lt;code&gt;globals()&lt;/code&gt; is &lt;a href=&quot;https://stackoverflow.com/questions/19158339/python-why-are-global-variables-evil&quot;&gt;not a good practice&lt;/a&gt; since it relies on the order of execution (like in your case), makes the code less readable (you have to jump from one place to another instead of reading it &quot;fluently&quot;) as well as it might introduce side effects.&lt;/p&gt;&lt;p&gt;&lt;strong&gt;Bad practice (a.k.a. don&#x27;t do it at home!):&lt;/strong&gt;&lt;br&gt;The following code (though it&#x27;s a bad practice) will work since the &lt;em&gt;order&lt;/em&gt; of decelerations is meaningful when you&#x27;re using &lt;code&gt;globals()&lt;/code&gt;: &lt;code&gt;game = Game()&lt;/code&gt; should be declared &lt;em&gt;before&lt;/em&gt; class &lt;code&gt;Player&lt;/code&gt; in order for it to be used there:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;class Game():    def __init__(self):        self.board = range(9)game = Game()class Player():    global game    print game.board p = Player() # prints [0, 1, 2, 3, 4, 5, 6, 7, 8]&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;The interpreter will first try to make class &lt;code&gt;Player&lt;/code&gt;, then class &lt;code&gt;Game&lt;/code&gt; and then run the code. So it will make class &lt;code&gt;Player&lt;/code&gt; before &lt;code&gt;game = Game()&lt;/code&gt; is executed and hence there is no variable &lt;code&gt;game&lt;/code&gt; at that moment and cause your error. &lt;/p&gt;</Body>
+</answer>
+</qroot>

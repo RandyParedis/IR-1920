@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>DEVSimPy vs Simpy</Title>
+<Body>&lt;p&gt;I&#x27;m currently on the search for differences in simulation software for python. Most hits from a search of google scholar that are comparisons of simulation software only mention DEVSimPy. &lt;/p&gt;&lt;p&gt;So my question is: are DEVSimPy and Simpy the same?&lt;/p&gt;</Body>
+<Tags>python-3.x,simpy</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;DEVSimPy has nothing to do with SimPy and I do not know why they are using such a similar name.&lt;/p&gt;</Body>
+</answer>
+</qroot>

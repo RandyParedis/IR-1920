@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>`ImportError: No module named pyautocad` whenever I try to create an exe with py2exe</Title>
+<Body>&lt;p&gt;Not sure whats happening and why py2exe is unable to find the module. My &lt;code&gt;setup.py&lt;/code&gt; file is as follows:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;from distutils.core import setupimport py2exeimport shutilsetup(windows=[&quot;RotoWorks.py&quot;], options={&#x27;py2exe&#x27;: {&#x27;includes&#x27;: [&#x27;pyautocad&#x27;]}})&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I&#x27;m not sure where to start or how to reason why py2exe is unable to import &lt;code&gt;pyautocad&lt;/code&gt;. If I open up IDLE or just the python shell and type &lt;code&gt;import pyautocad&lt;/code&gt;, it imports fine.&lt;/p&gt;</Body>
+<Tags>python,python-2.7,py2exe</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;You need to include your pyautocad.pyd.Py2exe is structured otherwise than python interpreter, which looks into site-packages for modules...&lt;/p&gt;&lt;p&gt;you could do it with like (&lt;strong&gt;no exact code, just structural proposal..!&lt;/strong&gt;):&lt;/p&gt;&lt;pre&gt;&lt;code&gt;import glob, shutil, py2execorrect_Pyd_file = &#x27;none&#x27;for file in glob.glob(&#x27;*.pyd&#x27;):   if file.startswith(&quot;pyautocad&quot;):      correct_Pyd_file = filecorrect_Pyd_file.strip(&#x27;.pyd&#x27;) #strip ending for py2exeopts = {&#x27;py2exe&#x27;: {&#x27;compressed&#x27;: True, &quot;dll_excludes&quot;: [&quot;MSVCP90.dll&quot;], &quot;includes&quot; : [&quot;sip&quot;]}}setup(console=[{&quot;script&quot; : &quot;main.py&quot;}], options=opts, data_files=correct_Pyd_file)shutil.rmtree(&#x27;build&#x27;, ignore_errors=True)     #Remove the build folder&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

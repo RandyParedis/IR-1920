@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Client code for sending and receiving messages</Title>
+<Body>&lt;p&gt;Can someone please tell me how can I write a C++ client using the Firebase Cloud Messaging SDK for C++ ? Please point me too a tutorial or GitHub link or some kind of help in the answers. Thank you.&lt;/p&gt;</Body>
+<Tags>c++,firebase,firebase-cloud-messaging</Tags>
+</question>
+</qroot>

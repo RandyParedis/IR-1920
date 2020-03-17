@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>How to use Bpython with GAE remote_api_shell.py?</Title>
+<Body>&lt;p&gt;Basically I&#x27;m trying to get the Google App Engine &lt;code&gt;remote_api_shell.py&lt;/code&gt; to look like this:&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://i.stack.imgur.com/z9jQi.png&quot; rel=&quot;nofollow noreferrer&quot;&gt;&lt;img src=&quot;https://i.stack.imgur.com/z9jQi.png&quot; alt=&quot;enter image description here&quot;&gt;&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Instead of looking like this:&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://i.stack.imgur.com/QT5Th.png&quot; rel=&quot;nofollow noreferrer&quot;&gt;&lt;img src=&quot;https://i.stack.imgur.com/QT5Th.png&quot; alt=&quot;enter image description here&quot;&gt;&lt;/a&gt;&lt;/p&gt;&lt;p&gt;For some reason this works:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;$ python /usr/local/bin/remote_api_shell.py banded-advice-96618&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;but this does not work:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;$ bpython /usr/local/bin/remote_api_shell.py banded-advice-96618&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I even tried:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;$ bpython -i /usr/local/bin/remote_api_shell.py banded-advice-96618&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;which is supposed to Drop to bpython shell after running file instead ofexiting, but that didn&#x27;t work either. I wasn&#x27;t able to import the proper files from my current location.&lt;/p&gt;&lt;p&gt;Any ideas?&lt;/p&gt;</Body>
+<Tags>google-app-engine,read-eval-print-loop,bpython,dev-appserver</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;The remote_api_shell.py script isn&#x27;t designed for use with bpython, and so this is expected. I suggest you file a Feature Request in the &lt;a href=&quot;https://issuetracker.google.com/&quot; rel=&quot;nofollow noreferrer&quot;&gt;Public Issue Tracker&lt;/a&gt; for this.&lt;/p&gt;</Body>
+</answer>
+</qroot>

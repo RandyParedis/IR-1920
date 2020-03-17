@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Using chromedriver with selenium/python/ubuntu</Title>
+<Body>&lt;p&gt;I am trying to execute some tests using chromedriver and have tried using the following methods to start chromedriver.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;driver = webdriver.Chrome(&#x27;/usr/local/bin/chromedriver&#x27;)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;and &lt;/p&gt;&lt;pre&gt;&lt;code&gt;driver = webdriver.Chrome(executable_path=&#x27;/usr/local/bin/chromedriver&#x27;)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;and&lt;/p&gt;&lt;pre&gt;&lt;code&gt;import osfrom selenium import webdriverchromedriver = &quot;/usr/local/bin/chromedriver&quot;os.environ[&quot;webdriver.chrome.driver&quot;] = chromedriverdriver = webdriver.Chrome(chromedriver)driver.get(&quot;http://stackoverflow.com&quot;)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;But none of these seems to help and the error is : &lt;code&gt;selenium.common.exceptions.WebDriverException: Message: &#x27;ChromeDriver executable needs to be available in the path.&lt;/code&gt;&lt;/p&gt;&lt;p&gt;I have checked multiple times and &lt;code&gt;chromedriver&lt;/code&gt; is present in location &lt;code&gt;/usr/local/bin&lt;/code&gt;.&lt;/p&gt;&lt;p&gt;Still my scripts are not working. Could any body pls help.&lt;/p&gt;&lt;p&gt;My google-chrome location is : /usr/bin/google-chrome&lt;/p&gt;</Body>
+<Tags>python,selenium,selenium-webdriver,selenium-chromedriver</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;The following should normally work:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;driver = webdriver.Chrome(executable_path=&#x27;/usr/local/bin/chromedriver&#x27;)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Note that in your question there was no preceding &#x27;/&#x27; in the path.&lt;/p&gt;&lt;p&gt;Additionally, make sure that the chromedriver executable located in /usr/local/bin/ has appropriate file permissions, i.e. that it can be executed:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;&amp;gt; chmod 777 /usr/local/bin/chromedriver&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;As the message says: ChromeDriver executable needs to be available in the path.&lt;/p&gt;&lt;p&gt;So is it in the path? What is the output of:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;$ cd$ chromedriver --version&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If you don’t see the version, &lt;code&gt;chromedriver&lt;/code&gt; is definitively not in the PATH.&lt;/p&gt;&lt;p&gt;I don’t tell webdriver where to find &lt;code&gt;chromedriver&lt;/code&gt; otherwise. – I use the Ubuntu package “chromium-chromedriver”, but it drops the binary in &lt;code&gt;/usr/lib/chromium-browser/chromedriver&lt;/code&gt;, which is not in my PATH. So I put a soft link in &lt;code&gt;/usr/bin&lt;/code&gt;.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;Following the suggestion from &lt;a href=&quot;https://askubuntu.com/questions/539498/where-does-chromedriver-install-to&quot;&gt;https://askubuntu.com/questions/539498/where-does-chromedriver-install-to&lt;/a&gt; I was able to make it work like this:&lt;/p&gt;&lt;ol&gt;&lt;li&gt;&lt;p&gt;Installed the chromium-chromedriver: &lt;/p&gt;&lt;pre&gt;&lt;code&gt;sudo apt-get install chromium-chromedriver&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;Adding the path to the selenium line: &lt;/p&gt;&lt;pre&gt;&lt;code&gt;driver = webdriver.Chrome(&quot;/usr/lib/chromium-browser/chromedriver&quot;)&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;&lt;/ol&gt;&lt;p&gt;Note that this opens Chromium and not Chrome. Hope it was helpful.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;You need to make sure the standalone ChromeDriver binary is either in your path or available in the webdriver.chrome.driver environment variable and then try to use absolute path to that binary.Below is the code for java - &lt;/p&gt;&lt;pre&gt;&lt;code&gt;    File chromeDriver = new File(&quot;/usr/bin/chromedriver&quot;);    System.setProperty(&quot;webdriver.chrome.driver&quot;, chromeDriver.getAbsolutePath());    driver = new ChromeDriver();&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;Just pass the binary location as argument to it and not just the directory conatining it. So if it lies in /usr/bin directory, then run below command:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;driver = webdriver.Chrome(&quot;/usr/bin/chromedriver&quot;)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This worked for me in ubuntu and adding path to bashrc is not working. Give it a try.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;I have solved the issue in the following way:&lt;/p&gt;&lt;ol&gt;&lt;li&gt;&lt;p&gt;Open a terminal and type &lt;code&gt;whereis chromedriver&lt;/code&gt;. In my case, I had the following output: &lt;/p&gt;&lt;p&gt;&lt;code&gt;chromedriver: /usr/local/bin/chromedriver&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;Copy that path and edit your Webdriver instance like:&lt;/p&gt;&lt;/li&gt;&lt;/ol&gt;&lt;pre class=&quot;lang-py prettyprint-override&quot;&gt;&lt;code&gt;driver = webdriver.Chrome(&#x27;/usr/local/bin/chromedriver&#x27;)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;That should be enough!&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;hope this will be useful for some who did like me.For my case i left preceding slash in the path did &quot;home/user/chromedriver&quot; instead of &quot;/home/user/chromedriver&quot;&lt;/p&gt;</Body>
+</answer>
+</qroot>

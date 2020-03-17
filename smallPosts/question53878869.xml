@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Detect change in REST API response</Title>
+<Body>&lt;p&gt;Say I query some API to get the prices of some items on Amazon. I was thinking I could create some Pub/Sub system where, when there is a change in any of these prices, the new price is published and some subscriber handles the change.&lt;/p&gt;&lt;p&gt;One option is to make some process that spins, querying the same API over and over until there is some new price in the API response, which then gets published. Is this my only option? If so, what python libraries exist to run this spinning publisher in the background?&lt;/p&gt;&lt;p&gt;Thanks in advance for any help!&lt;/p&gt;</Body>
+<Tags>python-3.x,rest,asynchronous</Tags>
+</question>
+</qroot>

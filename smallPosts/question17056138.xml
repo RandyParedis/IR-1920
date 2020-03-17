@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>How to make py.test run doctests as well as normal tests directory?</Title>
+<Body>&lt;p&gt;We currently have &lt;code&gt;py.test&lt;/code&gt; with the coverage plugin running over our tests in a &lt;code&gt;tests&lt;/code&gt; directory.&lt;/p&gt;&lt;p&gt;What&#x27;s the simplest way to also run doctests extracted from our main code?  &lt;code&gt;--doctest-modules&lt;/code&gt; doesn&#x27;t work (probably since it just runs doctests from &lt;code&gt;tests&lt;/code&gt;).  Note that we want to include doctests in the same process (and not simply run a separate invocation of &lt;code&gt;py.test&lt;/code&gt;) because we want to account for doctest in code coverage.&lt;/p&gt;</Body>
+<Tags>python,testing,pytest,doctest</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Could you try with the repo version of pytest and paste a session log?  I&#x27;d think &lt;code&gt;--doctest-modules&lt;/code&gt; should pick up any .py files.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;Now it is implemented :-).&lt;/p&gt;&lt;p&gt;To use, either run &lt;code&gt;py.test --doctest-modules&lt;/code&gt; command, or set your configuration with &lt;code&gt;pytest.ini&lt;/code&gt;:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;$ cat pytest.ini# content of pytest.ini[pytest]addopts = --doctest-modules&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Man page: &lt;a href=&quot;http://doc.pytest.org/en/latest/doctest.html&quot; rel=&quot;noreferrer&quot;&gt;PyTest: doctest integration for modules and test files.&lt;/a&gt;&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;worked with doctest as well as with plain tests in one module. for a non-doctest test to be picked up, standard py.test discovery mechanism applies: a module name with test prefix, test function with test prefix.&lt;/p&gt;</Body>
+</answer>
+</qroot>

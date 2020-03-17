@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>RuntimeError: To use MKL 2018 with Theano you MUST set &quot;MKL_THREADING_LAYER=GNU&quot;</Title>
+<Body>&lt;p&gt;I have installed theano with &lt;/p&gt;&lt;pre&gt;&lt;code&gt;conda install theano&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;on Ubuntu 16.04.Now I have import problems&lt;/p&gt;&lt;pre&gt;&lt;code&gt;import theanoTraceback (most recent call last):  File &quot;/home/milenko/miniconda3/lib/python3.6/configparser.py&quot;, line 1138, in _unify_values    sectiondict = self._sections[section]KeyError: &#x27;blas&#x27;  File &quot;/home/milenko/miniconda3/lib/python3.6/site-packages/theano/configdefaults.py&quot;, line 1252, in check_mkl_openmp    raise RuntimeError(&#x27;To use MKL 2018 with Theano you MUST set &quot;MKL_THREADING_LAYER=GNU&quot; in your environement.&#x27;)RuntimeError: To use MKL 2018 with Theano you MUST set &quot;MKL_THREADING_LAYER=GNU&quot; in your environement.&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;What does this mean?How to check if everything if BLAS is properly installed?&lt;/p&gt;</Body>
+<Tags>python,theano</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;I have solved this,it seems that MKL 2018 has some serious problems&lt;/p&gt;&lt;pre&gt;&lt;code&gt;conda uninstall mkl=2018conda install mkl=2017&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;Just add below line to ~/.bashrc&lt;/p&gt;&lt;pre&gt;&lt;code&gt;export MKL_THREADING_LAYER=GNU&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I had the same problem and this fixed the issue for me.&lt;/p&gt;&lt;p&gt;Ubuntu - 16.04&lt;br/&gt;Python - 3.6.4&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;I faced same error on Ubuntu-GNOME 16.04. To solve this, I added an &lt;code&gt;export&lt;/code&gt; statement to my &lt;em&gt;&lt;code&gt;.zshrc&lt;/code&gt;&lt;/em&gt; as:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;export MKL_THREADING_LAYER=GNU&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;And ran the following for compiling the configuration file&lt;/p&gt;&lt;pre&gt;&lt;code&gt;$ source ~/.zshrc&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Following this, I was able to &lt;code&gt;import theano&lt;/code&gt; without any errors.&lt;/p&gt;</Body>
+</answer>
+</qroot>

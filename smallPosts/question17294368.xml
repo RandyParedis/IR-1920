@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Plotting the surface of a sphere onto a circle</Title>
+<Body>&lt;p&gt;I am trying to create an animation of a sphere rotating but only 2π of the surface of this object can be seen, so I require the ability to plot regions (separation into longitude and latitude) onto a circle and to have them defined by parameters such that they can be altered for rotation using two angles (theta and phi from spherical polar coordinates). &lt;/p&gt;&lt;p&gt;I have tried a few things, but the only time a made anything worthwhile was using tricontour:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;import matplotlib.pyplot as pltimport matplotlib.tri as triimport numpy as npfrom math import *r=1.0 N=360circlexy = np.asarray([[r*cos(radians(i)), r*sin(radians(i))]                   for i in np.arange(0,N,0.1)])circlez = [r*(cos(radians(j)))*sin(radians(j))       for j in np.arange(0,N,0.1)]x1 = circlexy[:,0]y1 = circlexy[:,1]z1=circlezplt.figure()plt.gca().set_aspect(&#x27;equal&#x27;)plt.tricontourf(x1, y1, z1, 3)plt.show()&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;However, this plot is not very smooth and even if it were to be it is not very helpful as z1 is required to be the same length as x1 and y1 and so I cannot see a way to define two angles (this plot only rotates in one plane).&lt;/p&gt;&lt;p&gt;I could well have made errors above as my experience in coding is not particularly broad. What would be best to use to make such a plot? Thank you for your time.&lt;/p&gt;</Body>
+<Tags>python,plot,geometry,geometry-surface</Tags>
+</question>
+</qroot>

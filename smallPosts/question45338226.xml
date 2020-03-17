@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>store multiple dataframe.info to array</Title>
+<Body>&lt;p&gt;I would like to combine the information from dataframe.info from a couple of dataframes into one table to be exported. &lt;/p&gt;&lt;p&gt;I think the best way to do this is to pull df1.info into an array and then do some cutting so only the column and count info remains. &lt;/p&gt;&lt;p&gt;Here is roughly what I want to do in code:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;import pandas as pdfiles=[&quot;file1&quot;, &quot;file2&quot;]for filename in files:    df= pd.read_csv(filename)    info=df.info()    *convert info to info[]*    *cut first 3 rows and last 2 rows*    output=output.extend(info) &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Let me know if anything is unclear. Thanks! &lt;/p&gt;</Body>
+<Tags>python,pandas,dataframe</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Since &lt;code&gt;df.info()&lt;/code&gt; prints to &lt;code&gt;stdout&lt;/code&gt;, you can harvest it by temporally redirecting IO to a &lt;code&gt;StringIO&lt;/code&gt; object:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;import contextlibimport iodef get_info_middle(df):    fobj = io.StringIO()    with contextlib.redirect_stdout(fobj) as stdout:        df.info()    fobj.seek(0)    return &#x27;\n&#x27;.join(fobj.read().splitlines()[3:-2])&lt;/code&gt;&lt;/pre&gt;&lt;h3&gt;Example&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;In [1]: df = pd.DataFrame({&#x27;a&#x27;: [1, 2, 3], &#x27;b&#x27;: [4, 5, 6]})In [2]: df.info()&amp;lt;class &#x27;pandas.core.frame.DataFrame&#x27;&amp;gt;RangeIndex: 3 entries, 0 to 2Data columns (total 2 columns):a    3 non-null int64b    3 non-null int64dtypes: int64(2)memory usage: 128.0 bytesIn [3]: print(get_info_middle(df))a    3 non-null int64b    3 non-null int64&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

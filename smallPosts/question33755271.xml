@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Find the associated dll file to __declspec(dllexport)</Title>
+<Body>&lt;p&gt;I got this massive project with many classes with definitions in dll files. I need to extract a part of this project and create a new project from that part. I have managed to find some dll files by using the Code Map in Visual Studio but some classes are not shown up there.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;#   ifdef FCBase#       define BaseExport  __declspec(dllexport)#   else#       define BaseExport  __declspec(dllimport)#   endifclass BaseExport Handled{. .};&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;What is specifying which dll files are linked to what? &lt;/p&gt;</Body>
+<Tags>c++,dllimport,dllexport,declspec</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Directive &lt;code&gt;__declspec(dllexport)&lt;/code&gt; indicates that anything declared with this directive will be exported from a DLL to be used in some other application that links to that DLL. So when writing header files for code that will be compiled into a DLL, functions declarations and class definitions are decorated with this directive. On the other hand, code that will use these functions and classes will need to declare them with &lt;code&gt;__declspec(dllimport)&lt;/code&gt;, to let the linker know they will be imported from a DLL.&lt;/p&gt;&lt;p&gt;Both directives are often replaced by a single macro, which resolves to appropriate value depending on project settings. This way, you can include the same header in DLL implementation files and implementation files for some other application that will use this DLL. For instance, in your case the project for DLL will have &lt;code&gt;FCBase&lt;/code&gt; defined so &lt;code&gt;BaseExport&lt;/code&gt; will resolve to &lt;code&gt;__declspec(dllexport)&lt;/code&gt; during preprocessing step. That indicates that this project is for implementation of DLL. Project that does not have &lt;code&gt;FCBase&lt;/code&gt; defined, which means that the project is importing functions an classes from DLL.&lt;/p&gt;</Body>
+</answer>
+</qroot>

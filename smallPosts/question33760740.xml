@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Is there a private using name = type;</Title>
+<Body>&lt;p&gt;I want to write:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;namespace A{    using name = type;}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;But if I try to use it from another space it would be available. Can I make it private inside its namespace?&lt;/p&gt;</Body>
+<Tags>c++,c++11,private,using</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;There&#x27;s no language feature to allow that, but many projects have the convention that all contents of namespaces named &lt;code&gt;detail&lt;/code&gt; are reserved and should not be used.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;namespace A {    namespace detail {        using name = type;    }    //something using detail::name}//A::detail::name technically accessible, but disallowed by convention&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;No you can&#x27;t: namespaces are (loosely speaking) &lt;code&gt;public&lt;/code&gt;, unless the whole thing is within an &lt;em&gt;anonymous namespace&lt;/em&gt; in which case it&#x27;s only visible to that compilation unit.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;namespace{    namespace A{        using name = type;    }}&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

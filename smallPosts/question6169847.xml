@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>how to choose libc6 or libc6-dbg</Title>
+<Body>&lt;p&gt;Im bug checking a c program and would like to install valgrind, the system then tells me that I should also install libc6 with debug symbols libc6-dbg.&lt;/p&gt;&lt;p&gt;Now my question is, when I in the future compile with gcc, which version of libc will be used?&lt;/p&gt;&lt;p&gt;How do I choose which libc6 I&#x27;m compiling against?&lt;/p&gt;&lt;p&gt;I&#x27;m not asking how to install this, I&#x27;m on ubuntu so apt-get install libc6-dbg will do the trick.&lt;/p&gt;</Body>
+<Tags>c++,c,gcc,libc</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;&lt;code&gt;libc6-dbg&lt;/code&gt; is not a separate library from &lt;code&gt;libc6&lt;/code&gt; — it&#x27;s the debugging symbols for &lt;code&gt;libc6&lt;/code&gt;, so that you can get accurate tracebacks within libc.&lt;/p&gt;</Body>
+</answer>
+</qroot>

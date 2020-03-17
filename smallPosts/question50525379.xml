@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Create matrix in a loop with numpy</Title>
+<Body>&lt;p&gt;I would like to build up a numpy matrix using rows I get in a loop. But how do I initialize the matrix? If I write&lt;/p&gt;&lt;pre&gt;&lt;code&gt;A = []A = numpy.vstack((A, [1, 2]))&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I get&lt;/p&gt;&lt;p&gt;ValueError: all the input array dimensions except for the concatenation axis must match exactly&lt;/p&gt;&lt;p&gt;What&#x27;s the best practice for this?&lt;/p&gt;&lt;p&gt;NOTE: I do not know the number of rows in advance. The number of columns is known.&lt;/p&gt;</Body>
+<Tags>python,numpy,matrix,iteration</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;&lt;strong&gt;Unknown number of rows&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;One way is to form a list of lists, and then convert to a &lt;code&gt;numpy&lt;/code&gt; array in one operation:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;final = []# x is some generatorfor item in x:    final.append(x)A = np.array(x)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Or, more elegantly, given a generator &lt;code&gt;x&lt;/code&gt;:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;A = np.array(list(x))&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This solution is time-efficient but memory-inefficient.&lt;/p&gt;&lt;p&gt;&lt;strong&gt;Known number of rows&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Append operations on &lt;code&gt;numpy&lt;/code&gt; arrays are expensive and not recommended. If you know the size of the final array in advance, you can instantiate an empty (or zero) array of your desired size, and then fill it with values. For example:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;A = np.zeros((10, 2))A[0] = [1, 2]&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Or in a loop, with a trivial assignment to demonstrate syntax:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;A = np.zeros((2, 2))# in reality, x will be some generator whose length you know in advancex = [[1, 2], [3, 4]]for idx, item in enumerate(x):    A[idx] = itemprint(A)array([[ 1.,  2.],       [ 3.,  4.]])&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

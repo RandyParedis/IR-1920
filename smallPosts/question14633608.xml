@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Converting gamepad thumbstick values to range</Title>
+<Body>&lt;p&gt;I&#x27;m trying to get the value from the thumbstick with XInput, but the values are weird and I don&#x27;t know how to handle them correctly.&lt;/p&gt;&lt;p&gt;How do I calculate so that I can read the values between -1 (thumbstick to the left/up) +1 (thumbstick to the right/down)&lt;/p&gt;&lt;p&gt;Similiar to XNA&#x27;s Gamepad.GetState().ThumbSticks.Left.X ( -1 = to the left, +1 = to the right ).&lt;/p&gt;&lt;p&gt;Any ideas?&lt;/p&gt;</Body>
+<Tags>c++,input,directx,xinput,gamepad</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;According to the &lt;a href=&quot;http://msdn.microsoft.com/en-us/library/windows/desktop/microsoft.directx_sdk.reference.xinput_gamepad%28v=vs.85%29.aspx&quot; rel=&quot;nofollow&quot;&gt;documentation&lt;/a&gt;, &lt;code&gt;_XINPUT_GAMEPAD.sThumbLX&lt;/code&gt; is a &lt;code&gt;SHORT&lt;/code&gt; whose value lies between -32768 and 32767. If you want to convert that to a range of [-1, 1), divide the value by 32768.0.&lt;/p&gt;</Body>
+</answer>
+</qroot>

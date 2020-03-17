@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Importing Python files into each other on a web server</Title>
+<Body>&lt;p&gt;Using CGI scripts, I can run single Python files on my server and then use their output on my website. &lt;/p&gt;&lt;p&gt;However, I have a more complicated program on my computer that I would like to run on the server. It involves several modules I have written myself, and the SQLITE3 module built in Python. The program involves reading from a .db file and then using that data. &lt;/p&gt;&lt;p&gt;Once I run my main Python executable from a browser, I get a &quot;500: Internal server error&quot; error.&lt;/p&gt;&lt;p&gt;I just wanted to know whether I need to change something in the permission settings or something for Python files to be allowed to import other Python files, or to read from a .db file. &lt;/p&gt;&lt;p&gt;I appreciate any guidance, and sorry if I&#x27;m unclear about anything I&#x27;m new to this site and coding in general.&lt;/p&gt;&lt;p&gt;FOLLOW UP: So, as I understand, there isn&#x27;t anything inherently wrong with importing Python files on a server?&lt;/p&gt;</Body>
+<Tags>python,sqlite,web</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;I suggest you look in the log of your server to find out what caused the 500 error.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;You can get an extensive error message by adding the following lines at the beginning of your CGI script:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;import cgitbcgitb.enable()&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

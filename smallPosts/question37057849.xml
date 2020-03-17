@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Any disadvantage of inheriting from boost::noncopyable vs delete copy ctor and op?</Title>
+<Body>&lt;p&gt;First:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;class T1 : boost::noncopyable {    // ...}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Second:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;class T2 {public:    T2(const T2&amp;amp;) = delete;    T2&amp;amp; operator=(const T2&amp;amp;) = delete;}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Are they the same? What are disadvantages of each? I mean runtime costs, not comfort of writing code or readability.&lt;/p&gt;&lt;p&gt;In 2016 with C++11/14 is there any advantage to use &lt;code&gt;boost::noncopyable&lt;/code&gt; instead of C++11 &lt;code&gt;= delete&lt;/code&gt;?&lt;/p&gt;</Body>
+<Tags>c++,c++11,boost,delete-operator,noncopyable</Tags>
+</question>
+</qroot>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Django with MongoDB can&#x27;t get django admin panel?</Title>
+<Body>&lt;p&gt;Is it true that it&#x27;s a bad choice python with non-relational database like MongoDB ? &lt;/p&gt;&lt;p&gt;I heard if i use mongoDB as my database in my djanog project i can&#x27;t use default admin panel of django in my projects as it&#x27;s designed with Relational database m ethology ?  &lt;/p&gt;</Body>
+<Tags>python,django,mongodb,pymongo,mongoengine</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Sure you can use mongoDB with all Django features. Checkout Django non-rel documentation and decide yourself. &lt;a href=&quot;http://django-mongodb-engine.readthedocs.io/en/latest/&quot; rel=&quot;nofollow noreferrer&quot;&gt;http://django-mongodb-engine.readthedocs.io/en/latest/&lt;/a&gt;&lt;/p&gt;</Body>
+</answer>
+</qroot>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>create column concatenating strings</Title>
+<Body>&lt;p&gt;I have this dataframe:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;import pandas as pddf = pd.DataFrame({&#x27;type&#x27;:[&#x27;HEPA2&#x27;, &#x27;HEPA3&#x27;],                    &#x27;dep&#x27;: [&#x27;B01&#x27;, &#x27;C02&#x27;],                   &#x27;c&#x27;: [1 ,2],                   &#x27;ch&#x27;:[3, 4]})&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;df.dtypes:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;type    objectdep     objectc        int64ch       int64dtype: object&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;and I want to create a new column where I concatenate some strings:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;df[&#x27;name&#x27;] = str(str(df[&#x27;dep&#x27;]) + &#x27;-&#x27; + &#x27;c&#x27; + str(df[&#x27;c&#x27;]) + &#x27;-&#x27; + str(df[&#x27;ch&#x27;]))&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;and df is:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;        type    dep     c   ch  name0      HEPA2    B01     1   3   0 B01\n1 C02\nName: dep, dtype: object-c...1      HEPA3    C02     2   4   0 B01\n1 C02\nName: dep, dtype: object-c...&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;instead of:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;       type     dep     c      ch   name0       HEPA2   B01     1      3     B01-1-31       HEPA3   C02     2      4     C02-2-4&lt;/code&gt;&lt;/pre&gt;</Body>
+<Tags>python-3.x,pandas</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Instead of &lt;code&gt;str()&lt;/code&gt; you should use &lt;code&gt;df[&#x27;column&#x27;].astype(str)&lt;/code&gt;&lt;/p&gt;&lt;pre&gt;&lt;code&gt;df[&#x27;name&#x27;] = df[&#x27;dep&#x27;] + &#x27;-&#x27; + df[&#x27;c&#x27;].astype(str) + &#x27;-&#x27; + df[&#x27;ch&#x27;].astype(str)&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;Use &lt;code&gt;agg&lt;/code&gt; and &lt;code&gt;join&lt;/code&gt; on columns &lt;code&gt;dep&lt;/code&gt;, &lt;code&gt;c&lt;/code&gt;, &lt;code&gt;ch&lt;/code&gt; and assign back to column &lt;code&gt;name&lt;/code&gt; as follows&lt;/p&gt;&lt;pre&gt;&lt;code&gt;df[&#x27;name&#x27;] = df.drop(&#x27;type&#x27;, 1).astype(str).agg(&#x27;-&#x27;.join, axis=1)Out[331]:    type  dep  c  ch     name0  HEPA2  B01  1   3  B01-1-31  HEPA3  C02  2   4  C02-2-4&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;another alternative:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;df[&#x27;name&#x27;] = df.apply(lambda x: &#x27;{}-{}-{}&#x27;.format(x[&#x27;dep&#x27;], x[&#x27;c&#x27;], x[&#x27;ch&#x27;]), axis=1)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Output:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;    type  dep  c  ch     name0  HEPA2  B01  1   3  B01-1-31  HEPA3  C02  2   4  C02-2-4&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;Instead of using str() use .str method and .cat() to concatenate:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;In [16]: df[&#x27;dep&#x27;].str.cat(df[&#x27;c&#x27;].astype(&#x27;str&#x27;),sep=&#x27;-&#x27;).str.cat(df[&#x27;ch&#x27;].astype(&#x27;str&#x27;), sep=&#x27;-&#x27;)Out[16]:0    B01-1-31    C02-2-4Name: type, dtype: object&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

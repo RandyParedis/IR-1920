@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>CNN for feature array in python</Title>
+<Body>&lt;p&gt;I have an array data which has 5000 row(images) and 58 columns(features). And the array is CSV format. How can i classify with CNN? &lt;/p&gt;&lt;p&gt;I was trying this following code, but i got error. what is wrong?&lt;/p&gt;&lt;pre&gt;&lt;code&gt;import kerasfrom keras.models import Sequentialfrom keras.layers.core import Dense, Dropout, Activation, Flattenfrom keras.layers.convolutional import Convolution1D, MaxPooling2Dfrom sklearn.model_selection import train_test_splitimport pandas as pdimport numpy as npdata = pd.read_csv(&#x27;/home/mahfuz/Documents/AllFeatures.csv&#x27;)data.head()data.iloc[3,1:].valuesdf_x = data.iloc[:,1:].valuesy = data.iloc[:,1].valuesdf_x = np.array(df_x)df_y = np.array(y)df_ydf_y.shapedf_x.shapex_train, x_test, y_train, y_test = train_test_split(df_x,df_y,test_size=0.2,random_state=4)model = Sequential()model.add(Convolution1D(32, (3, 3), input_shape= ( 32, 32, 3)))model.add(MaxPooling1D(pool_size=(2,2)))model.add(Flatten())model.add(Dense(100))model.add(Dropout(0.5))model.add(Dense(10))model.add(Activation(&#x27;softmax&#x27;))model.compile(loss=&#x27;categorical_crossentropy&#x27;,optimizer = &#x27;adadelta&#x27;, metrices = [&#x27;accuracy&#x27;])model.fit(x_train,y_train,validation_data=(x_test,y_test))model.evaluate(x_test,y_test)&lt;/code&gt;&lt;/pre&gt;</Body>
+<Tags>python,keras,deep-learning</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Can I ask you what is the error?First, Your data shape in the model is (32,32,3) on Conv1D, check it. Your images shape is (32, 32, 3) or you have data with shape (5000, 58) ?&lt;/p&gt;</Body>
+</answer>
+</qroot>

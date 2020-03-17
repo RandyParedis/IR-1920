@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>error: array initializer must be an initializer list</Title>
+<Body>&lt;p&gt;When I define an array, I got this error:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;In file included from a.cc:2: ./solution.h:4:13: error: array initializer must be an initializer list int ugly[]=new int[index]; ^ 1error generated.&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;What&#x27;s wrong with it? Can&#x27;t I define an array without initialization?&lt;/p&gt;&lt;p&gt;&lt;strong&gt;Code:&lt;/strong&gt;&lt;/p&gt;&lt;pre&gt;&lt;code&gt; class Solution {public:    int GetUglyNumber_Solution(int index) {        int ugly[]=new int[index];        ugly[0]=1;        int t2=0,t3=0,t5=0,i;        for (i=1;i&amp;lt;index;i++){            ugly[i]=min(ugly[t2]*2,min(ugly[t3]*3,ugly[t5]*5));            if (ugly[t2]*2==ugly[i]) t2++;            else if (ugly[t3]*3==ugly[i]) t3++;            else if (ugly[t5]*5==ugly[i]) t5++;                    }        return ugly[index-1]    }};&lt;/code&gt;&lt;/pre&gt;</Body>
+<Tags>c++,arrays,initialization</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;That&#x27;s not exactly how arrays work. For a simple fix:&lt;/p&gt;&lt;p&gt;&lt;code&gt;int * ugly = new int[index]&lt;/code&gt;&lt;/p&gt;&lt;p&gt;But I do suggest brushing up on your c++ - no offense intended.&lt;/p&gt;</Body>
+</answer>
+</qroot>

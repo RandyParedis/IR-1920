@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>How do I write data to a file that I have taken from an SQL database in Python? (sqlite3)</Title>
+<Body>&lt;pre&gt;&lt;code&gt;c.execute(&quot;SELECT * FROM Student WHERE Forename =:forename AND Surname =:surname AND YearGroup =:yeargroup AND FormNumber =:formnumber BETWEEN :startdate AND :enddate&quot;, {&quot;forename&quot;: forename, &quot;surname&quot;: surname, &quot;yeargroup&quot;: yeargroup, &quot;formnumber&quot;: formnumber, &quot;startdate&quot;: startdate, &quot;enddate&quot;: enddate})studentRequest = c.fetchall()records = studentRequest#write to filef = open(&#x27;Student Report&#x27;, &#x27;w&#x27;)f.write(name)f.write(&#x27; Form Number: &#x27; + (yeargroup +&#x27;/&#x27;+ formnumber))f.write(str(records))f.close()&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This is my code but it doesn&#x27;t seem to write the data from the database to the file. The name, Forum Number etc is written though. &lt;/p&gt;&lt;p&gt;Can anyone help?&lt;/p&gt;</Body>
+<Tags>python,sql,database,object,sqlite</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Does your output have &quot;[]&quot; in it? It sounds like your query doesn&#x27;t find any matches.&lt;/p&gt;&lt;p&gt;If this isn&#x27;t so, prepare a &lt;a href=&quot;https://stackoverflow.com/help/mcve&quot;&gt;complete, &lt;strong&gt;runnable&lt;/strong&gt;&lt;/a&gt; example showing the problem.&lt;/p&gt;</Body>
+</answer>
+</qroot>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>C++ Simulating key presses only once</Title>
+<Body>&lt;p&gt;I have tried everything I found in google but nothing works. I want to press &lt;code&gt;A&lt;/code&gt; for &lt;strong&gt;5 seconds&lt;/strong&gt;, but everything presses it only once.It just releases it immediately. Pressing multiple times is not the answer because the key must be pressed for atleast 30ms.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;const int KEYEVENT_KEYUP = 0x02;keybd_event(0x41, 0, 0, 0);Sleep(5000);keybd_event(0x41, 0, KEYEVENT_KEYUP, 0);&lt;/code&gt;&lt;/pre&gt;</Body>
+<Tags>c++,keyboard</Tags>
+</question>
+</qroot>

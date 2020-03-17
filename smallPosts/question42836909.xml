@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>call templated static method inside templated class</Title>
+<Body>&lt;p&gt;I have a class called Serializer with Serialize and Deserialize methods, on simple types like &quot;int, double, bool  etc)&quot;&lt;/p&gt;&lt;p&gt;To extend my possibilities of object serializable, I wanted to make Serializer templated.The goal was to make users of my lib able to create their own Serialization/ Deserialization class, and use it like this :&lt;/p&gt;&lt;pre&gt;&lt;code&gt;Serializer&amp;lt; MyOwnSerializationClass&amp;gt;::Serialize(var);&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Then Serializer would have called MyOwnSerializationClass::serialize&lt;/p&gt;&lt;p&gt;When I try to do it :&lt;/p&gt;&lt;pre&gt;&lt;code&gt;template &amp;lt;class CustomSerializer, typename T&amp;gt;inline web::json::value Serializer&amp;lt;CustomSerializer&amp;gt;::Serialize(T var){    web::json::value value;    CustomSerializer::template Serialize(var);}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;CustomSerializer&lt;/strong&gt;::template Serialize(var);&lt;/p&gt;&lt;p&gt;CustomSerializer is red on visual studio, it says &quot;cannot resolve symbol&quot;&lt;/p&gt;</Body>
+<Tags>c++,templates</Tags>
+</question>
+</qroot>

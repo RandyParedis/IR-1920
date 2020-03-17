@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>adding items of list to nuke.addCommand method only takes one of the items?</Title>
+<Body>&lt;p&gt;I am writing a scripts that can be placed in e.g. the meny.py file to load all the custom plugins/gizmos/.nk files into a new Menu at startup. It is supposed to work with subdirectories in the specified folder to create submenus to order the items by category. &lt;strong&gt;PROBLEM&lt;/strong&gt;: It creates the menu and its submenus as well as the items in place, but while the names of the items are different they create all the exact same node when executed. I don&#x27;t get what is happening there. &lt;/p&gt;&lt;p&gt;Here is what I have so far:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;import ospluginpath = &#x27;C:\Users\Workstation\.nuke\userplugins&#x27;#print nuke.pluginPath()customMenu = nuke.menu(&#x27;Nodes&#x27;).addMenu(&#x27;UserPlugIns&#x27;)for dirpath, dirnames, filenames in os.walk ( pluginpath ):    print (&#x27;&#x27;)    print (&#x27;CurrentPath: &#x27; , dirpath)    nuke.pluginAddPath(dirpath)    dirname = os.path.split(dirpath)[-1]    subMenu = customMenu.addMenu(dirname)    #print (&#x27;Directories: &#x27; , dirnames)    #print (&#x27;Filenames: &#x27; , filenames)    for x in filenames:        print x        subMenu.addCommand(x, lambda: nuke.createNode(&#x27;{}&#x27;.format(x)))&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I guess it is the last line causing the problem. Any ideas?&lt;/p&gt;</Body>
+<Tags>python-2.7,plugins,operating-system,nuke</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;That&#x27;s know danger from lambda, so you probably start using partial &lt;/p&gt;&lt;pre&gt;&lt;code&gt;from functools import partial................        subMenu.addCommand(x, partial(nuke.createNode(&#x27;{}&#x27;.format(x))))&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

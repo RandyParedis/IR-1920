@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Why doesn&#x27;t std::sets of alglib::real_1d_array work in this case?</Title>
+<Body>&lt;p&gt;I&#x27;m forking a C++ program using Alglib so that I can invert matrices and do matrix multiplications easily. &lt;/p&gt;&lt;p&gt;Right now I&#x27;m facing this error:&lt;/p&gt;&lt;p&gt;Invalid operands to binary expression (&#x27;const alglib::real_1d_array&#x27; and &#x27;const alglib::real_1d_array&#x27;)&lt;/p&gt;&lt;p&gt;So what caused this error?&lt;/p&gt;&lt;pre&gt;&lt;code&gt; inline vecset getAdmittedCVectors(void) {        return admittedCVectors; }&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Here vecset means&lt;/p&gt;&lt;pre&gt;&lt;code&gt;typedef std::set&amp;lt;alglib::real_1d_array&amp;gt; vecset;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;and admittedCVectors is a member of a class.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;vecset admittedCVectors;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;How shall I solve it? Using a variant of std::set that does not have this issue or overloading &amp;lt; in alglib::real_1d_array which is much harder?&lt;/p&gt;</Body>
+<Tags>c++,set,alglib</Tags>
+</question>
+</qroot>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Tensorflow=1.12.0 AttributeError: module &#x27;tensorflow&#x27; has no attribute &#x27;feature_column&#x27;</Title>
+<Body>&lt;p&gt;I am trying to go through a &lt;code&gt;Tensorflow&lt;/code&gt; tutorial that uses &lt;code&gt;tf.feature_column&lt;/code&gt;, however when running it I am encountered with this error. &lt;/p&gt;&lt;p&gt;I have &lt;code&gt;tensorflow=1.12.0&lt;/code&gt; installed. I am running it on &lt;code&gt;Python 3.6.8&lt;/code&gt;.&lt;/p&gt;&lt;p&gt;This looks to be the most recent stable package of &lt;code&gt;tensorflow&lt;/code&gt; and the docs say that Python 3.6 is supported. I have also checked the tensorflow package files and found that &lt;code&gt;feature_column&lt;/code&gt; is included.&lt;/p&gt;&lt;p&gt;Any idea why this error is still persisting?&lt;/p&gt;&lt;p&gt;Full error:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;Traceback (most recent call last):  File &quot;tensorflow.py&quot;, line 1, in &amp;lt;module&amp;gt;    import tensorflow as tf  File &quot;/Users/blakecarroll/SFInsuretech/virtEnv1/tensorflow.py&quot;, line 50, in &amp;lt;module&amp;gt;    categorical_object_feat_cols = [tf.feature_column.embedding_column(tf.feature_column.categorical_column_with_hash_bucket(key=col,hash_bucket_size=1000), dimension = len(df[col].unique())) for col in categorical_columns if df[col].dtype==&#x27;O&#x27;]  File &quot;/Users/blakecarroll/SFInsuretech/virtEnv1/tensorflow.py&quot;, line 50, in &amp;lt;listcomp&amp;gt;    categorical_object_feat_cols = [tf.feature_column.embedding_column(tf.feature_column.categorical_column_with_hash_bucket(key=col,hash_bucket_size=1000), dimension = len(df[col].unique())) for col in categorical_columns if df[col].dtype==&#x27;O&#x27;]AttributeError: module &#x27;tensorflow&#x27; has no attribute &#x27;feature_column&#x27;&lt;/code&gt;&lt;/pre&gt;</Body>
+<Tags>python,tensorflow</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;This is happening because the name of your script is &lt;code&gt;tensorflow.py&lt;/code&gt;, which makes &lt;code&gt;import tensorflow as tf&lt;/code&gt; import your script itself. Rename your script into something else and this should be resolved.&lt;/p&gt;</Body>
+</answer>
+</qroot>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>How to print to C++Builder output window</Title>
+<Body>&lt;p&gt;I have a C++Builder 2010 project and want to add tests to it. So, instead of pausing the output of my console window to read the outcome of the tests, I want to print the same information to the Output Window in C++Builder (not in the Event Log).&lt;/p&gt;&lt;p&gt;So OutputDebugString is not an option for me. Is there some specific way to either redirect console output to the Output Window or to print directly there?&lt;/p&gt;&lt;p&gt;&lt;img src=&quot;https://i.stack.imgur.com/nAlin.png&quot; alt=&quot;C++ Builder 2010 output window&quot;&gt;&lt;/p&gt;</Body>
+<Tags>delphi,debugging,ide,c++builder,c++builder-2010</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;That window is for the output of the compilation process. It&#x27;s not what you are looking for. You want to generate output whilst the program runs. I&#x27;d use the console or OutputDebugString or similar and I can&#x27;t understand what you have against those options.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;You can simply define a Post-build event in your Project Options to run your executable. Its console output will automatically be included in Output messages.&lt;/p&gt;</Body>
+</answer>
+</qroot>

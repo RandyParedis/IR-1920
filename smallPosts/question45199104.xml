@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Is there a fast way to create a numpy array that reduces unique values to their lowest form?</Title>
+<Body>&lt;p&gt;Sorry if the question is worded confusingly. I have an array similar to the following:&lt;code&gt;[[3,7,9,5],[3,3,7,5]]&lt;/code&gt;, though much larger.&lt;/p&gt;&lt;p&gt;How can I convert this into a form such as&lt;code&gt;[[0,2,3,1],[0,0,2,1]]&lt;/code&gt; where each unique value starting with the lowest is given an identifying number, starting with 0? Currently I am using a for loop, but it is very slow. Is there any functions in numpy that could speed this up? &lt;/p&gt;</Body>
+<Tags>python,arrays,numpy,multidimensional-array</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;We can use one approach using &lt;a href=&quot;https://docs.scipy.org/doc/numpy/reference/generated/numpy.unique.html&quot; rel=&quot;nofollow noreferrer&quot;&gt;&lt;code&gt;np.unique&lt;/code&gt;&lt;/a&gt; with its optional arg &lt;code&gt;return_inverse&lt;/code&gt; set as &lt;code&gt;True&lt;/code&gt;. This flattens the input when fed to it, giving us unique IDs in sequence starting from &lt;code&gt;0&lt;/code&gt;. The uniqueness is maintained across all elements in the array because it was flattened. So, the output needs a reshape afterwards to bring it back to the same shape as the input.&lt;/p&gt;&lt;p&gt;Thus, the implementation would be -&lt;/p&gt;&lt;pre&gt;&lt;code&gt;np.unique(a, return_inverse=True)[1].reshape(a.shape)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Sample run -&lt;/p&gt;&lt;pre&gt;&lt;code&gt;In [208]: a = np.array([[3,7,9,5],[3,3,7,5]])In [209]: np.unique(a, return_inverse=True)[1].reshape(a.shape)Out[209]: array([[0, 2, 3, 1],       [0, 0, 2, 1]])&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

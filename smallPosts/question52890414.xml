@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>installing packages in Anaconda stopped</Title>
+<Body>&lt;p&gt;i have been using Anaconda for installing python packages and so far it worked just fine.&lt;/p&gt;&lt;p&gt;Since today it doesn&#x27;t ... I am able to select the package i want, in my case &quot;python-docx&quot;, run apply, and anaconda finds the package. I am also able to start the installtion and it does something (at least the processing bar keeps running), but after a view minutes it stopps. But nothing has happened. The package is still marked as not installed and wound&#x27;t work in the code.&lt;/p&gt;&lt;p&gt;I tried it with different packages, but it is always the same.I also tried to install the package using the conda comment in the cmd-box but here i end up with the error &quot;conda comment hast not been found&quot;.&lt;/p&gt;&lt;p&gt;Does anyone know what i can do ?&lt;/p&gt;</Body>
+<Tags>python-3.x,anaconda,python-docx</Tags>
+</question>
+</qroot>

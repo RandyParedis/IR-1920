@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Nested lists and saving into a text file</Title>
+<Body>&lt;p&gt;I have a nested list containing strings and integers that I&#x27;m trying to save into a txt file but I&#x27;m having trouble with formatting.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;array = [(string1, int1),(string2, int2),(string3, int3),...(string_n, int_n)]with open(&quot;output.txt&quot;, &quot;w&quot;) as f:    f.write(repr(array))&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;and get the array saved as is.&lt;/p&gt;&lt;p&gt;How do I format the output so that the format is as below instead of the array as is?&lt;/p&gt;&lt;pre&gt;&lt;code&gt;string1 int1string2 int2...string_n int_n&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This is propably a very newbie question, but I couldn&#x27;t find anything similar with search...&lt;/p&gt;</Body>
+<Tags>python,arrays,save</Tags>
+</question>
+<answer>
+<Body>&lt;pre&gt;&lt;code&gt;for s, i in array:    f.write(&#x27;{} {}\n&#x27;.format(s, i))&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I can&#x27;t remember off the top of my head if &lt;code&gt;write&lt;/code&gt; includes a newline, but I&#x27;m pretty sure it does not.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;Use the following:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;array = [(&#x27;s1&#x27;, 1),(&#x27;s2&#x27;, 2)]with open(&#x27;out.txt&#x27;, &#x27;w&#x27;) as f:    for item in array:        f.write(&#x27;{} {}\n&#x27;.format(*item))&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Output:&lt;/strong&gt;&lt;/p&gt;&lt;pre&gt;&lt;code&gt;s1 1s2 2&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;You could use &lt;code&gt;join&lt;/code&gt; instead &lt;/p&gt;&lt;pre&gt;&lt;code&gt;for sub_array in array:     f.write(&#x27; &#x27;.join(sub_array))&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This will work for arbitrary length arrays.&lt;/p&gt;&lt;p&gt;If you have a list of lists rather than an array of mix types then you would need to coerce the elements to string before using the join (as pointed out by @Blckknght).&lt;/p&gt;&lt;p&gt;This could look like this&lt;/p&gt;&lt;pre&gt;&lt;code&gt;for sub_array in array:     f.write(&#x27; &#x27;.join(map(str,sub_array)))&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

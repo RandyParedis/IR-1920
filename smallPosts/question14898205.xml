@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Compiler error with C++ and eigen3</Title>
+<Body>&lt;p&gt;I have the following program:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;#include &amp;lt;Eigen/Core&amp;gt;using namespace Eigen;template &amp;lt;int _n, int _m&amp;gt;void func(Matrix&amp;lt;double, _m, _n&amp;gt; A){  Matrix&amp;lt;double, 2, 3&amp;gt; AA;  AA &amp;lt;&amp;lt; 1, 0, 5,        2, 0, 7;  MatrixXd KK = AA.triangularView&amp;lt;Lower&amp;gt;();  // if I uncomment this, the code won&#x27;t compile  // MatrixXd K = A.triangularView&amp;lt;Lower&amp;gt;();}int main(){  Matrix&amp;lt;double, 2, 4&amp;gt; AA;  AA &amp;lt;&amp;lt; 1, 0, 5, 17,        2, 0, 7, -2;  func(AA);  return 0;}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I compile it with &lt;code&gt;g++ $(pkg-config --cflags --libs eigen3) -o main main.cc&lt;/code&gt;&lt;/p&gt;&lt;p&gt;If the indicated code is commented out, I get the following errors:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;main.cc: In function ‘void func(Eigen::Matrix&amp;lt;double, _m, _n&amp;gt;)’:main.cc:15:40: error: expected primary-expression before ‘)’ tokenmain.cc: In instantiation of ‘void func(Eigen::Matrix&amp;lt;double, _m, _n&amp;gt;) [with int _n = 4; int _m = 2]’:main.cc:26:10:   required from heremain.cc:15:40: error: no match for ‘operator&amp;lt;’ in ‘A.Eigen::MatrixBase&amp;lt;Eigen::Matrix&amp;lt;double, 2, 4&amp;gt; &amp;gt;::triangularView &amp;lt; (Eigen::._79)1u’&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;r&lt;/p&gt;&lt;p&gt;I don&#x27;t unserstand the problem here. It seems like g++ thinks that I wan&#x27;t to compare a matrix to the &lt;code&gt;Lower&lt;/code&gt; enum constant, even though I just want to call a member function.&lt;/p&gt;</Body>
+<Tags>c++,gcc,eigen</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;You need to say &lt;code&gt;MatrixXd K = A.template triangularView&amp;lt;Lower&amp;gt;();&lt;/code&gt;&lt;/p&gt;&lt;p&gt;See &lt;a href=&quot;http://womble.decadent.org.uk/c++/template-faq.html#disambiguation&quot; rel=&quot;nofollow&quot;&gt;http://womble.decadent.org.uk/c++/template-faq.html#disambiguation&lt;/a&gt;&lt;/p&gt;</Body>
+</answer>
+</qroot>

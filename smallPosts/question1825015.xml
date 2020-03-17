@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Variable Argument Lists in C++/CLI</Title>
+<Body>&lt;p&gt;How do I create a function which accepts a variable argument list in C++/CLI? I am looking to create a function which forwards most of it&#x27;s arguments to &lt;code&gt;String::Format&lt;/code&gt;.&lt;/p&gt;</Body>
+<Tags>.net,syntax,c++-cli,arguments,variadic-functions</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Declare the last argument as a managed array prefixed with an ellipsis.&lt;/p&gt;&lt;p&gt;Here is a variable argument function that just passes all of its arguments to String::Format&lt;/p&gt;&lt;pre&gt;&lt;code&gt;String ^FormatAString(String ^format, ...array&amp;lt;Object^&amp;gt; ^args){  return String::Format(format, args);}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;And here is how to call it:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;Console::WriteLine(FormatAString(L&quot;{0} {1} {2}.&quot;, 40.5, &quot;hello&quot;, DateTime::Now));&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

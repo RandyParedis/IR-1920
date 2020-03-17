@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Extracting questions from docx file using python</Title>
+<Body>&lt;p&gt;I have a Django project in which I want the user to upload a docx file containing questions of MCQ/Fill in The Blanks type. I want to extract these questions and store individual questions in the database.&lt;/p&gt;&lt;p&gt;I have set up the database, but couldn&#x27;t find anything to extract the questions from the docx file.&lt;/p&gt;&lt;p&gt;I can read the docx file using textract (&lt;a href=&quot;https://textract.readthedocs.io/en/stable/&quot; rel=&quot;nofollow noreferrer&quot;&gt;https://textract.readthedocs.io/en/stable/&lt;/a&gt;), which gives me a list of strings. But how do I check whether a string is a question or an option or just an instruction? Do I have to make specific rules to extract the questions, or is there any library in Python that can help me solve this problem?&lt;/p&gt;</Body>
+<Tags>python</Tags>
+</question>
+</qroot>

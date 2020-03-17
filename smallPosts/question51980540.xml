@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Python - Sum of Excel cell range</Title>
+<Body>&lt;p&gt;I am completely new to python&lt;br&gt;I have an excel sheet as below: &lt;/p&gt;&lt;pre&gt;        Column A  Column B   Column C         Column D  Row 1   Mathew    abc       89499052          17895077  Row 2   Job       def       89499158          17920464  Row 3   Robin     ehj       89499254          17901346  Row 4                      Sumof(C1+c2+c3)   Sumof(D1+D2+D3)  Row 5                      Result of D4/C4&lt;/pre&gt;  &lt;p&gt;I need a code snippet for below:&lt;br&gt;1. Open the excel sheet in certain path(E:/Excelfiles/abc.csv)&lt;br&gt;2. Find the required values C4 and D4.&lt;br&gt;3. Find value of C5.&lt;br&gt;Can someone please help me out?&lt;/p&gt;</Body>
+<Tags>python,python-3.x,python-2.7</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Sure, you should use Pandas.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;import pandas as padf = pa.read_csv(&#x27;E:/Excelfiles/abc.csv&#x27;)cSum = df[&#x27;Column C&#x27;].sum()dSum = df[&#x27;Column D&#x27;].sum()d4 = df[&#x27;Column D&#x27;].iloc[3]c4 = df[&#x27;Column C&#x27;].iloc[3]&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I let you find the code left. Please check the &lt;a href=&quot;https://pandas.pydata.org/pandas-docs/stable/generated/pandas.read_csv.html&quot; rel=&quot;nofollow noreferrer&quot;&gt;read_csv&lt;/a&gt; function as it may need the encoding parameter depending on your csv file.You will need to learn Pandas &lt;a href=&quot;https://pandas.pydata.org/pandas-docs/stable&quot; rel=&quot;nofollow noreferrer&quot;&gt;Doc&lt;/a&gt;  &lt;a href=&quot;https://pandas.pydata.org/pandas-docs/stable/tutorials.html&quot; rel=&quot;nofollow noreferrer&quot;&gt;Tutorial&lt;/a&gt;  &lt;a href=&quot;http://www.data-analysis-in-python.org&quot; rel=&quot;nofollow noreferrer&quot;&gt;Article&lt;/a&gt;  &lt;a href=&quot;http://wesmckinney.com/pages/book.html&quot; rel=&quot;nofollow noreferrer&quot;&gt;Book&lt;/a&gt; &lt;a href=&quot;https://rpy2.readthedocs.io/en/version_2.8.x&quot; rel=&quot;nofollow noreferrer&quot;&gt;R in Python&lt;/a&gt; &lt;a href=&quot;https://github.com/jvns/pandas-cookbook&quot; rel=&quot;nofollow noreferrer&quot;&gt;CookBook&lt;/a&gt;&lt;/p&gt;</Body>
+</answer>
+</qroot>

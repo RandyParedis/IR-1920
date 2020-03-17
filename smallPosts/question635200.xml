@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Visual Studio 2005 Build of Python with Debug .lib</Title>
+<Body>&lt;p&gt;I am looking for the Visual Studio 2005 build of Python 2.4, 2.5 or 2.6, I also need the python2x_d.lib (the debug version of the .lib) since I embed the interpreter into my app and the python libs implicitly link to the python2x_d.lib with pragmas (grrr).&lt;/p&gt;&lt;p&gt;Any hints where I can find those builds ?&lt;/p&gt;&lt;p&gt;Regards,&lt;/p&gt;&lt;p&gt;Paul&lt;/p&gt;</Body>
+<Tags>python,visual-studio-2005</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;I would recommend that you &lt;a href=&quot;http://python.org/download/&quot; rel=&quot;nofollow noreferrer&quot;&gt;download the Python source&lt;/a&gt; (tgz and tar.bz2 zipped versions available) and compile it yourself.  It comes with a VS2005 solution so it isn&#x27;t difficult.  I had to do this for a SWIG project I was working on.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;If you have trouble finding the debug builds, you can try and build your own. Browse the &lt;a href=&quot;http://svn.python.org/view/python/trunk/PCbuild/&quot; rel=&quot;nofollow noreferrer&quot;&gt;build directory&lt;/a&gt;, for project files like &lt;code&gt;python.vcproj&lt;/code&gt; - to locate versions that will work with Visual Studio 2005.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;I recall, some time ago, giving IronPython a &#x27;whirl&#x27; in VS2005. I ran into all kinds of &#x27;esoteric&#x27; errors until I figured out that to compile and run I had to add the C++ libraries and tools of VS2005 as well (add/remove).Maybe this is something similar ?&lt;/p&gt;</Body>
+</answer>
+</qroot>

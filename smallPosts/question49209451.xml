@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Linking c++ with python</Title>
+<Body>&lt;p&gt;I have made a chatbot in c++ using gcc compiler which uses basic file handling operations to handle user queries but now I wanted to upgrade the same.For this I thought of linking my code to internet,opening windows programs and providing it a GUI interphase.As I have recently learned python and I know that developing a GUI and connecting code to internet is much easier than it was in c++.So I thought of linking my c++ code with python.How can I do it so that the basic code remains same but i link it to internet using python.I searched  and found out cpython,py++ and swig but as I am new I don&#x27;t know much.Can someone help me on this?&lt;/p&gt;</Body>
+<Tags>python,c++</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;You may need to write your python wrapper for the c++ code. You can use &lt;a href=&quot;http://www.boost.org/doc/libs/1_66_0/libs/python/doc/html/index.html&quot; rel=&quot;nofollow noreferrer&quot;&gt;boost::python&lt;/a&gt; for this&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;The easiest solution, given your chatbot read/writes to stdin/stdout, is to use the &lt;code&gt;subprocess&lt;/code&gt; module as it requires the least amount of fuss. Here you will start your chatbot in a separate process and then use it as if from a terminal.&lt;/p&gt;&lt;p&gt;Below is a basic implementation of something that could talk to your C++ chatbot (it just uses &lt;code&gt;cat&lt;/code&gt; to echo input as an example). Its &lt;code&gt;say&lt;/code&gt; method is blocking and assumes exactly one line of output for each line of input. It will get into trouble if your chatbox has multi-line responses.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;from subprocess import Popen, PIPEimport ioCMD = &#x27;cat&#x27;class Chatbot:    def __init__(self):        self._chatbot_proc = Popen(CMD, stdin=PIPE, stdout=PIPE)        # You may wish to add encoding=&#x27;ascii&#x27; to the TextIOWrapper constructor        # if your chatbot is not UTF-aware.        self._input = io.TextIOWrapper(self._chatbot_proc.stdin, line_buffering=True)        self._output = io.TextIOWrapper(self._chatbot_proc.stdout)    def close(self):        self._input.close()        self._output.close()        self._chatbot_proc.close()    def say(self, request):        assert &#x27;\n&#x27; not in request        self._input.write(request)        self._input.write(&#x27;\n&#x27;)        return self._output.readline().rstrip()def main():    chatbot = Chatbot()    try:        while True:            user_input = input()            print(&#x27;sending:&#x27;, repr(user_input))            chatbot_response = chatbot.say(user_input)            print(&#x27;chatbot said:&#x27;, repr(chatbot_response))    except Exception:        chatbot.close()        raiseif __name__ == &quot;__main__&quot;:    main()&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

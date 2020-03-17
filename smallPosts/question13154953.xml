@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Programatically set read-only for QTimeEdit</Title>
+<Body>&lt;p&gt;QTimeEdit has a read-only property, which I can set from Designer (it is in the QAbstractSpinBox properties category).&lt;/p&gt;&lt;p&gt;But there is no setReadOnly member in QTimeEdit. &lt;/p&gt;</Body>
+<Tags>c++,qt</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;You can call setReadOnly. It is a member of QAbstractSpinBox, which QTimeEdit inherits from.&lt;/p&gt;&lt;p&gt;When looking up documentation for a particular class, don&#x27;t forget to click the link &quot;List of all members, including inherited members&quot;, which will display all of the methods you can call for a given object.&lt;/p&gt;</Body>
+</answer>
+</qroot>

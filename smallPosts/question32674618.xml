@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>What is wrong with the following code? Iterator type does not work in a template function?</Title>
+<Body>&lt;pre&gt;&lt;code&gt;#include&amp;lt;iostream&amp;gt;#include&amp;lt;list&amp;gt;#include&amp;lt;vector&amp;gt;template&amp;lt;typename Container&amp;gt;void remove(Container &amp;amp;list){    typename Container::iterator iter;    iter = list.begin();    while( iter != list.end()){            iter = list.erase( iter);            if( iter ! = list.end())                    iter++;    }}int main(){    std::list&amp;lt;int&amp;gt; chess;    std::vector&amp;lt;int&amp;gt; v;    for (int n=0; n&amp;lt;100; n++){            chess.push_back(n);            v.push_back(n);    }    remove(chess);    remove(v);    std::cout&amp;lt;&amp;lt;chess.back()&amp;lt;&amp;lt;std::endl;    std::cout&amp;lt;&amp;lt;v.back()&amp;lt;&amp;lt;std::endl;    return 0;}&lt;/code&gt;&lt;/pre&gt;&lt;blockquote&gt;  &lt;p&gt;[Error] expected &#x27;)&#x27; before &#x27;!&#x27; token&lt;/p&gt;    &lt;p&gt;[Error] could not convert &#x27;iter&#x27; from &#x27;std::list::iterator {aka std::_List_iterator}&#x27; to &#x27;bool&#x27;&lt;/p&gt;    &lt;p&gt;[Error] could not convert &#x27;iter&#x27; from &#x27;std::vector::iterator {aka __gnu_cxx::__normal_iterator &gt;}&#x27; to &#x27;bool&#x27;&lt;/p&gt;&lt;/blockquote&gt;</Body>
+<Tags>c++</Tags>
+</question>
+<answer>
+<Body>&lt;pre&gt;&lt;code&gt;        if( iter ! = list.end())&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;should be&lt;/p&gt;&lt;pre&gt;&lt;code&gt;        if( iter != list.end()) // No space between ! and =&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;pre&gt;&lt;code&gt;if( iter ! = list.end())&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;should be&lt;/p&gt;&lt;pre&gt;&lt;code&gt;if( iter != list.end())&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Note the extra space between &lt;code&gt;!&lt;/code&gt; and &lt;code&gt;=&lt;/code&gt; in your code.&lt;/p&gt;&lt;p&gt;My advice for the future: Handle compiler error in the order they appear in. Often enough, fixing the first one will make some of the others go away.&lt;/p&gt;</Body>
+</answer>
+</qroot>

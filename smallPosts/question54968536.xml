@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>fbprophet installation error, how can I fix it?</Title>
+<Body>&lt;p&gt;&lt;a href=&quot;https://i.stack.imgur.com/Lwkee.png&quot; rel=&quot;nofollow noreferrer&quot;&gt;&lt;img src=&quot;https://i.stack.imgur.com/Lwkee.png&quot; alt=&quot;enter image description here&quot;&gt;&lt;/a&gt;Command &quot;/anaconda2/bin/python -u -c &quot;import setuptools, tokenize;&lt;strong&gt;file&lt;/strong&gt;=&#x27;/private/var/folders/m3/g71nqyvn0bv24y8ktfs9h_ph0000gn/T/pip-install-KiBstp/fbprophet/setup.py&#x27;;f=getattr(tokenize, &#x27;open&#x27;, open)(&lt;strong&gt;file&lt;/strong&gt;);code=f.read().replace(&#x27;\r\n&#x27;, &#x27;\n&#x27;);f.close();exec(compile(code, &lt;strong&gt;file&lt;/strong&gt;, &#x27;exec&#x27;))&quot; install --record /private/var/folders/m3/g71nqyvn0bv24y8ktfs9h_ph0000gn/T/pip-record-CUxAWQ/install-record.txt --single-version-externally-managed --compile&quot; failed with error code 1 in /private/var/folders/m3/g71nqyvn0bv24y8ktfs9h_ph0000gn/T/pip-install-KiBstp/fbprophet/&lt;/p&gt;</Body>
+<Tags>python</Tags>
+</question>
+</qroot>

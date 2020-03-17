@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Looping over a csv, trying to write to another csv</Title>
+<Body>&lt;p&gt;I&#x27;m looping over a csv of links, visiting those links, and then trying to write information from those links to a new file:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;with open(&quot;hrefs.csv&quot;, &quot;rb&quot;) as f:    reader = csv.reader(f)    for row in reader:        newUrl = row[0]        response = requests.get(newUrl)        newData = response.text        newSoup = BeautifulSoup(newData, &#x27;lxml&#x27;)        newstring = &#x27;&#x27;        titles = newSoup.findAll(&#x27;span&#x27;, {&#x27;id&#x27;: &#x27;titletextonly&#x27;})        prices = newSoup.findAll(&#x27;span&#x27;, {&#x27;class&#x27;: &#x27;price&#x27;})        newstring += titles[0].text + &#x27;,&#x27; + prices[0].text + &#x27;,&#x27;        for ana in newSoup.findAll(&#x27;p&#x27;,{&#x27;class&#x27;:&#x27;attrgroup&#x27;}):            for myb in ana.findAll(&#x27;b&#x27;):                newstring += myb.text + &#x27;,&#x27;        print newstring        listFile = open(&quot;output.csv&quot;, &#x27;wb&#x27;)        writer = csv.writer(listFile)        writer.writerow(newstring.encode(&#x27;ascii&#x27;, &#x27;ignore&#x27;).decode(&#x27;ascii&#x27;))&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;There are a couple problems I&#x27;m running into. &lt;strong&gt;First&lt;/strong&gt;, I thought the csv would realize that there are comma separated values and put each attribute in a new column. &lt;strong&gt;Second&lt;/strong&gt;, it seems that one letter is getting put in each column. When I simple &lt;code&gt;print&lt;/code&gt; each &lt;code&gt;newstring&lt;/code&gt; it is giving me a coherent string.&lt;/p&gt;</Body>
+<Tags>python,csv,beautifulsoup</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;You need to give &lt;code&gt;writer.writerow&lt;/code&gt; a sequence of strings:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;writer.writerow(newstring.split(&quot;,&quot;))&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;would be the easiest change from what you currently have.&lt;/p&gt;</Body>
+</answer>
+</qroot>

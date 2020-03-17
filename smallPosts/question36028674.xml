@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>cpp pointer for function write on binary file</Title>
+<Body>&lt;p&gt;I tried to create function that get pointer for the functions of binary file, write and read.Both of functions need get :&lt;/p&gt;&lt;p&gt;1)char* (on write function the char* mean from witch address write, and on read function char* mean , to witch address read)&lt;/p&gt;&lt;p&gt;2)  int (on write address that meam how many wirte and on read function that mean how many read).&lt;/p&gt;&lt;p&gt;I want create function that get pointer for read/ write , but i get an errormy code.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;#include &amp;lt;iostream&amp;gt;using namespace std;#include &amp;lt;fstream&amp;gt;void func(void(*funcToCall)(char*, int)){    char * temp= &quot;zzz&quot;;    funcToCall(temp, 3);}int main(){    fstream dskfl;    dskfl.open(&quot;aa.txt&quot;, ios::out |  ios::binary);    dskfl.close();    dskfl.open(&quot;aa.txt&quot;, ios::out | ios::in | ios::binary);    char ddd[]= &quot;fffff&quot;;    dskfl.write((char*)ddd, 5);    dskfl.seekp(0);    func(dskfl.write);    dskfl.close();}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;i get error on line     &lt;/p&gt;&lt;pre&gt;&lt;code&gt;func(dskfl.write);Error   1   error C3867: &#x27;std::basic_ostream&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;&amp;gt;::write&#x27;: function call missing argument list; use &#x27;&amp;amp;std::basic_ostream&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;&amp;gt;::write&#x27; to create a pointer to member &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;why please?&lt;/p&gt;</Body>
+<Tags>c++,function,pointers,function-pointers,binaryfiles</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;you can use a &lt;code&gt;lambda&lt;/code&gt;&lt;/p&gt;&lt;p&gt;for example:&lt;/p&gt;&lt;p&gt;change the signature of your outer func for receive a &lt;code&gt;std::function&lt;/code&gt;:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;void func(std::function&amp;lt;void(char*, int)&amp;gt;&amp;amp;&amp;amp; funcToCall)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;and call it like this:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;func([&amp;amp;dskfl](char* c, int i){ dskfl.write(c, i); });&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

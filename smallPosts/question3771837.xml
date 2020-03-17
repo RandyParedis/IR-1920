@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Ambiguous tab completion not working in iPython on Windows</Title>
+<Body>&lt;p&gt;I am running IPython on Windows 7 x64 with pyreadline installed.  If I start a new session and type:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;import numpynu&amp;lt;TAB&amp;gt;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Then &lt;code&gt;nu&lt;/code&gt; autocompletes to &lt;code&gt;numpy&lt;/code&gt;.  However, if I start a new session and try this:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;import numpyn&amp;lt;TAB&amp;gt;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Then nothing happens.  I would expect it to cycle through all of the possible completions.  I&#x27;m currently using out of the box config, do I need to change a setting to enable ambiguous tab completion or am I just out of luck?&lt;/p&gt;&lt;p&gt;&lt;strong&gt;EDIT&lt;/strong&gt;:To address the comment from ma3204, here is another example (start with fresh ipython session):&lt;/p&gt;&lt;pre&gt;&lt;code&gt;[In 1]: value1 = 5[In 2]: value2 = 6[In 3]: va&amp;lt;TAB&amp;gt;       ... nothing happens[In 3]: va&amp;lt;Ctrl + l&amp;gt;vars   value2 value1[In 3]: val&amp;lt;TAB&amp;gt;      ... completes to &#x27;value&#x27;[In 3]: value[In 3]: value&amp;lt;Ctrl + l&amp;gt;value2 value1[In 3]: value&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;When I type &lt;code&gt;va&amp;lt;TAB&amp;gt;&lt;/code&gt; above I would expect each tab press to cycle through &lt;code&gt;value1&lt;/code&gt;, &lt;code&gt;value2&lt;/code&gt;, &lt;code&gt;vars&lt;/code&gt;, &lt;code&gt;value1&lt;/code&gt;, &lt;code&gt;value2&lt;/code&gt;, etc.&lt;/p&gt;</Body>
+<Tags>python,ipython,tab-completion</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Just installed python 2.6 and numpy, ipython and so on. I am also annoyed of this. On my other computers with older installations it works. I use the completions list very much to see what commands are available so I feel frustrated when it doesn&#x27;t work.&lt;/p&gt;&lt;p&gt;EDIT: Found that you can get it with CTRL-l. Looked in ipythonrc and it should work like I am used to but not. The CTRL-l work though. Will see if it kicks back on. Seem to remember that I had similar trouble before but it worked after some time.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;You have to copy config file for pyreadline to your HOME folder (C:\Users\&amp;lt; username &gt;).&lt;/p&gt;&lt;p&gt;Open Command line and execute that:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;copy &quot;C:\Program Files (x86)\Python26\Lib\site-packages\pyreadline\configuration\pyreadlineconfig.ini&quot; %HOMEPATH%&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

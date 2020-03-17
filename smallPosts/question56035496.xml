@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>How can I call the cli function in c#?</Title>
+<Body>&lt;p&gt;I want to CLI function in C#.I want to call &lt;code&gt;Set_Test&lt;/code&gt; function by using &lt;code&gt;List&amp;lt;T&amp;gt;&lt;/code&gt; in C#.&lt;/p&gt;&lt;p&gt;&lt;strong&gt;CLI Source&lt;/strong&gt;&lt;/p&gt;&lt;pre&gt;&lt;code&gt;void Api::Set_Test(array&amp;lt;Test&amp;gt;^% _Test2)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;C#&lt;/strong&gt;&lt;/p&gt;&lt;pre&gt;&lt;code&gt;List&amp;lt;Test&amp;gt; Test3 = new List&amp;lt;Test&amp;gt;(5);Test3.Add(...)...Api.Set_test(ref Test3)  --&amp;gt; Error&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Error code&lt;/strong&gt; : it is not converted from &lt;code&gt;List&amp;lt;Test&amp;gt;&lt;/code&gt; to &lt;code&gt;Test[]&lt;/code&gt;.&lt;/p&gt;&lt;p&gt;How can I call the function?&lt;/p&gt;</Body>
+<Tags>c#,c++,c++-cli</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Jane,&lt;/p&gt;&lt;p&gt;Its a little unclear, however, your Set_test is after an array and you wanted to work with a list.&lt;/p&gt;&lt;p&gt;Normally then you would do &lt;code&gt;Api.Set_Test(Test3.ToArray());&lt;/code&gt;&lt;/p&gt;</Body>
+</answer>
+</qroot>

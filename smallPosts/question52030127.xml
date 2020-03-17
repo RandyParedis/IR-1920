@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Index over a set, I get two sets and not one</Title>
+<Body>&lt;p&gt;I thought the following code would work the way I expcted.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;p1 = [    ({1}, (0,0)),    ({2}, (0,0)),    ({3},(0,0),]p2 = [    ({1,2}, (1,0)),    ({3}, (0,0)),]for k in range(len(p1)):    m = set()    for l in range(len(p2)):        if p1[k] != p2[l]:           m = m.union(               set([min(p1[k][0])]))    print(m)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;What I should be getting is &lt;code&gt;{1,2}&lt;/code&gt;, but I get &lt;/p&gt;&lt;pre&gt;&lt;code&gt;Set([1])Set([2])&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I also get an error message saying:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;&#x27;set&#x27; object does not support indexing&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;and I don&#x27;t know if I should be using some other command.&lt;/p&gt;&lt;p&gt;I am real grateful for any help I can get. I have thought about it for some time and have not been able to fix this.&lt;/p&gt;</Body>
+<Tags>python,python-3.x,set,unions</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;It is unclear what you are trying to do, but just fixing your errors does not return you expected output. Using &lt;code&gt;itertools.product()&lt;/code&gt; instead of nested for loops:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;p1=[({1}, (0,0)), ({2}, (0,0)), ({3}, (0,0))]#                                  ^^^^ a tuple nowp2=[({1,2}, (1,0)), ({3}, (0,0))]In []import itertools as itm = set()for k, l in it.product(p1, p2):    if k != l:        m.add(min(k[0]))print(m)Out[]:{1, 2, 3}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Making a big assumption but if you meant to go through these lists both at the same time you would use &lt;code&gt;zip(p1, p2)&lt;/code&gt;, e.g.:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;In []:m = set()for k, l in zip(p1, p2):    if k != l:        m.add(min(k[0]))print(m)Out []:{1, 2}&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

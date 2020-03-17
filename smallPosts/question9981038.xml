@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>How can I setup Visual C++ 2010 Express to copy some folders during the build process?</Title>
+<Body>&lt;p&gt;I&#x27;m not a regular C++er, so this question might be fairly trivial: Can anybody please tell me what I need to do that during the build process some folders will get copied to the output directory?&lt;/p&gt;&lt;p&gt;My project is currently structured somewhat like this:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;Projects    -&amp;gt; ProjectName        -&amp;gt; .cpp and .h files        -&amp;gt; Folder1        -&amp;gt; Folder2    -&amp;gt; Debug    -&amp;gt; Release&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Folder1 and 2 contain some files that are required during runtime, so they need to be shipped with my application - how do I get those into Debug/Release while building the project? Or is there any other recommended method to deal with such situations?&lt;/p&gt;</Body>
+<Tags>c++,visual-studio-2010</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Under the projects properties, use build events, and on the command line enter the equivalent command codes to copy the files.&lt;/p&gt;</Body>
+</answer>
+</qroot>

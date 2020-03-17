@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Pass iterator by reference to std::inner_product</Title>
+<Body>&lt;p&gt;consider the following scenario:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;std::vector&amp;lt;int&amp;gt; a {1, 2, 3};std::vector&amp;lt;int&amp;gt; b {1, 2, 3, 4};auto it = b.begin();auto res = std::inner_product(a.begin(), a.end(), it, 0); (*)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Is there a way to pass &lt;code&gt;it&lt;/code&gt; to &lt;code&gt;std::inner_product&lt;/code&gt; such that after (*) finish execution &lt;code&gt;it&lt;/code&gt; will point to 4. (i.e. &lt;code&gt;*it == 4&lt;/code&gt;) ?&lt;/p&gt;</Body>
+<Tags>c++,c++11</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Assuming &lt;code&gt;std::inner_product&lt;/code&gt; implementation increments the second iterator in linear fashion, you can write a wrapper class of &lt;code&gt;std::vector&amp;lt;int&amp;gt;::iterator&lt;/code&gt; which can be passed to &lt;code&gt;std::inner_product&lt;/code&gt; and this wrapper (which updates iterator) indirectly will point to a new location.&lt;/p&gt;&lt;p&gt;But this way is strongly discouraged because:&lt;/p&gt;&lt;ol&gt;&lt;li&gt;You are making an assumption about the implementation.&lt;/li&gt;&lt;li&gt;There are much better ways to increment the iterator.&lt;code&gt;std::advance(it, a.size());&lt;/code&gt; for example which should be preferredfor your case.&lt;/li&gt;&lt;/ol&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;As Mohit Jain says, there&#x27;s no Standard-guaranteed portable way to do this, as you have to assume the &lt;code&gt;inner_product&lt;/code&gt; implemenation happens to leave &lt;code&gt;it&lt;/code&gt; where you want it, but you don&#x27;t need to write a separate wrapper class:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;#include &amp;lt;iostream&amp;gt;#include &amp;lt;vector&amp;gt;#include &amp;lt;numeric&amp;gt;#include &amp;lt;functional&amp;gt;int main(){    std::vector&amp;lt;int&amp;gt; a {1, 2, 3};    std::vector&amp;lt;int&amp;gt; b {1, 2, 3, 4};    auto it = b.begin();    typedef std::vector&amp;lt;int&amp;gt;::iterator ci;    auto res = std::inner_product&amp;lt;ci,ci&amp;amp;,int&amp;gt;(a.begin(), a.end(), it, 0);    std::cout &amp;lt;&amp;lt; (void*)&amp;amp;*b.begin() &amp;lt;&amp;lt; &#x27; &#x27; &amp;lt;&amp;lt; (void*)&amp;amp;*it &amp;lt;&amp;lt; &#x27;\n&#x27;;}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;(&lt;a href=&quot;http://ideone.com/2Rfqvq&quot; rel=&quot;nofollow&quot;&gt;Here&lt;/a&gt; on ideone.com)&lt;/p&gt;</Body>
+</answer>
+</qroot>

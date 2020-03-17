@@ -3,22 +3,39 @@
 02:Standard library c++
 03:Templates usage c++
 04:Loops
-05:Visual controls
+05:Visual controls and visual frameworks
 06:Tokens
-07:Unicode and ASCII
+07:Unicode, ASCII and characters
 08:File operations
 09:Types (int, string)
-10:Functions
-11:Private member Classes
+10:Functions (parameters, return values)
+11:Classes
 12:Errors
 13:Arrays and lists
 14:Internet (protocols, sockets)
 15:Images (pixels, image manipulation)
 16:Operator overloading
-17:Tree structures
+17:API requests
 18:Assertions and exceptions
 19:Testing (unittesting)
-20:Shared library c++
-21:Python sklearn
-22:Python
-23:C++
+20:Library (shared, dynamic)
+21:Python sklearn numpy scipy pandas
+22:Hashing tables
+23:Variables
+24:Translate other programming languages
+25:Tree structures
+26:Command Line Arguments
+27:GitHub
+28:Multithreading
+29:Includes
+30:Operating Systems
+31:Issues with IDE
+32:Input output
+33:Algorithms
+34:Pointers
+35:Terminal
+36:Plotting
+37:Database
+
+98:Python
+99:C++

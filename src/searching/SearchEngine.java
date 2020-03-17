@@ -26,6 +26,7 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.*;
@@ -45,7 +46,7 @@ public class SearchEngine {
     private IndexSearcher searcher;
     private boolean wasIndexed = false;
 
-    final private int COUNT = 1000;
+    final private int COUNT = 500;
 
     private ProgressBar spb = new ProgressBar();
     private FieldType freqVecStorer;

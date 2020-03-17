@@ -1,24 +1,24 @@
-Web development in Python
-Recursion
-Standard library c++
-Templates usage c++
-Loops
-Visual controls
-Tokens
-Unicode and ASCII
-File operations
-Types (int, string)
-Functions
-Private member Classes
-Errors
-Arrays and lists
-Internet (protocols, sockets)
-Images (pixels, image manipulation)
-Operator overloading
-Tree structures
-Assertions and exceptions
-Testing (unittesting)
-Shared library c++
-Python sklearn
-Python
-C++
+00:Web development in Python
+01:Recursion
+02:Standard library c++
+03:Templates usage c++
+04:Loops
+05:Visual controls
+06:Tokens
+07:Unicode and ASCII
+08:File operations
+09:Types (int, string)
+10:Functions
+11:Private member Classes
+12:Errors
+13:Arrays and lists
+14:Internet (protocols, sockets)
+15:Images (pixels, image manipulation)
+16:Operator overloading
+17:Tree structures
+18:Assertions and exceptions
+19:Testing (unittesting)
+20:Shared library c++
+21:Python sklearn
+22:Python
+23:C++

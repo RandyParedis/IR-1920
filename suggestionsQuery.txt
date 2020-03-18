@@ -3,8 +3,8 @@
 02:Standard library c++
 03:Templates usage c++
 04:Loops
-05:Visual controls and visual frameworks
-06:Tokens
+05:Visual controls and visual frameworks graphics
+06:Compilers and Tokens
 07:Unicode, ASCII and characters
 08:File operations
 09:Types (int, string)
@@ -12,14 +12,14 @@
 11:Classes
 12:Errors
 13:Arrays and lists
-14:Internet (protocols, sockets)
+14:Internet (protocols, sockets, html)
 15:Images (pixels, image manipulation)
 16:Operator overloading
 17:API requests
 18:Assertions and exceptions
 19:Testing (unittesting)
 20:Library (shared, dynamic)
-21:Python sklearn numpy scipy pandas
+21:Python sklearn numpy scipy pandas json xpath
 22:Hashing tables
 23:Variables
 24:Translate other programming languages
@@ -36,6 +36,8 @@
 35:Terminal
 36:Plotting
 37:Database
+38:External devices, audio
+39:Encryption
 
 98:Python
 99:C++

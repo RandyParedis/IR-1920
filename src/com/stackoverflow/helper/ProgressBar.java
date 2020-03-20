@@ -1,4 +1,4 @@
-package helper;
+package com.stackoverflow.helper;
 
 public class ProgressBar {
     private int current;

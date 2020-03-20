@@ -1,4 +1,4 @@
-package helper;
+package com.stackoverflow.helper;
 
 import java.io.File;
 import java.util.*;
@@ -30,7 +30,7 @@ public class Helper {
         String[] fls = dir.list();
         for(String file: Objects.requireNonNull(fls)) {
             if(file.equals(".DS_Store")) { continue; } // MAC
-            if(file.endsWith(".xml")) { // We're only interested in helper.XML
+            if(file.endsWith(".xml")) { // We're only interested in com.stackoverflow.helper.XML
                 res.add(directory + "/" + file);
             } else {
                 File f = new File(directory + "/" + file);

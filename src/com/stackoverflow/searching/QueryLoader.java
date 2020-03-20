@@ -1,6 +1,6 @@
-package searching;
+package com.stackoverflow.searching;
 
-import helper.Helper;
+import com.stackoverflow.helper.Helper;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriterConfig;

@@ -4,7 +4,7 @@ These can be used for custom computation of boxplots, histograms and some other 
 based upon certain algorithms. This way, it is possible to compute these values in
 situations where you don't have access over the entire dataset, but only over a few values
 thereof.
-There are also some additional helper functions that can be useful in other circumstances
+There are also some additional com.stackoverflow.helper functions that can be useful in other circumstances
 as well.
 
 Author: Randy Paredis
@@ -16,7 +16,7 @@ import math
 
 
 class BoxplotAlgorithm(Enum):
-    """helper.Helper enum for creating boxplots.
+    """com.stackoverflow.helper.Helper enum for creating boxplots.
 
     Boxplots are created with 5 values:
         [min, Q1, median, Q3, max]
@@ -185,7 +185,7 @@ def histogram(series: list, b: int):
 
 
 def histostep(xj, b: int, q: list, n: list, N: int):
-    """helper.Helper function for the histogram function.
+    """com.stackoverflow.helper.Helper function for the histogram function.
 
     This function was extracted to make it easier for the algorithm
     to be used without knowledge of the entire series.

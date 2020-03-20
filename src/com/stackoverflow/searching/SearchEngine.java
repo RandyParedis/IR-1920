@@ -1,8 +1,8 @@
-package searching;
+package com.stackoverflow.searching;
 
-import helper.Helper;
-import helper.ProgressBar;
-import helper.XML;
+import com.stackoverflow.helper.Helper;
+import com.stackoverflow.helper.ProgressBar;
+import com.stackoverflow.helper.XML;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -26,13 +26,12 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.*;
 
 /**
- * The {@code SearchEngine} class is a class that will do the actual searching.
+ * The {@code SearchEngine} class is a class that will do the actual com.stackoverflow.searching.
  * It has an index phase, in which it will index all documents and a search
  * phase that will be able to collect the top-k documents matching a Query,
  * based on some predefined settings.
@@ -64,6 +63,11 @@ public class SearchEngine {
 
         freqVecStorer = new FieldType(TextField.TYPE_STORED);
         freqVecStorer.setStoreTermVectors(true);
+
+        // Prevents error
+        IndexWriter iwriter = new IndexWriter(directory, new IndexWriterConfig(analyzer));
+        iwriter.commit();
+        iwriter.close();
 
         reader = DirectoryReader.open(directory);
         searcher = new IndexSearcher(reader);
@@ -119,6 +123,16 @@ public class SearchEngine {
         spb.end();
         System.out.println("Index Created");
         wasIndexed = true;
+    }
+
+    /**
+     * Retrieves the question id from the filename.
+     * @param filename  The filename to retrieve the question id from.
+     * @return The question id as a {@code String}.
+     */
+    public static String questionID(String filename) {
+        String pattern = "^question(\\d+)\\.xml$";
+        return filename.replaceAll(pattern, "$1");
     }
 
     /**

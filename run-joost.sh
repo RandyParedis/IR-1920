@@ -6,5 +6,5 @@ export CLASSPATH=$CLASSPATH:$(find ~/Documents/Overig/lucene-8.3.0/ -name "lucen
 javac src/*.java
 echo "Compiled!"
 mv $(find src -name "*.class") .
-java Main ~/Documents/UAntwerpen/M_DataScience/Information\ Retrieval/data/python_cpp
-#java Main smallPosts
+java com.stackoverflow.Main ~/Documents/UAntwerpen/M_DataScience/Information\ Retrieval/data/python_cpp
+#java com.stackoverflow.Main smallPosts

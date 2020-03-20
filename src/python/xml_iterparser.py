@@ -28,7 +28,7 @@ def preprocess(file, directory):
             widgets.AdaptiveETA(), ' ', widgets.Bar()
         ])
         bar.start()
-        xml.readline()  # Read the helper.XML Info
+        xml.readline()  # Read the com.stackoverflow.helper.XML Info
         xml.readline()  # Read the root opening tag
         for linenr in range(lastid):
             line = xml.readline()

@@ -1,4 +1,4 @@
-package helper;
+package com.stackoverflow.helper;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;

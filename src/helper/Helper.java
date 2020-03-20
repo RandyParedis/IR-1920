@@ -45,6 +45,10 @@ public class Helper {
 
     /**
      * Picks {@code count} filenames from a list, according to a RNG with seed {@code seed}.
+     *
+     * If the amount of filenames is less than or equal to {@code count}, the first {@code}
+     * files from the list will be chosen instead, bypassing the randomizer.
+     *
      * @param list      The list to pick the filenames from.
      * @param count     The amount of files to pick.
      * @param seed      The seed of the RNG to pick with.
@@ -56,7 +60,7 @@ public class Helper {
         System.out.println("Total Dataset Size: " + list.size());
 
         // Pick <count> Documents (efficiency)
-        if(list.size() < count) {
+        if(list.size() <= count) {
             for(String s : list) {
                 rres.add(new File(s));
             }

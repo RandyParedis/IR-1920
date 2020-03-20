@@ -32,6 +32,10 @@ public class QueryLoader {
 
     final private String[] FIELDS = {"title", "body", "answers"};
 
+    public interface QueryCallback {
+        String call(String query);
+    }
+
     /**
      * {@code QueryLoader} constructor.
      * All arguments will be used in generating the suggestions based on the index.
@@ -66,16 +70,20 @@ public class QueryLoader {
      * queries that need to be transformed as described by {@link QueryLoader#queryTransform}.
      * @param filename      The name of the file to load.
      * @param suggestions   The amount of suggestions to use for each term in each query.
+     * @param method        The method to call on the query. I.e. for parsing.
      * @return  A {@code List<Query>} containing all queries in this file. They can be looped over
      *          and inputted in the {@link SearchEngine} as such.
      * @see QueryLoader#getQuery
      */
-    public List<Query> getQueries(String filename, int suggestions) throws IOException, ParseException {
+    public List<Query> getQueries(String filename, int suggestions, QueryCallback method)
+            throws IOException, ParseException {
         List<Query> queries = new ArrayList<>();
         Scanner sc = new Scanner(new File(filename));
         while(sc.hasNextLine()) {
             String line = sc.nextLine();
-            queries.add(getQuery(line, suggestions));
+            if(!line.equals("")) {
+                queries.add(getQuery(method.call(line), suggestions));
+            }
         }
         return queries;
     }

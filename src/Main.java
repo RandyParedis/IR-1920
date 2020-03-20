@@ -5,6 +5,7 @@ import searching.QueryLoader;
 import searching.RelevanceMarker;
 import searching.SearchEngine;
 
+import java.util.List;
 import java.util.Map;
 
 public class Main {
@@ -15,15 +16,20 @@ public class Main {
         StandardAnalyzer analyzer = new StandardAnalyzer();
 
         SearchEngine engine = new SearchEngine(loc, analyzer);
-        // TODO: change this so it uses the actual files instead of a subset.
-//        engine.index();
+        engine.index();
 
+        // Load all queries
         QueryLoader queryLoader = new QueryLoader(engine.getDirectory(), engine.getReader(), analyzer);
-        Query query = queryLoader.getQuery("test this string", SUGGESTIONS);
+        List<Query> queries = queryLoader.getQueries("suggestionsQuery.txt", SUGGESTIONS,
+                (String q) -> q.substring(3));
 
-        Map<Double, Document> documents = engine.search(query);
+        // TODO: Store results in a file, so it can be parsed by Python
+        //       In Python, it will be compared against the manually labeled files.
+        for(Query query: queries) {
+            Map<Double, Document> documents = engine.search(query);
 
-        // TODO: Mark as relevant and generate plot data
-        RelevanceMarker relevanceMarker = new RelevanceMarker();
+            // TODO: Mark as relevant and generate plot data
+            RelevanceMarker relevanceMarker = new RelevanceMarker();
+        }
     }
 }

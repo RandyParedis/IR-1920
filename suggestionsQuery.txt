@@ -14,7 +14,7 @@
 13:Arrays and lists
 14:Internet (protocols, sockets, html)
 15:Images (pixels, image manipulation)
-16:Operator overloading
+16:Virtual Env
 17:API requests
 18:Assertions and exceptions
 19:Testing (unittesting)
@@ -40,10 +40,19 @@
 39:Encryption
 40:Spark
 41:Bit manipulations
-42:Math
+42:Math sets
 43:Regex
 44:Neural Networks
 45:SimPy
+46:Memory
+47:Beautifulsoup
+48:Excel
+49:File permissions
+50:Pandas
+51:Csv
+52:Xml
+53:Video editing
+54:Kubernetes
 
 98:Python
 99:C++

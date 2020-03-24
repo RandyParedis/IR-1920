@@ -81,7 +81,7 @@ public class QueryLoader {
         Scanner sc = new Scanner(new File(filename));
         while(sc.hasNextLine()) {
             String line = sc.nextLine();
-            if(!line.equals("")) {
+            if(!line.equals("") && !line.startsWith("#")) {
                 queries.add(getQuery(method.call(line), suggestions));
             }
         }

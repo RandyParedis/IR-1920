@@ -1,15 +1,12 @@
-00:Django development
-#Angular
+00:Web development in Python
+Django
+Angular
 01:Recursion speed
 02:Standard library c++
 03:Templates usage c++
 04:Loops
-05a:Tkinter
-05b:Qt c++
-05c:PyQt
-05d:Wxwidgets
-05e:Pygame
-05f:Opencv
+05:Visual controls and visual frameworks graphics
+GUI
 06:Compilers Tokens Grammar
 07:Unicode, ASCII and characters
 08:File operations

@@ -1,83 +1,43 @@
 00:Django development
-00a:Google App Engling
-00b:Angular
 01:Recursion speed
-02:Standard library c++
-03:Templates usage c++
-04:Loops
-05a:Tkinter
-05b:Qt c++
-05c:PyQt
-05d:Wxwidgets
-05e:Pygame
-05f:Opencv
-05g:Dll
-06a:Compilers
-06b:Cmake
-06c:Linking
-06d:Gcc
-06e:Parsing
-07:Characters
-08:File i/o
-09a:Dictionary
-09b:Datetime
-# REMOVED string as query
-10:Lamdba
-# REMOVED returns, default (params), functions, variadic, etc. cuz of its complexity
-11:Classes
-# Should we include this query?
-12:Errors
-13a:Lists
-13b:Array
-14a:Sockets
-14b:Selenium
-14c:IP
-14d:Boost
-16:Anaconda
-17:API requests
-# 18:Assertions and exceptions
-19:Testing (unittesting)
-21a:Json
-21b:Xpath
-21c:Scipy
-21d:Yaml
-21e:Pandas
-21f:Numpy
-21g:Csv
-21h:Scikit
-23:Variables
-# 24:Translate other programming languages
-25:Tree structures
-26:Command Line Arguments
-27:GitHub
-28:Multithreading
-# 29:Includes imports
-# Anders krijgen we queries als Windows en OSX? Zinvol?
-# 30:Operating Systems
-# 31:Issues with IDE
-# 32:Input output
-33a:Sorting
-34:Pointers references
-35:Terminal shell
-36:Plotting
-37a:Sqlite
-37b:Postgresql
-37c:Sqlalchemy
-# Raspberry pi?
-38:External devices, audio
-39:Encryption
-40:Spark
-41:Bit manipulations
-42:Math sets
-43:Regex
-44:Neural Networks
-45:SimPy
-47:Beautifulsoup
-50:Pandas
-52:Xml
+02:Templates usage c++
+03:Loops
+04:Tkinter
+05:Qt c++
+06:PyQt
+07:Pygame
+08:Opencv
+09:Dll
+10:Compilers
+11:Linking
+12:Parsing
+13:Characters
+14:File i/o
+15:Dictionary
+16:Datetime
+17:Lamdba
+18:Classes
+19:Lists
+20:Array
+21:Sockets
+22:Selenium
+23:API requests
+24:Testing (unittesting)
+25:Json
+26:Xpath
+27:Pandas dataframe
+28:Numpy
+29:Variables
+30:Multithreading and synchonization
+31:Sorting
+32:Pointers references
+33:Plotting
+34:Sql database
+35:Encryption
+36:PySpark
+37:Regex
+38:Neural Networks tensor keras
+39:Beautifulsoup
 
 98:Python
 99:C++
-
-#toevallig veel twitter queries, doen we daar iets mee?
-#'Pytest django': 55724010

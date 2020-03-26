@@ -1,6 +1,6 @@
 00:Django development
 00a:Google App Engling
-#Angular
+00b:Angular
 01:Recursion speed
 02:Standard library c++
 03:Templates usage c++
@@ -21,13 +21,19 @@
 08:File i/o
 09a:Dictionary
 09b:Datetime
-10:Functions (parameters, return values)
+# REMOVED string as query
+10:Lamdba
+# REMOVED returns, default (params), functions, variadic, etc. cuz of its complexity
 11:Classes
+# Should we include this query?
 12:Errors
-13:Arrays and lists
-14:Internet (protocols, sockets, html)
-15:Images (pixels, image manipulation)
-16:Virtual Env
+13a:Lists
+13b:Array
+14a:Sockets
+14b:Selenium
+14c:IP
+14d:Boost
+16:Anaconda
 17:API requests
 18:Assertions and exceptions
 19:Testing (unittesting)
@@ -69,3 +75,5 @@
 
 98:Python
 99:C++
+
+#toevallig veel twitter queries, doen we daar iets mee?

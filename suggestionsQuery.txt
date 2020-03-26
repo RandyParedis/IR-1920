@@ -1,4 +1,5 @@
 00:Django development
+00a:Google App Engling
 #Angular
 01:Recursion speed
 02:Standard library c++
@@ -10,10 +11,16 @@
 05d:Wxwidgets
 05e:Pygame
 05f:Opencv
-06:Compilers Tokens Grammar
-07:Unicode, ASCII and characters
-08:File operations
-09:Types (int, string)
+05g:Dll
+06a:Compilers
+06b:Cmake
+06c:Linking
+06d:Gcc
+06e:Parsing
+07:Characters
+08:File i/o
+09a:Dictionary
+09b:Datetime
 10:Functions (parameters, return values)
 11:Classes
 12:Errors

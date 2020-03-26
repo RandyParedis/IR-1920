@@ -59,7 +59,7 @@ def plot_roc_curve(ax, y_true, y_pred):
 
 if __name__ == '__main__':
     # TODO: make the filenames command arguments
-    manual = parse("manualLabel.txt")
+    manual = parse("data/manualLabel.txt")
     actual = parse("data/labels.txt")
     idlist = ids("data/questions.txt")
 

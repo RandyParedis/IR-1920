@@ -7,3 +7,4 @@ errors.log
 *.zip
 *.class
 __pycache__
+.build

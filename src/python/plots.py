@@ -5,6 +5,7 @@ The files need to be parsed first and afterwards they can be compared.
 import matplotlib.pyplot as plt
 from sklearn.metrics import roc_curve, precision_recall_curve, average_precision_score, auc
 from sklearn.utils.fixes import signature
+import argparse
 
 
 def parse(filename):
@@ -80,11 +81,21 @@ def plot_roc_curve(ax, y_true, y_score):
 
 
 if __name__ == '__main__':
-    # TODO: make the filenames command arguments
-    manual = parseManual("data/manualLabel.txt")
-    actual = parseLabels("data/labels.txt")
-    idlist = ids("data/questions.txt")
-    queries = parse("data/suggestionsQuery.txt")
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-m", "--manuallabel", type=str, default="data/manualLabel.txt",
+                        help=".txt file with the manual labels for the given queries.")
+    parser.add_argument("-a", "--actuallabel", type=str, default="data/labels.txt",
+                        help=".txt file with the scored queries of Lucene.")
+    parser.add_argument("-i", "--idquestions", type=str, default="data/questions.txt",
+                        help=".txt file with the list of all ids of the documents.")
+    parser.add_argument("-q", "--queries", type=str, default="data/suggestionsQuery.txt",
+                        help=".txt file with all the queries to score.")
+    args = parser.parse_args()
+
+    manual = parseManual(args.manuallabel)
+    actual = parseLabels(args.actuallabel)
+    idlist = ids(args.idquestions)
+    queries = parse(args.queries)
 
     assert len(set(manual.keys()) - set(actual.keys())) > 0
 

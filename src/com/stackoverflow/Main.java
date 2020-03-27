@@ -53,6 +53,7 @@ public class Main {
             // Find the matching documents
             Query query = queries.get(qid);
             Map<Double, Document> documents = engine.search(query);
+//            System.out.println("Query " + query.toString());
 
 
             // Store for file writing

@@ -30,7 +30,7 @@ public class QueryLoader {
     private IndexReader reader;
     private Analyzer analyzer;
 
-    final private String[] FIELDS = {"title", "body", "answers"};
+    final private String[] FIELDS = {"title", "body", "answers", "tags"};
 
     public interface QueryCallback {
         String call(String query);
@@ -121,8 +121,10 @@ public class QueryLoader {
     private String[] suggest(String word, int sugs)
         throws IOException {
         SpellChecker sc = new SpellChecker(index);
-        sc.indexDictionary(new LuceneDictionary(reader, "content"),
-                new IndexWriterConfig(analyzer), false);
+        for(String field: FIELDS) {
+            sc.indexDictionary(new LuceneDictionary(reader, field),
+                    new IndexWriterConfig(analyzer), false);
+        }
 
         return sc.suggestSimilar(word, sugs, reader, "content", SuggestMode.SUGGEST_ALWAYS);
     }

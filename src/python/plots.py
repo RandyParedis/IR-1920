@@ -16,7 +16,26 @@ def parse(filename):
         if line.startswith("#") or line == "":
             continue
         x = line.split(":")
-        res[int(x[0])] = [int(y) for y in x[1].split(",") if y != '']
+        if x[1] != '':
+            res[int(x[0])] = x[1]
+    return res
+
+
+def parseManual(filename):
+    res = parse(filename)
+    for qid in res:
+        res[qid] = [int(y) for y in res[qid].split(",")]
+    return res
+
+
+def parseLabels(filename):
+    res = parse(filename)
+    for qid in res:
+        lst = []
+        for y in res[qid].split(";"):
+            rel, score = y.split(",")
+            lst.append((int(rel), float(score)))
+        res[qid] = lst
     return res
 
 
@@ -26,8 +45,11 @@ def ids(filename):
     return [int(x) for x in contents.split(",")]
 
 
-def transform(quids, tt):
-    d = {q: 1 if q in tt else 0 for q in quids}
+def transform(quids, mlist, alist):
+    d = {}
+    for quid in quids:
+        res = [x for x in alist if x[0] == quid]
+        d[quid] = (1 if quid in mlist else 0, res[0][1] if len(res) > 0 else 0)
     return [p[1] for p in sorted(d.items(), key=lambda kv: kv[0])]
 
 
@@ -42,37 +64,44 @@ def plot_pr_curve(ax, y_true, y_pred):
     ax.set_ylabel('Precision')
     ax.set_ylim([0.0, 1.05])
     ax.set_xlim([0.0, 1.0])
-    ax.set_title('Precision-Recall curve: AP={0:0.2f}'.format(average_precision))
+    ax.set_title('Precision-Recall Curve: AP={0:0.2f}'.format(average_precision))
 
 
-def plot_roc_curve(ax, y_true, y_pred):
-    fpr_rf, tpr_rf, _ = roc_curve(y_true, y_pred)
+def plot_roc_curve(ax, y_true, y_score):
+    fpr_rf, tpr_rf, _ = roc_curve(y_true, y_score)
     auc_rf = auc(fpr_rf, tpr_rf)
 
     ax.plot([0, 1], [0, 1], 'k--')
     ax.plot(fpr_rf, tpr_rf, label='RF')
     ax.set_xlabel('False positive rate')
     ax.set_ylabel('True positive rate')
-    ax.set_title('ROC curve (AUC={0:0.2f})'.format(auc_rf))
+    ax.set_title('ROC Curve (AUC={0:0.2f})'.format(auc_rf))
     ax.legend(loc='best')
 
 
 if __name__ == '__main__':
     # TODO: make the filenames command arguments
-    manual = parse("data/manualLabel.txt")
-    actual = parse("data/labels.txt")
+    manual = parseManual("data/manualLabel.txt")
+    actual = parseLabels("data/labels.txt")
     idlist = ids("data/questions.txt")
+    queries = parse("data/suggestionsQuery.txt")
 
-    assert manual.keys() == actual.keys()
+    assert len(set(manual.keys()) - set(actual.keys())) > 0
 
-    y_exp = []
-    y_score = []
-    for qid in manual:
-        y_exp += transform(idlist, manual[qid])
-        y_score += transform(idlist, actual[qid])
+    y_exp = []    # expected
+    y_pred = []   # predicted
+    y_score = []  # scores
+    for qid in actual:
+        trs = transform(idlist, manual[qid], actual[qid])
+        rel = [x[0] for x in trs]
+        score = [x[1] for x in trs]
+        y_exp += rel
+        y_pred += [1 if s != 0 else 0 for s in score]
+        y_score += score
 
-    fig2, (ax1, ax2) = plt.subplots(1, 2)
-    plot_pr_curve(ax1, y_exp, y_score)
-    plot_roc_curve(ax2, y_exp, y_score)
-    plt.subplots_adjust(wspace=0.3)
-    plt.show()
+        print(qid, "|", queries[qid])
+        fig2, (ax1, ax2) = plt.subplots(1, 2)
+        plot_pr_curve(ax1, y_exp, y_pred)
+        plot_roc_curve(ax2, y_exp, y_score)
+        plt.subplots_adjust(wspace=0.3)
+        plt.show()

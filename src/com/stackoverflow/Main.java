@@ -58,7 +58,7 @@ public class Main {
             // Store for file writing
             List<String> ids = new ArrayList<>();
             for(Map.Entry<Double, Document> pair: documents.entrySet()) {
-                ids.add(SearchEngine.questionID(pair.getValue().get("name")));
+                ids.add(SearchEngine.questionID(pair.getValue().get("name")) + "," + pair.getKey());
             }
             String results =  String.format("%02d", qid);
 
@@ -68,7 +68,7 @@ public class Main {
             } else if(qid == queries.size() - 1) { // 99 is CPP
                 results = "99";
             }
-            results += ":" + String.join(",", ids);
+            results += ":" + String.join(";", ids);
             labels.add(results);
             pb.next();
             pb.print();

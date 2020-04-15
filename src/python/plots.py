@@ -110,7 +110,7 @@ if __name__ == '__main__':
         y_pred += [1 if s != 0 else 0 for s in score]
         y_score += score
 
-        print(qid, "|", queries[qid])
+        print(str(qid).rjust(3), "|", queries[qid])
         fig2, (ax1, ax2) = plt.subplots(1, 2)
         plot_pr_curve(ax1, y_exp, y_pred)
         plot_roc_curve(ax2, y_exp, y_score)

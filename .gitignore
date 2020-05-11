@@ -8,3 +8,4 @@ errors.log
 *.class
 __pycache__
 .build
+target

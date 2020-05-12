@@ -4,47 +4,33 @@
 03:How to loop over data
 04:Python Tkinter button not working
 05:Issues with Qt
-# 06:PyQt
-07:Drawing in PyGame on collision
-08:Python Opencv cannot detect
-# 09:Dll
-# 10:Compilers
-# 11:Linking
-# 12:Parsing
-# 13:Characters
-14:How to read and write to a file
-15:Using nested dictionary
-16:Computing with timestamps
-17:Lamdba not working
-18a:Examples of a natural use of protected
-18b: How to use class inheritance
-18c: class methods
-18d: class private members
-19a:How can you use lists in python
-19b: searching in a list
-19c: manipulating a list
-# 20:Arrays
-21:How to work with sockets
-# 22:Selenium
-23:REST API requests
-24:Create testing environment in python
-25:Using nested JSON
-# 26:Xpath
-27:Operations on Pandas dataframe
-28:The best way to implement a Numpy array
-# 29:Variables
-30:Multithreading and synchonization
-31:Sorting Algorithms
-32a:What’s the difference between passing a parameter by reference or by value
-32b:Pointers in C++
-33:How to Plot data in Python
-34:Sql database
-# 35:Encryption
-# 36:PySpark
-37:How to get my regex to work
-38:Neural Networks tensors in keras
-39:Beautifulsoup web scrapers
-40:New to programming
+06:Drawing in PyGame on collision
+07:Python Opencv cannot detect
+08:How to read and write to a file
+09:Using nested dictionary
+10:Computing with timestamps
+11:Lamdba not working
+12:How to use class inheritance
+13:Using class methods
+14:Class private members
+15:How can you use lists in python
+16:Manipulating a list
+17:How to work with sockets
+18:REST API requests
+19:Create testing environment in python
+20:Using nested JSON
+21:Operations on Pandas dataframe
+22:The best way to implement a Numpy array
+23:Multithreading and synchonization
+24:Sorting Algorithms
+25:What’s the difference between passing a parameter by reference or by value
+26:Pointers in C++
+27:How to Plot data in Python
+28:Sql database
+29:How to get my regex to work
+30:Neural Networks tensors in keras
+31:Beautifulsoup web scrapers
+32:New to programming
 
 98:Python
 99:C++

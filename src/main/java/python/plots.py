@@ -9,6 +9,11 @@ import argparse
 
 
 def parse(filename):
+    """Parses a file, which is used by parseManual and parseLabels.
+
+    Args:
+        filename (str): The filename to parse.
+    """
     with open(filename) as file:
         contents = file.read()
     lines = contents.split("\n")  # Python reads all endings by default as \n
@@ -23,30 +28,51 @@ def parse(filename):
 
 
 def parseManual(filename):
-    res = parse(filename)
-    for qid in res:
-        res[qid] = [int(y) for y in res[qid].split(",")]
+    """Parses a manual labeled file. This file contains the expected results.
+
+    Args:
+        filename (str): The filename to read.
+    """
+    r = parse(filename)
+    res = {}
+    for qid in r:
+        res[qid] = [int(y) for y in r[qid].split(",")]
     return res
 
 
 def parseLabels(filename):
-    res = parse(filename)
-    for qid in res:
+    """Parses a measured labeling file. This file is outputted by Lucene.
+
+    Args:
+        filename (str): The filename to read.
+    """
+    r = parse(filename)
+    res = {}
+    for qid in r:
         lst = []
-        for y in res[qid].split(";"):
-            rel, score = y.split(",")
-            lst.append((int(rel), float(score)))
+        for y in r[qid].split(";"):
+            doc, score = y.split(",")
+            lst.append((int(doc), float(score)))
         res[qid] = lst
     return res
 
 
 def ids(filename):
+    """Gets all the question ids."""
     with open(filename) as file:
         contents = file.read()
     return [int(x) for x in contents.split(",")]
 
 
 def transform(quids, mlist, alist):
+    """Transforms the manual labels and measured labels into boolean vectors.
+    A 1 indicates that, for the query, the label was expected and measured.
+
+    Args:
+        quids (list):   The question ids.
+        mlist (list):   The manual label list (obtained from parseLabels).
+        alist (list):   The actual label list (obtained from parseManual).
+    """
     d = {}
     for quid in quids:
         res = [x for x in alist if x[0] == quid]
@@ -55,6 +81,12 @@ def transform(quids, mlist, alist):
 
 
 def plot_pr_curve(ax, y_true, y_pred):
+    """Plots the ROC-curve.
+
+    Args:
+        y_true (list):  The expected labels. (Boolean list)
+        y_pred (list):  The measured labels. (Boolean list)
+    """
     precision, recall, _ = precision_recall_curve(y_true, y_pred)
     step_kwargs = ({'step': 'post'} if 'step' in signature(plt.fill_between).parameters else {})
     average_precision = average_precision_score(y_true, y_pred)
@@ -69,15 +101,38 @@ def plot_pr_curve(ax, y_true, y_pred):
 
 
 def plot_roc_curve(ax, y_true, y_score):
+    """Plots the ROC-curve.
+
+    Args:
+        y_true (list):  The expected labels. (Boolean list)
+        y_score (list): The measured labels. (Boolean list)
+    """
     fpr_rf, tpr_rf, _ = roc_curve(y_true, y_score)
-    auc_rf = auc(fpr_rf, tpr_rf)
 
     ax.plot([0, 1], [0, 1], 'k--')
     ax.plot(fpr_rf, tpr_rf, label='RF')
     ax.set_xlabel('False positive rate')
     ax.set_ylabel('True positive rate')
-    ax.set_title('ROC Curve (AUC={0:0.2f})'.format(auc_rf))
+    ax.set_title('ROC Curve')
     ax.legend(loc='best')
+
+
+def pr_at_k(rels, expected_count, k):
+    """Computes the precision and recall @ k.
+
+    Args:
+        rels (list):            A boolean list that indicates that all
+                                obtained results belong to the expected
+                                results, in the order that they were
+                                returned.
+        expected_count (int):   The expected amount of results.
+        k (int):                The maximal level to look for.
+    """
+    k = min(k, len(rels))
+    TP = sum(rels[:k])
+    FP = k - TP
+    FN = expected_count - TP
+    return TP / (TP + FP), TP / (TP + FN)
 
 
 if __name__ == '__main__':
@@ -90,6 +145,8 @@ if __name__ == '__main__':
                         help=".txt file with the list of all ids of the documents.")
     parser.add_argument("-q", "--queries", type=str, default="data/suggestionsQuery.txt",
                         help=".txt file with all the queries to score.")
+    parser.add_argument("-k", type=int, default=20,
+                        help="The maximal value of k when computing Precision@k / Recall@k.")
     args = parser.parse_args()
 
     manual = parseManual(args.manuallabel)
@@ -102,6 +159,7 @@ if __name__ == '__main__':
     y_exp = []    # expected
     y_pred = []   # predicted
     y_score = []  # scores
+    wpk, wrk = 0.0, 0.0     # weighted precision@k / recall@k
     for qid in actual:
         trs = transform(idlist, manual[qid], actual[qid])
         rel = [x[0] for x in trs]
@@ -110,9 +168,18 @@ if __name__ == '__main__':
         y_pred += [1 if s != 0 else 0 for s in score]
         y_score += score
 
-        print(str(qid).rjust(3), "|", queries[qid])
-        fig2, (ax1, ax2) = plt.subplots(1, 2)
-        plot_pr_curve(ax1, y_exp, y_pred)
-        plot_roc_curve(ax2, y_exp, y_score)
-        plt.subplots_adjust(wspace=0.3)
-        plt.show()
+        pk, rk = pr_at_k([int(x[0] in manual[qid]) for x in actual[qid]], len(manual[qid]), args.k)
+        print(str(qid).rjust(3), "|", queries[qid].ljust(35), "P@k = %.5f; R@k =%.5f" % (pk, rk))
+        wpk += pk
+        wrk += rk
+    wpk /= len(actual)
+    wrk /= len(actual)
+
+    print("Weighted Precision@%i =" % args.k, wpk)
+    print("Weighted Recall@%i    =" % args.k, wrk)
+
+    fig2, (ax1, ax2) = plt.subplots(1, 2)
+    plot_pr_curve(ax1, y_exp, y_pred)
+    plot_roc_curve(ax2, y_exp, y_score)
+    plt.subplots_adjust(wspace=0.3)
+    plt.show()

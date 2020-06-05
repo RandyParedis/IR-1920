@@ -1,0 +1,54 @@
+indexPath: /Users/cwillis/dev/uiucGSLIS/indexes/lucene/FT.train
+corpus: 
+   path: /Users/cwillis/dev/uiucGSLIS/data/FT.train
+   type: trectext
+fields:
+   - name: docno
+     source: element
+     element: DOCNO
+     indexed: true
+     stored: true
+     storedTermVectors: false
+     type: string
+   - name: profile
+     source: element
+     element: PROFILE
+     indexed: true
+     stored: true
+     storedTermVectors: false
+     type: string
+   - name: epoch
+     source: element
+     element: EPOCH
+     indexed: true
+     stored: true
+     storedTermVectors: false
+     type: long
+   - name: headline
+     source: element
+     element: HEADLINE
+     indexed: true
+     stored: true
+     storedTermVectors: false
+     type: text
+   - name: text
+     source: element
+     element: TEXT
+     indexed: true
+     stored: true
+     storedTermVectors: true
+     type: text
+   - name: pub
+     source: element
+     element: PUB
+     indexed: true
+     stored: true
+     storedTermVectors: false
+     type: string
+   - name: page
+     source: element
+     element: PAGE
+     indexed: true
+     stored: true
+     storedTermVectors: false
+     type: string

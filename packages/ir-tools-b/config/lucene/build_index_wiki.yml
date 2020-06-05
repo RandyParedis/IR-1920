@@ -1,0 +1,21 @@
+indexPath: /Users/cwillis/dev/uiucGSLIS/indexes/lucene/wiki
+corpus: 
+   path: /Users/cwillis/dev/uiucGSLIS/data/enwiki-test
+   type: wiki
+analyzer: org.apache.lucene.analysis.standard.StandardAnalyzer
+similarity: org.apache.lucene.search.similarities.DefaultSimilarity
+fields:
+   - name: title
+     indexed: true
+     stored: true
+     storedTermVectors: true
+     type: string
+     analyzer: org.apache.lucene.analysis.core.KeywordAnalyzer
+   - name: text
+     indexed: true
+     stored: true
+     storedTermVectors: true
+     storedTermVectorPositions: true
+     storedTermVectorOffsets: true
+     storedTermVectorPayloads: true
+     type: text

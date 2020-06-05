@@ -9,3 +9,4 @@ errors.log
 __pycache__
 .build
 target
+/packages/indri-5.11/

@@ -9,7 +9,7 @@ import com.stackoverflow.searching.QueryLoader;
 import com.stackoverflow.searching.RelevanceMarker;
 import com.stackoverflow.searching.SearchEngine;
 import org.apache.lucene.search.similarities.BM25Similarity;
-import org.retrievable.lucene.searching.expansion.Rocchio;
+//import org.retrievable.lucene.searching.expansion.Rocchio;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -45,45 +45,42 @@ public class Main {
 
         List<QueryConfig> queries = queryLoader.readQueries("data/suggestionsQuery.txt", SUGGESTIONS);
 
-        Rocchio expander = new Rocchio();
-
-        System.out.println("Searching...");
-        ProgressBar pb = new ProgressBar(0, queries.size());
-        pb.print();
-        // Write all matches to file in the same format as the manual labeling happened
-        List<String> labels = new ArrayList<>();
-        for(int qid = 0; qid < queries.size(); ++qid) {
-            // Find the matching documents
-            QueryConfig query = queries.get(qid);
-            expander.expandQuery(engine.getSearcher(), query, 20, 20);
-            Map<Double, Document> documents = engine.search(query);
-//            System.out.println("Query " + query.toString());
-
-
-            // Store for file writing
-            List<String> ids = new ArrayList<>();
-            for(Map.Entry<Double, Document> pair: documents.entrySet()) {
-                ids.add(SearchEngine.questionID(pair.getValue().get("name")) + "," + pair.getKey());
-            }
-            String results =  String.format("%02d", qid);
-
-            // Special ids:
-            if(qid == queries.size() - 2) { // 98 is Python
-                results = "98";
-            } else if(qid == queries.size() - 1) { // 99 is CPP
-                results = "99";
-            }
-            results += ":" + String.join(";", ids);
-            labels.add(results);
-            pb.next();
-            pb.print();
-        }
-        pb.end();
-        BufferedWriter writer = new BufferedWriter(new FileWriter("data/labels.txt"));
-        writer.write(String.join("\n", labels));
-        writer.close();
+//        Rocchio expander = new Rocchio();
 //
-//        // TODO: Mark as relevant and generate plot data
-//        RelevanceMarker relevanceMarker = new RelevanceMarker();
+//        System.out.println("Searching...");
+//        ProgressBar pb = new ProgressBar(0, queries.size());
+//        pb.print();
+//        // Write all matches to file in the same format as the manual labeling happened
+//        List<String> labels = new ArrayList<>();
+//        for(int qid = 0; qid < queries.size(); ++qid) {
+//            // Find the matching documents
+//            QueryConfig query = queries.get(qid);
+//            expander.expandQuery(engine.getSearcher(), query, 20, 20);
+//            Map<Double, Document> documents = engine.search(query);
+////            System.out.println("Query " + query.toString());
+//
+//
+//            // Store for file writing
+//            List<String> ids = new ArrayList<>();
+//            for(Map.Entry<Double, Document> pair: documents.entrySet()) {
+//                ids.add(SearchEngine.questionID(pair.getValue().get("name")) + "," + pair.getKey());
+//            }
+//            String results =  String.format("%02d", qid);
+//
+//            // Special ids:
+//            if(qid == queries.size() - 2) { // 98 is Python
+//                results = "98";
+//            } else if(qid == queries.size() - 1) { // 99 is CPP
+//                results = "99";
+//            }
+//            results += ":" + String.join(";", ids);
+//            labels.add(results);
+//            pb.next();
+//            pb.print();
+//        }
+//        pb.end();
+//        BufferedWriter writer = new BufferedWriter(new FileWriter("data/labels.txt"));
+//        writer.write(String.join("\n", labels));
+//        writer.close();
     }
 }

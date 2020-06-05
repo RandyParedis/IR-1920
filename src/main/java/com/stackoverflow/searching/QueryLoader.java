@@ -1,6 +1,7 @@
 package com.stackoverflow.searching;
 
 import com.stackoverflow.helper.Helper;
+import edu.gslis.lucene.main.config.QueryConfig;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriterConfig;
@@ -14,6 +15,7 @@ import org.apache.lucene.search.spell.SuggestMode;
 import org.apache.lucene.store.Directory;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -86,6 +88,22 @@ public class QueryLoader {
             }
         }
         return queries;
+    }
+
+    public List<QueryConfig> readQueries(String filename, int suggestions) throws IOException {
+        List<QueryConfig> configs = new ArrayList<>();
+        Scanner sc = new Scanner(new File(filename));
+        int linenr = 0;
+        while(sc.hasNextLine()) {
+            String line = sc.nextLine();
+            if(!line.equals("") && !line.startsWith("#")) {
+                ++linenr;
+                QueryConfig config = new QueryConfig();
+                config.setNumber(Integer.toString(linenr));
+                config.setText(queryTransform(line, suggestions));
+            }
+        }
+        return configs;
     }
 
     /**

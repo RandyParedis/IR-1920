@@ -1,12 +1,15 @@
 package com.stackoverflow;
 
 import com.stackoverflow.helper.ProgressBar;
+import edu.gslis.lucene.main.config.QueryConfig;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.search.Query;
 import com.stackoverflow.searching.QueryLoader;
 import com.stackoverflow.searching.RelevanceMarker;
 import com.stackoverflow.searching.SearchEngine;
+import org.apache.lucene.search.similarities.BM25Similarity;
+import org.retrievable.lucene.searching.expansion.Rocchio;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -21,7 +24,7 @@ public class Main {
         String loc = args.length == 0 ? "smallPosts" : args[0];
         StandardAnalyzer analyzer = new StandardAnalyzer();
 
-        SearchEngine engine = new SearchEngine(loc, analyzer);
+        SearchEngine engine = new SearchEngine(loc, analyzer, new BM25Similarity(1.2f, 0.75f));
         engine.index();
 
         // Load all queries
@@ -40,18 +43,19 @@ public class Main {
 //        }
 
 
-        List<Query> queries = queryLoader.getQueries("data/suggestionsQuery.txt", SUGGESTIONS,
-                (String q) -> q.substring(3));
+        List<QueryConfig> queries = queryLoader.readQueries("data/suggestionsQuery.txt", SUGGESTIONS);
 
-        System.out.println("Testing Engine...");
+        Rocchio expander = new Rocchio();
+
+        System.out.println("Searching...");
         ProgressBar pb = new ProgressBar(0, queries.size());
         pb.print();
         // Write all matches to file in the same format as the manual labeling happened
-        // TODO: do things with matched documents
         List<String> labels = new ArrayList<>();
         for(int qid = 0; qid < queries.size(); ++qid) {
             // Find the matching documents
-            Query query = queries.get(qid);
+            QueryConfig query = queries.get(qid);
+            expander.expandQuery(engine.getSearcher(), query, 20, 20);
             Map<Double, Document> documents = engine.search(query);
 //            System.out.println("Query " + query.toString());
 

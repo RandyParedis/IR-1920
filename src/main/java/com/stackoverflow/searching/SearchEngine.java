@@ -3,7 +3,9 @@ package com.stackoverflow.searching;
 import com.stackoverflow.helper.Helper;
 import com.stackoverflow.helper.ProgressBar;
 import com.stackoverflow.helper.XML;
+import edu.gslis.lucene.main.config.QueryConfig;
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.FieldType;
@@ -12,6 +14,8 @@ import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
@@ -97,6 +101,10 @@ public class SearchEngine {
 
     public IndexReader getReader() {
         return reader;
+    }
+
+    public IndexSearcher getSearcher() {
+        return searcher;
     }
 
 
@@ -239,5 +247,13 @@ public class SearchEngine {
      */
     public Map<Double, Document> search(Query q) throws IOException {
         return search(q, COUNT);
+    }
+
+    public Map<Double, Document> search(QueryConfig queryConfig)
+            throws IOException, ParseException {
+        Query query;
+        QueryParser queryParser = new QueryParser("text", new StandardAnalyzer());
+        query = queryParser.parse(queryConfig.getText());
+        return search(query);
     }
 }

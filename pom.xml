@@ -86,23 +86,15 @@
         </dependency>
         <dependency>
             <groupId>edu.illinois.lis</groupId>
-            <artifactId>ir-utils</artifactId>
-            <version>4.0.13</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-collections</groupId>
-                    <artifactId>commons-collections</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.geronimo.specs</groupId>
-                    <artifactId>geronimo-stax-api_1.0_spec</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>xml-apis</groupId>
-                    <artifactId>xml-apis</artifactId>
-                </exclusion>
-            </exclusions>
+            <artifactId>indri</artifactId>
+            <version>5.11</version>
         </dependency>
-    </dependencies>
+        <dependency>
+            <groupId>edu.glis</groupId>
+            <artifactId>illinois-core-utilities</artifactId>
+            <version>4.0.13</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/packages/illinois-core-utilities-4.0.13.jar</systemPath>
+        </dependency>
     </dependencies>
 </project>

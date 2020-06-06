@@ -18,6 +18,8 @@ import org.sweble.wikitext.lazy.parser.LinkTitle;
 import de.fau.cs.osr.ptk.common.ast.AstNode;
 import de.fau.cs.osr.ptk.common.ast.Text;
 
+import javax.xml.bind.JAXBException;
+
 
 public class LinkDumper  implements DumpWriter {
 
@@ -26,7 +28,7 @@ public class LinkDumper  implements DumpWriter {
     String currentTitle = "";
     int currentPage = -1;
     
-    public LinkDumper() throws IOException {
+    public LinkDumper() throws IOException, JAXBException {
         
         wikicfg = new SimpleWikiConfiguration(
                 "classpath:/org/sweble/wikitext/engine/SimpleWikiConfiguration.xml");

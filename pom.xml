@@ -92,9 +92,9 @@
         <dependency>
             <groupId>org.wikimedia</groupId>
             <artifactId>mwdumper</artifactId>
-            <version>1.16-ukp-1</version>
+            <version>1.16-ukp-2</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/packages/mwdumper-1.16-ukp-1-sources.jar</systemPath>
+            <systemPath>${project.basedir}/packages/mwdumper-1.16-ukp-2.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.apache.lucene</groupId>
@@ -163,7 +163,7 @@
         <dependency>
             <groupId>org.sweble.wikitext</groupId>
             <artifactId>swc-engine</artifactId>
-            <version>3.1.9</version>
+            <version>1.1.0</version>
         </dependency>
         <dependency>
             <groupId>org.tukaani</groupId>

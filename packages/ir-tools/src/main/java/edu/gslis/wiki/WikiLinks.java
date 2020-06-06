@@ -20,6 +20,7 @@ import org.xml.sax.InputSource;
 
 import edu.gslis.lucene.indexer.XmlDumpReader;
 
+import javax.xml.bind.JAXBException;
 
 
 /**
@@ -30,26 +31,25 @@ import edu.gslis.lucene.indexer.XmlDumpReader;
 public class WikiLinks {
     org.sweble.wikitext.engine.Compiler compiler;
     SimpleWikiConfiguration wikicfg;
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, JAXBException {
         WikiLinks linkReader = new WikiLinks();
         linkReader.getLinks(new File(args[0]));
     }
     
-    public WikiLinks() throws IOException {
+    public WikiLinks() throws IOException, JAXBException {
         wikicfg = new SimpleWikiConfiguration(
                 "classpath:/org/sweble/wikitext/engine/SimpleWikiConfiguration.xml");
         
         compiler = new org.sweble.wikitext.engine.Compiler(wikicfg);
     }
     
-    public void getLinks(Reader reader) throws IOException {
+    public void getLinks(Reader reader) throws IOException, JAXBException {
         LinkDumper dumper = new LinkDumper();
         XmlDumpReader wikiReader = new XmlDumpReader(new InputSource(reader), dumper);
         wikiReader.readDump();
      
     }
-    public void getLinks(File file) throws IOException
-    {
+    public void getLinks(File file) throws IOException, JAXBException {
         if (file.isDirectory()) {
             File[] files = file.listFiles();
             for (File f: files) {

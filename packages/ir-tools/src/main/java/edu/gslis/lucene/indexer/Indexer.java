@@ -14,14 +14,9 @@ import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.DoubleField;
-import org.apache.lucene.document.Field;
+import org.apache.lucene.document.*;
 import org.apache.lucene.document.Field.Store;
-import org.apache.lucene.document.FieldType;
-import org.apache.lucene.document.IntField;
-import org.apache.lucene.document.LongField;
-import org.apache.lucene.document.StringField;
+import org.apache.lucene.index.IndexOptions;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.util.Version;
@@ -63,7 +58,7 @@ public abstract class Indexer
     {        
         String fieldName = fieldConfig.getName();
         String type = fieldConfig.getType();
-        
+
         Field luceneField;
         Field.Store stored = fieldConfig.isStored() ? Field.Store.YES : Field.Store.NO;
 
@@ -71,20 +66,20 @@ public abstract class Indexer
             luceneField = new StringField(fieldName, value, stored);
         }
         else if (type.equals(FieldConfig.TYPE_INT)) {                    
-            luceneField = new IntField(fieldName, Integer.valueOf(value), stored);
+            luceneField = new StoredField(fieldName, Integer.parseInt(value));
         }
         else if (type.equals(FieldConfig.TYPE_LONG)) {                    
-            luceneField = new LongField(fieldName, Long.valueOf(value), stored);
+            luceneField = new StoredField(fieldName, Long.parseLong(value));
         }
         else if (type.equals(FieldConfig.TYPE_DOUBLE)) {                    
-            luceneField = new DoubleField(fieldName, Double.valueOf(value), stored);
+            luceneField = new StoredField(fieldName, Double.parseDouble(value));
         }
         else if (type.equals(FieldConfig.TYPE_STRING)) { 
             luceneField = new StringField(fieldName, value, stored);                            
         }
         else if (type.equals(FieldConfig.TYPE_TEXT)) {  
             FieldType fieldType = new FieldType();
-            fieldType.setIndexed(fieldConfig.isIndexed());
+//            fieldType.setIndexed(fieldConfig.isIndexed());
             fieldType.setStored(fieldConfig.isStored());
             fieldType.setStoreTermVectors(fieldConfig.isStoredTermVectors());
             fieldType.setStoreTermVectorPositions(fieldConfig.isStoredTermVectorPositions());
@@ -106,7 +101,7 @@ public abstract class Indexer
                 docLength += docLen.numericValue().longValue();
                 luceneDoc.removeField(FIELD_DOC_LEN);
             }
-            luceneDoc.add(new LongField(FIELD_DOC_LEN, docLength, Store.YES));
+            luceneDoc.add(new StoredField(FIELD_DOC_LEN, docLength));
         }
         else {
             throw new Exception("Unsupported field type: " + type);

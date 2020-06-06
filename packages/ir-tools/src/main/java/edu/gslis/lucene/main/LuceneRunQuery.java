@@ -21,8 +21,8 @@ import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.lucene.analysis.util.CharArraySet;
-import org.apache.lucene.analysis.util.StopwordAnalyzerBase;
+import org.apache.lucene.analysis.CharArraySet;
+import org.apache.lucene.analysis.StopwordAnalyzerBase;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
@@ -85,14 +85,14 @@ public class LuceneRunQuery {
             {
                 @SuppressWarnings({ "rawtypes", "unchecked" })
                 java.lang.reflect.Constructor analyzerConst = analyzerCls.getConstructor(Version.class, Reader.class);
-                defaultAnalyzer = (StopwordAnalyzerBase)analyzerConst.newInstance(Indexer.VERSION, new FileReader(stopwordsPath));
+                defaultAnalyzer = (StopwordAnalyzerBase)analyzerConst.newInstance(new FileReader(stopwordsPath));
             } else {
                 @SuppressWarnings({ "rawtypes", "unchecked" })
                 java.lang.reflect.Constructor analyzerConst = analyzerCls.getConstructor(Version.class);
-                defaultAnalyzer = (StopwordAnalyzerBase)analyzerConst.newInstance(Indexer.VERSION);
+                defaultAnalyzer = (StopwordAnalyzerBase)analyzerConst.newInstance();
             }
         } else {
-            defaultAnalyzer = new StandardAnalyzer(Indexer.VERSION, new CharArraySet(Indexer.VERSION, 0, true));
+            defaultAnalyzer = new StandardAnalyzer(new CharArraySet(0, true));
         }
 
 
@@ -101,7 +101,7 @@ public class LuceneRunQuery {
         Similarity similarity = new LMDirichletSimilarity();
         if (!StringUtils.isEmpty(similarityClass))
             similarity = (Similarity)loader.loadClass(similarityClass).newInstance();
-        IndexReader reader = DirectoryReader.open(FSDirectory.open(new File(indexPath)));
+        IndexReader reader = DirectoryReader.open(FSDirectory.open((new File(indexPath)).toPath()));
         IndexSearcher searcher = new IndexSearcher(reader);
         searcher.setSimilarity(similarity);
         String field = config.getField();
@@ -126,7 +126,7 @@ public class LuceneRunQuery {
         }
         
         for (QueryConfig query: queries) {
-            QueryParser parser = new MultiFieldQueryParser(Indexer.VERSION, fields, defaultAnalyzer);
+            QueryParser parser = new MultiFieldQueryParser(fields, defaultAnalyzer);
             Query q = parser.parse(query.getText());
             TopDocs topDocs = searcher.search(q, 1000);
             ScoreDoc[] docs = topDocs.scoreDocs;

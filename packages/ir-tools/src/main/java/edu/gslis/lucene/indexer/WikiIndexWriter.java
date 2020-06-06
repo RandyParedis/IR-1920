@@ -22,13 +22,15 @@ import org.sweble.wikitext.engine.utils.SimpleWikiConfiguration;
 import edu.gslis.lucene.main.config.FieldConfig;
 import edu.gslis.wiki.TextConverter;
 
+import javax.xml.bind.JAXBException;
+
 
 /**
  * Implements the Mediawiki DumpWriter interface for 
  * SAX-based parsing of a wiki dumpfile.  Writes to a given 
  * Lucene index
  */
-public class WikiIndexWriter  implements DumpWriter {
+public class WikiIndexWriter implements DumpWriter {
 
     Document currentDoc = null;
     IndexWriter index = null;
@@ -39,8 +41,8 @@ public class WikiIndexWriter  implements DumpWriter {
     SimpleWikiConfiguration wikicfg = null;
     WikiTextIndexer parent = null;
     
-    public WikiIndexWriter(IndexWriter index, Set<FieldConfig> fieldSet, WikiTextIndexer parent) 
-            throws IOException {
+    public WikiIndexWriter(IndexWriter index, Set<FieldConfig> fieldSet, WikiTextIndexer parent)
+            throws IOException, JAXBException {
         this.index = index;
         this.parent = parent;
         for (FieldConfig field: fieldSet) {

@@ -346,7 +346,7 @@ public class XmlDumpReader  extends DefaultHandler {
 	}
 	
 	void readRedirect() {
-		page.isRedirect = true;
+//		page.isRedirect = true;
 	}
 	
 	void readRestrictions() {

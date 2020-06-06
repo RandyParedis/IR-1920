@@ -63,7 +63,7 @@ public class LuceneDumpIndex
         }
         else if (cmd.equals("stats") || cmd.equals("s")) {
             
-            Fields fields = MultiFields.getFields(lucene); 
+            Fields fields = lucene.getTermVectors(0);
             System.out.println("Documents: \t" + (long)index.docCount());
             long vocabSize = (long)index.termTypeCount();
             if (vocabSize > 0)
@@ -111,7 +111,7 @@ public class LuceneDumpIndex
             }
         }
         else if (cmd.equals("vocabulary") || cmd.equals("v")) {
-            Fields fields = MultiFields.getFields(lucene); 
+            Fields fields = lucene.getTermVectors(0);
             Bag vocab = new TreeBag();
 
             if (StringUtils.isEmpty(field)) {
@@ -119,7 +119,7 @@ public class LuceneDumpIndex
                 while (it.hasNext()) {
                     String fieldName = it.next();
                     Terms terms = fields.terms(fieldName);
-                    TermsEnum termsEnum = terms.iterator(null);
+                    TermsEnum termsEnum = terms.iterator();
                     BytesRef byteRef = null;
                     while((byteRef = termsEnum.next()) != null) {
                         vocab.add(byteRef.utf8ToString(), termsEnum.docFreq());
@@ -128,7 +128,7 @@ public class LuceneDumpIndex
             }
             else {
                 Terms terms = fields.terms(Indexer.FIELD_TEXT);
-                TermsEnum termsEnum = terms.iterator(null);
+                TermsEnum termsEnum = terms.iterator();
                 BytesRef byteRef = null;
                 while((byteRef = termsEnum.next()) != null) {
                     vocab.add(byteRef.utf8ToString(), termsEnum.docFreq());

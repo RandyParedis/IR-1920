@@ -21,8 +21,8 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.KeywordAnalyzer;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.analysis.util.CharArraySet;
-import org.apache.lucene.analysis.util.StopwordAnalyzerBase;
+import org.apache.lucene.analysis.CharArraySet;
+import org.apache.lucene.analysis.StopwordAnalyzerBase;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
@@ -154,7 +154,7 @@ public class LuceneBuildIndex {
             try
             {
                 String indexPath = config.getIndexPath() + File.separator + "shard" + id;        
-                Directory dir = FSDirectory.open(new File(indexPath));
+                Directory dir = FSDirectory.open((new File(indexPath)).toPath());
     
                 // Initialize the analyzer
                 StopwordAnalyzerBase defaultAnalyzer;
@@ -169,14 +169,14 @@ public class LuceneBuildIndex {
                     {
                         @SuppressWarnings({ "rawtypes", "unchecked" })
                         java.lang.reflect.Constructor analyzerConst = analyzerCls.getConstructor(Version.class, Reader.class);
-                        defaultAnalyzer = (StopwordAnalyzerBase)analyzerConst.newInstance(Indexer.VERSION, new FileReader(stopwordsPath));            
+                        defaultAnalyzer = (StopwordAnalyzerBase)analyzerConst.newInstance(new FileReader(stopwordsPath));
                     } else {
                         @SuppressWarnings({ "rawtypes", "unchecked" })
                         java.lang.reflect.Constructor analyzerConst = analyzerCls.getConstructor(Version.class);
-                        defaultAnalyzer = (StopwordAnalyzerBase)analyzerConst.newInstance(Indexer.VERSION);            
+                        defaultAnalyzer = (StopwordAnalyzerBase)analyzerConst.newInstance();
                     }
                 } else {
-                    defaultAnalyzer = new StandardAnalyzer(Indexer.VERSION, new CharArraySet(Indexer.VERSION, 0, true));
+                    defaultAnalyzer = new StandardAnalyzer(new CharArraySet(0, true));
                 }
                 
                 // Assumes LM similarity, but can be changed via config file
@@ -207,7 +207,7 @@ public class LuceneBuildIndex {
                 }
                 
                 Analyzer analyzer = new PerFieldAnalyzerWrapper(defaultAnalyzer, perFieldAnalyzers);
-                IndexWriterConfig iwc = new IndexWriterConfig(Indexer.VERSION, analyzer);
+                IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
                 iwc.setOpenMode(OpenMode.CREATE_OR_APPEND);
                 iwc.setRAMBufferSizeMB(256.0);
                 iwc.setSimilarity(similarity);

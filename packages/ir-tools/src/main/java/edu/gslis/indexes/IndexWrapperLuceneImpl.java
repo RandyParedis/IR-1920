@@ -2,15 +2,7 @@ package edu.gslis.indexes;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,8 +15,7 @@ import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.StopwordAnalyzerBase;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.DocsAndPositionsEnum;
-import org.apache.lucene.index.DocsEnum;
+import org.apache.lucene.index.PostingsEnum;
 import org.apache.lucene.index.Fields;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexableField;
@@ -94,7 +85,7 @@ public class IndexWrapperLuceneImpl implements IndexWrapper
 	public IndexWrapperLuceneImpl(String pathToIndex) {
 	    try
 	    {
-	        index = DirectoryReader.open(FSDirectory.open(new File(pathToIndex))); 
+	        index = DirectoryReader.open(FSDirectory.open((new File(pathToIndex)).toPath()));
 	        searcher = new IndexSearcher(index);
 	        
 	        // Read the analyzer/similarity class from the index metadata,
@@ -109,10 +100,10 @@ public class IndexWrapperLuceneImpl implements IndexWrapper
 
                 @SuppressWarnings({ "rawtypes", "unchecked" })
                 java.lang.reflect.Constructor analyzerConst = analyzerCls.getConstructor(Version.class);
-                analyzer = (StopwordAnalyzerBase)analyzerConst.newInstance(Indexer.VERSION);
+                analyzer = (StopwordAnalyzerBase)analyzerConst.newInstance();
 
 	        } else {
-	            analyzer = new StandardAnalyzer(Indexer.VERSION);
+	            analyzer = new StandardAnalyzer();
 	        }
 	        
 	        if (indexMetadata.get("similarity") != null) {
@@ -149,7 +140,7 @@ public class IndexWrapperLuceneImpl implements IndexWrapper
     
     /**
      * Convert GQuery to Lucene query
-     * @param query        Query
+     * @param gquery        Query
      */
     public String getLuceneQueryString(GQuery gquery) {
     	StringBuilder queryString = new StringBuilder();
@@ -203,17 +194,17 @@ public class IndexWrapperLuceneImpl implements IndexWrapper
         SearchHits hits = new SearchHits();
         try {
             List<String> fieldNames = new ArrayList<String>();
-            Fields fields = MultiFields.getFields(index);
+            Fields fields = index.getTermVectors(0);
             Iterator<String> it = fields.iterator();
             while (it.hasNext()) {
                 String fieldName = it.next();
                 fieldNames.add(fieldName);
             }
             hits = runQuery(q, fieldNames.toArray(new String[0]), count);
-            
+
         } catch (IOException e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
-        }    
+        }
         return hits;
     }
     
@@ -242,10 +233,10 @@ public class IndexWrapperLuceneImpl implements IndexWrapper
 	    fields.add(timeFieldName);
 	    try
 	    {            
-            QueryParser parser = new MultiFieldQueryParser(Indexer.VERSION, field, analyzer);
+            QueryParser parser = new MultiFieldQueryParser(field, analyzer);
             Query query = parser.parse(q);
             searcher.setSimilarity(similarity);
-            TopDocs topDocs = searcher.search(query,  null, count);
+            TopDocs topDocs = searcher.search(query,  count);
             ScoreDoc[] docs = topDocs.scoreDocs;
 
             for (int i=0; i<docs.length; i++) {
@@ -305,7 +296,7 @@ public class IndexWrapperLuceneImpl implements IndexWrapper
 	public double termCount() {
 	    double count = 0;
 		try {
-            Fields fields = MultiFields.getFields(index);  
+            Fields fields = index.getTermVectors(0);
             Iterator<String> it = fields.iterator();
             while (it.hasNext()) {
                 String field = it.next();
@@ -323,7 +314,7 @@ public class IndexWrapperLuceneImpl implements IndexWrapper
 	public double termTypeCount() {
 	    if (vocabularySize == -1) {
 	        try {
-                Fields fields = MultiFields.getFields(index);  
+                Fields fields = index.getTermVectors(0);
                 Iterator<String> it = fields.iterator();
                 while (it.hasNext()) {
                     String field = it.next();
@@ -348,7 +339,7 @@ public class IndexWrapperLuceneImpl implements IndexWrapper
     public double termTypeCount(String field) {
         if (vocabularySize == -1) {
             try {
-                Fields fields = MultiFields.getFields(index);  
+                Fields fields = index.getTermVectors(0);
                 Terms terms = fields.terms(field);
                 vocabularySize = terms.size();
             } catch (Exception e) {
@@ -367,7 +358,7 @@ public class IndexWrapperLuceneImpl implements IndexWrapper
 	    double df = 0;
 	    
 		try {
-            Fields fields = MultiFields.getFields(index);  
+            Fields fields = index.getTermVectors(0);
             Iterator<String> it = fields.iterator();
             while (it.hasNext()) {
                 String field = it.next();
@@ -398,7 +389,7 @@ public class IndexWrapperLuceneImpl implements IndexWrapper
 	/**
 	 * Returns total term frequency in the specified field
 	 * @param term Term
-	 * @param tield Field name
+	 * @param field Field name
 	 */
 	public double termFreq(String term, String field) {
 		try {
@@ -417,7 +408,7 @@ public class IndexWrapperLuceneImpl implements IndexWrapper
         double tf = 0;
         
         try {
-            Fields fields = MultiFields.getFields(index);  
+            Fields fields = index.getTermVectors(0);
             Iterator<String> it = fields.iterator();
             while (it.hasNext()) {
                 String field = it.next();
@@ -439,7 +430,7 @@ public class IndexWrapperLuceneImpl implements IndexWrapper
 
 	/**
 	 * Returns a feature vector for the specified intermal document ID
-	 * @param docid    Lucene internal identifier
+	 * @param docID    Lucene internal identifier
 	 * @param stopper  Stopper
 	 */
     public FeatureVector getDocVector(int docID,  Stopper stopper) {
@@ -479,7 +470,7 @@ public class IndexWrapperLuceneImpl implements IndexWrapper
 	        
 	        for (Terms terms: termsSet) {
         	    if (terms != null) { 
-        	        TermsEnum termsEnum = terms.iterator(null); 
+        	        TermsEnum termsEnum = terms.iterator();
         	        while (termsEnum.next() != null) { 
         	            String term = termsEnum.term().utf8ToString();
         	            
@@ -518,12 +509,12 @@ public class IndexWrapperLuceneImpl implements IndexWrapper
    
                 Terms terms = index.getTermVector(docID, field);
                 if (terms != null) { 
-                    TermsEnum termsEnum = terms.iterator(null); 
-                    DocsAndPositionsEnum dp = null; 
+                    TermsEnum termsEnum = terms.iterator();
+                    PostingsEnum dp = null;
                     while (termsEnum.next() != null) { 
                         String term = termsEnum.term().utf8ToString();
                        
-                        dp = termsEnum.docsAndPositions(null, dp);
+                        dp = termsEnum.postings(dp);
                         dp.nextDoc();
                         int freq = dp.freq();
                         for (int i=0; i<freq; i++) {
@@ -579,12 +570,12 @@ public class IndexWrapperLuceneImpl implements IndexWrapper
 	            Terms terms = index.getTermVector(docID, field);
 	            Map<Integer, String> dv = new TreeMap<Integer, String>();
 	            if (terms != null) { 
-	                TermsEnum termsEnum = terms.iterator(null); 
-	                DocsAndPositionsEnum dp = null; 
+	                TermsEnum termsEnum = terms.iterator();
+	                PostingsEnum dp = null;
 	                while (termsEnum.next() != null) { 
 	                    String term = termsEnum.term().utf8ToString();
 	                   
-	                    dp = termsEnum.docsAndPositions(null, dp);
+	                    dp = termsEnum.postings(dp);
 	                    dp.nextDoc();
 	                    int freq = dp.freq();
 	                    for (int i=0; i<freq; i++) {
@@ -623,14 +614,14 @@ public class IndexWrapperLuceneImpl implements IndexWrapper
         {
             IndexSearcher searcher = new IndexSearcher(index);
             Analyzer analyzer = new KeywordAnalyzer();
-            QueryParser parser = new QueryParser(Indexer.VERSION, field, analyzer);
+            QueryParser parser = new QueryParser(field, analyzer);
             Query q = parser.parse("\"" + value + "\"");
     
     //        TermQuery q = new TermQuery(new Term(field, docno));
                             
 
             TopDocs docs = searcher.search(q,  100);
-            if (docs.totalHits > 0)
+            if (docs.totalHits.value > 0)
                 docid = docs.scoreDocs[0].doc;
         } catch (Exception e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
@@ -690,7 +681,7 @@ public class IndexWrapperLuceneImpl implements IndexWrapper
 
 	/**
 	 * Returns the document length. Note: this is stored in a custom field during indexing.
-	 * @param docid Lucene internal identifier
+	 * @param docID Lucene internal identifier
 	 * @see edu.gslis.lucene.main.LuceneBuildIndex
 	 */
 	public double getDocLength(int docID) {
@@ -795,15 +786,18 @@ public class IndexWrapperLuceneImpl implements IndexWrapper
        Map<Integer, Integer> df = new HashMap<Integer, Integer>();
        try
        {
-           Fields fields = MultiFields.getFields(index);
+           Fields fields = index.getTermVectors(0);
            Iterator<String> it = fields.iterator();
            while (it.hasNext()) {
                String field = it.next();
-               DocsEnum de =  MultiFields.getTermDocsEnum(index, MultiFields.getLiveDocs(index), 
-                       field, new BytesRef(term));
+               Terms terms = index.getTermVector(0, field);
+               TermsEnum termsEnum = terms.iterator();
+//               PostingsEnum de =  MultiFields.getTermDocsEnum(index, MultiFields.getLiveDocs(index),
+//                       field, new BytesRef(term));
+               PostingsEnum de = null;
                if (de != null) {
                    int doc;
-                   while((doc = de.nextDoc()) != DocsEnum.NO_MORE_DOCS) {
+                   while((doc = de.nextDoc()) != PostingsEnum.NO_MORE_DOCS) {
                        if (docids.contains(doc))
                            df.put(doc,  de.freq());
                    }

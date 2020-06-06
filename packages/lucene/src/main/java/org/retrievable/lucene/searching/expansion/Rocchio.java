@@ -1,7 +1,6 @@
 package org.retrievable.lucene.searching.expansion;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;

@@ -3,8 +3,7 @@
 The files need to be parsed first and afterwards they can be compared.
 """
 import matplotlib.pyplot as plt
-from sklearn.metrics import roc_curve, precision_recall_curve, average_precision_score, auc
-from sklearn.utils.fixes import signature
+from sklearn.metrics import roc_curve, precision_recall_curve, average_precision_score
 import argparse
 
 
@@ -88,11 +87,9 @@ def plot_pr_curve(ax, y_true, y_pred):
         y_pred (list):  The measured labels. (Boolean list)
     """
     precision, recall, _ = precision_recall_curve(y_true, y_pred)
-    step_kwargs = ({'step': 'post'} if 'step' in signature(plt.fill_between).parameters else {})
     average_precision = average_precision_score(y_true, y_pred)
 
     ax.step(recall, precision, color='b', alpha=0.2, where='post')
-    ax.fill_between(recall, precision, alpha=0.2, color='b', **step_kwargs)
     ax.set_xlabel('Recall')
     ax.set_ylabel('Precision')
     ax.set_ylim([0.0, 1.05])
@@ -147,6 +144,8 @@ if __name__ == '__main__':
                         help=".txt file with all the queries to score.")
     parser.add_argument("-k", type=int, default=20,
                         help="The maximal value of k when computing Precision@k / Recall@k.")
+    parser.add_argument("-t", "--title", type=str, default="",
+                        help="The title for the plot.")
     args = parser.parse_args()
 
     manual = parseManual(args.manuallabel)
@@ -154,7 +153,7 @@ if __name__ == '__main__':
     idlist = ids(args.idquestions)
     queries = parse(args.queries)
 
-    assert len(set(manual.keys()) - set(actual.keys())) > 0
+    assert len(set(manual.keys()) - set(actual.keys())) >= 0
 
     y_exp = []    # expected
     y_pred = []   # predicted
@@ -179,6 +178,7 @@ if __name__ == '__main__':
     print("Weighted Recall@%i    =" % args.k, wrk)
 
     fig2, (ax1, ax2) = plt.subplots(1, 2)
+    fig2.suptitle(args.title, fontsize=16)
     plot_pr_curve(ax1, y_exp, y_pred)
     plot_roc_curve(ax2, y_exp, y_score)
     plt.subplots_adjust(wspace=0.3)

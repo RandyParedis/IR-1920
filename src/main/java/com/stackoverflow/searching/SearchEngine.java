@@ -14,6 +14,7 @@ import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
@@ -202,11 +203,14 @@ public class SearchEngine {
     private void addDoc(IndexWriter w, String name, String title, String body, String tags, String answers)
             throws IOException {
         Document doc = new Document();
+        tags = tags.replace("  ", " ");
+        String text = title + "\n" + body + "\n" + tags + answers;
         doc.add(new Field("name", name, freqVecStorer));
         doc.add(new Field("title", title, freqVecStorer));
         doc.add(new Field("body", body, freqVecStorer));
-        doc.add(new Field("tags", tags.replace("  ", " "), freqVecStorer));
+        doc.add(new Field("tags", tags, freqVecStorer));
         doc.add(new Field("answers", answers, freqVecStorer));
+        doc.add(new Field("text", text, freqVecStorer));  // For Rocchio
         w.addDocument(doc);
     }
 
@@ -252,8 +256,11 @@ public class SearchEngine {
     public Map<Double, Document> search(QueryConfig queryConfig)
             throws IOException, ParseException {
         Query query;
-        QueryParser queryParser = new QueryParser("text", new StandardAnalyzer());
-        query = queryParser.parse(queryConfig.getText());
+//        QueryParser queryParser = new QueryParser("text", new StandardAnalyzer());
+//        query = queryParser.parse(queryConfig.getText());
+        MultiFieldQueryParser mfqp = new MultiFieldQueryParser(QueryLoader.FIELDS, analyzer);
+        mfqp.setDefaultOperator(QueryParser.Operator.OR);
+        query = mfqp.parse(queryConfig.getText());
         return search(query);
     }
 }

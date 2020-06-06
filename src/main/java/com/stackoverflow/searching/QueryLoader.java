@@ -3,6 +3,7 @@ package com.stackoverflow.searching;
 import com.stackoverflow.helper.Helper;
 import edu.gslis.lucene.main.config.QueryConfig;
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
@@ -32,7 +33,7 @@ public class QueryLoader {
     private IndexReader reader;
     private Analyzer analyzer;
 
-    final private String[] FIELDS = {"title", "body", "answers", "tags"};
+    static final public String[] FIELDS = {"title", "body", "answers", "tags"};
 
     public interface QueryCallback {
         String call(String query);
@@ -62,6 +63,8 @@ public class QueryLoader {
      */
     public Query getQuery(String old, int suggestions) throws IOException, ParseException {
         String querystr = queryTransform(old, suggestions);
+//        QueryParser queryParser = new QueryParser("text", new StandardAnalyzer());
+//        return queryParser.parse(querystr);
         MultiFieldQueryParser mfqp = new MultiFieldQueryParser(FIELDS, analyzer);
         mfqp.setDefaultOperator(QueryParser.Operator.OR);
         return mfqp.parse(querystr);
@@ -93,14 +96,14 @@ public class QueryLoader {
     public List<QueryConfig> readQueries(String filename, int suggestions) throws IOException {
         List<QueryConfig> configs = new ArrayList<>();
         Scanner sc = new Scanner(new File(filename));
-        int linenr = 0;
         while(sc.hasNextLine()) {
             String line = sc.nextLine();
             if(!line.equals("") && !line.startsWith("#")) {
-                ++linenr;
+                String[] sline = line.split(":");
                 QueryConfig config = new QueryConfig();
-                config.setNumber(Integer.toString(linenr));
-                config.setText(queryTransform(line, suggestions));
+                config.setNumber(Integer.toString(Integer.parseInt(sline[0])));
+                config.setText(queryTransform(sline[1], suggestions));
+                configs.add(config);
             }
         }
         return configs;

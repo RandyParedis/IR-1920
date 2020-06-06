@@ -52,29 +52,21 @@ public class Main {
         pb.print();
         // Write all matches to file in the same format as the manual labeling happened
         List<String> labels = new ArrayList<>();
-        for(int qid = 0; qid < queries.size(); ++qid) {
+        for (QueryConfig query : queries) {
             // Find the matching documents
-            QueryConfig query = queries.get(qid);
-            expander.expandQuery(engine.getSearcher(), query, 20, 20);
+            expander.expandQuery(engine.getSearcher(), query, engine.getReader().numDocs(), 200);
             Map<Double, Document> documents = engine.search(query);
-//            System.out.println("Query " + query.toString());
-
 
             // Store for file writing
             List<String> ids = new ArrayList<>();
-            for(Map.Entry<Double, Document> pair: documents.entrySet()) {
+            for (Map.Entry<Double, Document> pair : documents.entrySet()) {
                 ids.add(SearchEngine.questionID(pair.getValue().get("name")) + "," + pair.getKey());
             }
-            String results =  String.format("%02d", qid);
 
-            // Special ids:
-            if(qid == queries.size() - 2) { // 98 is Python
-                results = "98";
-            } else if(qid == queries.size() - 1) { // 99 is CPP
-                results = "99";
-            }
-            results += ":" + String.join(";", ids);
+            String results = String.format("%02d", Integer.parseInt(query.getNumber())) + ":" +
+                    String.join(";", ids);
             labels.add(results);
+
             pb.next();
             pb.print();
         }

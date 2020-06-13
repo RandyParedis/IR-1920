@@ -7,6 +7,7 @@ import org.apache.lucene.search.Query;
 import com.stackoverflow.searching.QueryLoader;
 import com.stackoverflow.searching.RelevanceMarker;
 import com.stackoverflow.searching.SearchEngine;
+import com.stackoverflow.searching.MyCustomAnalyzer;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -19,7 +20,8 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         String loc = args.length == 0 ? "smallPosts" : args[0];
-        StandardAnalyzer analyzer = new StandardAnalyzer();
+//        StandardAnalyzer analyzer = new StandardAnalyzer();
+        MyCustomAnalyzer analyzer = new MyCustomAnalyzer();
 
         SearchEngine engine = new SearchEngine(loc, analyzer);
         engine.index();

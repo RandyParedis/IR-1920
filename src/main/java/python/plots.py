@@ -154,7 +154,7 @@ if __name__ == '__main__':
     idlist = ids(args.idquestions)
     queries = parse(args.queries)
 
-    assert len(set(manual.keys()) - set(actual.keys())) > 0
+    assert len(set(manual.keys()) - set(actual.keys())) >= 0
 
     y_exp = []    # expected
     y_pred = []   # predicted

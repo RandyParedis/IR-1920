@@ -58,12 +58,12 @@ public class MyCustomAnalyzer extends StopwordAnalyzerBase {
         StandardTokenizer src = new StandardTokenizer();
         TokenStream result = new LowerCaseFilter(src);
         result = new StopFilter(result, EnglishAnalyzer.ENGLISH_STOP_WORDS_SET);
-        result = new SynonymFilter(result, generateSynonymMap(), true);
-//        result = new PatternReplaceFilter(result, Pattern.compile("[^a-zA-Z0-9]"), "", true);
+//        result = new SynonymFilter(result, generateSynonymMap(), true);
+        result = new PatternReplaceFilter(result, Pattern.compile("[^a-zA-Z0-9]"), "", true);
 //        result = new TrimFilter(result);
 //        result = new WordDelimiterGraphFilter(result, CATENATE_ALL, null);
-//        result = new PorterStemFilter(result);
-//        result = new NGramTokenFilter(result, 4);
+        result = new PorterStemFilter(result);
+//        result = new NGramTokenFilter(result, 6);
 //        result = new SynonymFilter(resulct, generateSynonymMap(), true);
         return new TokenStreamComponents(src, result);
 

@@ -8,6 +8,7 @@ import com.stackoverflow.searching.QueryLoader;
 import com.stackoverflow.searching.RelevanceMarker;
 import com.stackoverflow.searching.SearchEngine;
 import com.stackoverflow.searching.MyCustomAnalyzer;
+import org.apache.lucene.analysis.Analyzer;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -15,13 +16,41 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import net.sourceforge.argparse4j.ArgumentParsers;
+import net.sourceforge.argparse4j.inf.ArgumentParser;
+import net.sourceforge.argparse4j.inf.ArgumentParserException;
+import net.sourceforge.argparse4j.inf.Namespace;
+
 public class Main {
     public final static int SUGGESTIONS = 5;
 
     public static void main(String[] args) throws Exception {
-        String loc = args.length == 0 ? "smallPosts" : args[0];
-//        StandardAnalyzer analyzer = new StandardAnalyzer();
-        MyCustomAnalyzer analyzer = new MyCustomAnalyzer();
+        ArgumentParser parser = ArgumentParsers.newFor("Document Retrieval").build()
+                .defaultHelp(true)
+                .description("Document Retrieval");
+        parser.addArgument("-t", "--type")
+                .choices("standard", "custom").setDefault("standard")
+                .help("Choose which analyzer you want to use: standard or custom");
+        parser.addArgument("-l", "--loc")
+                .setDefault("smallPosts")
+                .help("Location of the xml files");
+        Namespace ns = null;
+        try {
+            ns = parser.parseArgs(args);
+        } catch (ArgumentParserException e) {
+            parser.handleError(e);
+            System.exit(1);
+        }
+        String loc = ns.getString("loc");
+        Analyzer analyzer = null;
+        if(ns.getString("type") == "standard") {
+            analyzer = new StandardAnalyzer();
+        } else if (ns.getString("type") == "custom") {
+            analyzer = new MyCustomAnalyzer();
+        } else {
+            System.out.println("Invalid type parameter");
+            System.exit(1);
+        }
 
         SearchEngine engine = new SearchEngine(loc, analyzer);
         engine.index();

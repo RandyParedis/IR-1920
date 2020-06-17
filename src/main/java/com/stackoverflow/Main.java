@@ -41,11 +41,12 @@ public class Main {
             parser.handleError(e);
             System.exit(1);
         }
+        String type = ns.getString("type");
         String loc = ns.getString("loc");
         Analyzer analyzer = null;
-        if(ns.getString("type") == "standard") {
+        if(type.equals("standard")) {
             analyzer = new StandardAnalyzer();
-        } else if (ns.getString("type") == "custom") {
+        } else if (type.equals("custom")) {
             analyzer = new MyCustomAnalyzer();
         } else {
             System.out.println("Invalid type parameter");

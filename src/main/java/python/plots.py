@@ -168,6 +168,13 @@ if __name__ == '__main__':
         y_pred += [1 if s != 0 else 0 for s in score]
         y_score += score
 
+#         Plot Graphs per query
+#         fig2, (ax1, ax2) = plt.subplots(1, 2)
+#         plot_pr_curve(ax1, rel, [1 if s != 0 else 0 for s in score])
+#         plot_roc_curve(ax2, rel, score)
+#         plt.subplots_adjust(wspace=0.3)
+#         plt.show()
+
         pk, rk = pr_at_k([int(x[0] in manual[qid]) for x in actual[qid]], len(manual[qid]), args.k)
         print(str(qid).rjust(3), "|", queries[qid].ljust(35), "P@k = %.5f; R@k =%.5f" % (pk, rk))
         wpk += pk

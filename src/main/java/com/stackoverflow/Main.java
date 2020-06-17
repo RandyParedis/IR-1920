@@ -20,6 +20,7 @@ import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.ArgumentParserException;
 import net.sourceforge.argparse4j.inf.Namespace;
+import org.apache.lucene.search.similarities.BM25Similarity;
 
 public class Main {
     public final static int SUGGESTIONS = 5;
@@ -53,7 +54,7 @@ public class Main {
             System.exit(1);
         }
 
-        SearchEngine engine = new SearchEngine(loc, analyzer);
+        SearchEngine engine = new SearchEngine(loc, analyzer, new BM25Similarity());
         engine.index();
 
         // Load all queries
@@ -84,6 +85,7 @@ public class Main {
         for(int qid = 0; qid < queries.size(); ++qid) {
             // Find the matching documents
             Query query = queries.get(qid);
+//            System.out.println("Query " + qid + ": " + query.toString());
             Map<Double, Document> documents = engine.search(query);
 //            System.out.println("Query " + query.toString());
 

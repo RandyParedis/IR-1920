@@ -110,6 +110,7 @@ public class QueryLoader {
             ors.add("(" + String.join(" OR ", suggestions) + ")");
         }
         return String.join(" AND ", ors);
+//        return old;
     }
 
     /**

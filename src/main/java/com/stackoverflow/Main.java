@@ -1,6 +1,7 @@
 package com.stackoverflow;
 
 import com.stackoverflow.helper.ProgressBar;
+import com.stackoverflow.searching.InfoCustom;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.search.Query;
@@ -35,6 +36,21 @@ public class Main {
         parser.addArgument("-l", "--loc")
                 .setDefault("smallPosts")
                 .help("Location of the xml files");
+        parser.addArgument("-w", "--worddelimiter")
+                .choices("true", "false").setDefault("true")
+                .help("Custom analyzer using word delimiter");
+        parser.addArgument("-tr", "--trim")
+                .choices("true", "false").setDefault("true")
+                .help("Custom analyzer using trim");
+        parser.addArgument("-p", "--porter")
+                .choices("true", "false").setDefault("true")
+                .help("Custom analyzer using a porter stemmer");
+        parser.addArgument("-n", "--ngram")
+                .setDefault("0")
+                .help("Custom analyzer using a ngrams where n is the length");
+        parser.addArgument("-s", "--synonym")
+                .choices("true", "false").setDefault("true")
+                .help("Custom analyzer using a synonym filter");
         Namespace ns = null;
         try {
             ns = parser.parseArgs(args);
@@ -44,6 +60,13 @@ public class Main {
         }
         String type = ns.getString("type");
         String loc = ns.getString("loc");
+        boolean w = Boolean.parseBoolean(ns.getString("worddelimiter"));
+        boolean t = Boolean.parseBoolean(ns.getString("trim"));
+        boolean p = Boolean.parseBoolean(ns.getString("porter"));
+        int n = Integer.parseInt(ns.getString("ngram"));
+        boolean s = Boolean.parseBoolean(ns.getString("synonym"));
+        System.out.println(w + " " + t + " " + p + " " + s + " " + n);
+//        InfoCustom info = new InfoCustom(w, t, p, n, s);
         Analyzer analyzer = null;
         if(type.equals("standard")) {
             analyzer = new StandardAnalyzer();

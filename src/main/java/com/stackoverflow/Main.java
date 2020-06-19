@@ -65,13 +65,12 @@ public class Main {
         boolean p = Boolean.parseBoolean(ns.getString("porter"));
         int n = Integer.parseInt(ns.getString("ngram"));
         boolean s = Boolean.parseBoolean(ns.getString("synonym"));
-        System.out.println(w + " " + t + " " + p + " " + s + " " + n);
-//        InfoCustom info = new InfoCustom(w, t, p, n, s);
+        InfoCustom info = new InfoCustom(w, t, p, n, s);
         Analyzer analyzer = null;
         if(type.equals("standard")) {
             analyzer = new StandardAnalyzer();
         } else if (type.equals("custom")) {
-            analyzer = new MyCustomAnalyzer();
+            analyzer = new MyCustomAnalyzer(info);
         } else {
             System.out.println("Invalid type parameter");
             System.exit(1);

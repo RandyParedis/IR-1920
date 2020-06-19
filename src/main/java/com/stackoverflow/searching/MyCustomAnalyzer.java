@@ -1,5 +1,6 @@
 package com.stackoverflow.searching;
 
+import com.stackoverflow.searching.InfoCustom;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
@@ -28,6 +29,12 @@ import org.apache.lucene.util.CharsRef;
 
 // https://www.baeldung.com/lucene-analyzers
 public class MyCustomAnalyzer extends StopwordAnalyzerBase {
+    InfoCustom info;
+
+    public MyCustomAnalyzer(InfoCustom i) {
+        info = i;
+    }
+
     private SynonymMap generateSynonymMap() {
         BufferedReader reader;
         try {
@@ -59,12 +66,19 @@ public class MyCustomAnalyzer extends StopwordAnalyzerBase {
         StandardTokenizer src = new StandardTokenizer();
         TokenStream result = new LowerCaseFilter(src);
         result = new StopFilter(result, EnglishAnalyzer.ENGLISH_STOP_WORDS_SET);
-        result = new WordDelimiterGraphFilter(result, CATENATE_ALL, null);
-//        result = new SynonymGraphFilter(result, generateSynonymMap(), true);
+        if(info.wordDelimiter) {
+            result = new WordDelimiterGraphFilter(result, CATENATE_ALL, null);
+        } if (info.synonym) {
+            result = new SynonymGraphFilter(result, generateSynonymMap(), true);
+        }
         result = new PatternReplaceFilter(result, Pattern.compile("[^a-zA-Z0-9]"), "", true);
-        result = new TrimFilter(result);
-        result = new PorterStemFilter(result);
-//        result = new NGramTokenFilter(result, 4,4, true);
+        if (info.trim) {
+            result = new TrimFilter(result);
+        } if (info.porter) {
+            result = new PorterStemFilter(result);
+        } if (info.ngram > 0) {
+            result = new NGramTokenFilter(result, info.ngram, info.ngram, true);
+        }
         return new TokenStreamComponents(src, result);
 
     }

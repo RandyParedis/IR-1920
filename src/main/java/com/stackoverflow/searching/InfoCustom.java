@@ -1,11 +1,11 @@
 package com.stackoverflow.searching;
 
 public class InfoCustom {
-    boolean wordDelimiter;
-    boolean trim;
-    boolean porter;
-    int ngram;
-    boolean synonym;
+    public boolean wordDelimiter;
+    public boolean trim;
+    public boolean porter;
+    public int ngram;
+    public boolean synonym;
 
     public InfoCustom(boolean w, boolean t, boolean p, int n, boolean s) {
         wordDelimiter = w;

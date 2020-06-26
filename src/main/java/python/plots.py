@@ -161,7 +161,8 @@ if __name__ == '__main__':
     y_score = []  # scores
     wpk, wrk = 0.0, 0.0     # weighted precision@k / recall@k
     for qid in actual:
-        trs = transform(idlist, manual[qid], actual[qid])
+        a_qid = list(reversed(sorted(actual[qid], key=lambda x: x[1])))
+        trs = transform(idlist, manual[qid], a_qid)
         rel = [x[0] for x in trs]
         score = [x[1] for x in trs]
         y_exp += rel
@@ -175,7 +176,7 @@ if __name__ == '__main__':
 #         plt.subplots_adjust(wspace=0.3)
 #         plt.show()
 
-        pk, rk = pr_at_k([int(x[0] in manual[qid]) for x in actual[qid]], len(manual[qid]), args.k)
+        pk, rk = pr_at_k([int(x[0] in manual[qid]) for x in a_qid], len(manual[qid]), args.k)
         print(str(qid).rjust(3), "|", queries[qid].ljust(35), "P@k = %.5f; R@k =%.5f" % (pk, rk))
         wpk += pk
         wrk += rk

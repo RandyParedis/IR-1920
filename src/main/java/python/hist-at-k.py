@@ -24,10 +24,10 @@ rects2 = ax.bar(ind+width, rec_k, width, color='grey')
 
 # add some text for labels, title and axes ticks
 ax.set_ylabel('Values')
-ax.set_title('Weighted PR@k and Recall@k values for different analyzers (k=20)')
+ax.set_title('Weighted Precision@k and Recall@k values for different analyzers (k=20)')
 ax.set_xticks(ind+width)
 ax.set_xticklabels( labels )
 
-ax.legend( (rects1[0], rects2[0]), ('PR@k', 'Recall@k') )
+ax.legend( (rects1[0], rects2[0]), ('Precision@k', 'Recall@k') )
 
 plt.show()

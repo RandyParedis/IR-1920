@@ -4,7 +4,7 @@ The files need to be parsed first and afterwards they can be compared.
 """
 import matplotlib.pyplot as plt
 from sklearn.metrics import roc_curve, precision_recall_curve, average_precision_score, auc
-from sklearn.utils.fixes import signature
+# from sklearn.utils.fixes import signature
 import argparse
 
 
@@ -88,11 +88,11 @@ def plot_pr_curve(ax, y_true, y_pred):
         y_pred (list):  The measured labels. (Boolean list)
     """
     precision, recall, _ = precision_recall_curve(y_true, y_pred)
-    step_kwargs = ({'step': 'post'} if 'step' in signature(plt.fill_between).parameters else {})
+    # step_kwargs = ({'step': 'post'} if 'step' in signature(plt.fill_between).parameters else {})
     average_precision = average_precision_score(y_true, y_pred)
 
     ax.step(recall, precision, color='b', alpha=0.2, where='post')
-    ax.fill_between(recall, precision, alpha=0.2, color='b', **step_kwargs)
+    # ax.fill_between(recall, precision, alpha=0.2, color='b', **step_kwargs)
     ax.set_xlabel('Recall')
     ax.set_ylabel('Precision')
     ax.set_ylim([0.0, 1.05])
@@ -118,7 +118,7 @@ def plot_roc_curve(ax, y_true, y_score):
 
 
 def pr_at_k(rels, expected_count, k):
-    """Computes the precision and recall @ k.
+    """Computes the precision, recall and accuracy @ k.
 
     Args:
         rels (list):            A boolean list that indicates that all
@@ -132,7 +132,9 @@ def pr_at_k(rels, expected_count, k):
     TP = sum(rels[:k])
     FP = k - TP
     FN = expected_count - TP
-    return TP / (TP + FP), TP / (TP + FN)
+    TN = len(rels[k:]) - sum(rels[k:])
+    assert TN >= 0.0
+    return TP / (TP + FP), TP / (TP + FN), TP / (TP + TN) if TP + TN > 0 else 0
 
 
 if __name__ == '__main__':
@@ -159,7 +161,7 @@ if __name__ == '__main__':
     y_exp = []    # expected
     y_pred = []   # predicted
     y_score = []  # scores
-    wpk, wrk = 0.0, 0.0     # weighted precision@k / recall@k
+    wpk, wrk, wak = 0.0, 0.0, 0.0     # weighted precision@k / recall@k / accuracy@k
     for qid in actual:
         a_qid = list(reversed(sorted(actual[qid], key=lambda x: x[1])))
         trs = transform(idlist, manual[qid], a_qid)
@@ -176,15 +178,18 @@ if __name__ == '__main__':
 #         plt.subplots_adjust(wspace=0.3)
 #         plt.show()
 
-        pk, rk = pr_at_k([int(x[0] in manual[qid]) for x in a_qid], len(manual[qid]), args.k)
-        print(str(qid).rjust(3), "|", queries[qid].ljust(35), "P@k = %.5f; R@k =%.5f" % (pk, rk))
+        pk, rk, ak = pr_at_k([int(x[0] in manual[qid]) for x in a_qid], len(manual[qid]), args.k)
+        print(str(qid).rjust(3), "|", queries[qid].ljust(35), "P@k = %.5f; R@k = %.5f; A@k = %.5f" % (pk, rk, ak))
         wpk += pk
         wrk += rk
+        wak += ak
     wpk /= len(actual)
     wrk /= len(actual)
+    wak /= len(actual)
 
     print("Weighted Precision@%i =" % args.k, wpk)
     print("Weighted Recall@%i    =" % args.k, wrk)
+    print("Weighted Accuracy@%i    =" % args.k, wak)
 
     fig2, (ax1, ax2) = plt.subplots(1, 2)
     plot_pr_curve(ax1, y_exp, y_pred)

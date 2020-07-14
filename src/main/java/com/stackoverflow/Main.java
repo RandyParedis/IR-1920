@@ -54,6 +54,9 @@ public class Main {
         parser.addArgument("-s", "--synonym")
                 .choices("true", "false").setDefault("true")
                 .help("Custom analyzer using a synonym filter");
+        parser.addArgument("-r", "--rocchio")
+                .choices("true", "false").setDefault("false")
+                .help("Enable pseudo-relevance feedback using the Rocchio algorithm");
         Namespace ns = null;
         try {
             ns = parser.parseArgs(args);
@@ -108,7 +111,9 @@ public class Main {
         // Write all matches to file in the same format as the manual labeling happened
         List<String> labels = new ArrayList<>();
         for (QueryConfig query : queries) {
-            expander.expandQuery(engine.getSearcher(), query, engine.getReader().numDocs(), 200);
+            if(Boolean.parseBoolean(ns.getString("rocchio")))  {
+                expander.expandQuery(engine.getSearcher(), query, engine.getReader().numDocs(), 200);
+            }
             Map<Double, Document> documents = engine.search(query);
 
             // Store for file writing

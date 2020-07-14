@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>python opencv error finding contours</Title>
+<Body>&lt;p&gt;&lt;img src=&quot;https://i.stack.imgur.com/t1NHA.jpg&quot; alt=&quot;&quot;&gt;I&#x27;m trying to find the contour of the attached image of a tshirt. FindContours returns a rectangular frame around the tshirt, and doesn&#x27;t find any additional contours. My goal is to find the external contour of the tshirt.Any idea what am I doing wrong?&lt;/p&gt;&lt;p&gt;Code below.Thanks.Li&lt;/p&gt;&lt;pre&gt;&lt;code&gt;from PIL import Imageimport osimport numpyimport bs4import scipyimport cv2STANDARD_SIZE = (200, 200)# read image fileimage_obj_orig = cv2.imread(image_file)image_name = os.path.split(image_file)[-1]name, extension = os.path.splitext(image_name)# normalize to a standard sizeimage_obj = cv2.resize(image_obj_orig, STANDARD_SIZE)# convert to grey-scalegreyscale_image = cv2.cvtColor(image_obj,cv2.COLOR_BGR2GRAY)cv2.imwrite(os.path.join(trg_dir, name + &#x27;_GS&#x27; + extension), greyscale_image)h, w = greyscale_image.shape[:2]contours, hierarchy = cv2.findContours( greyscale_image.copy(), cv2.RETR_TREE , cv2.CHAIN_APPROX_SIMPLE)cv2.drawContours( greyscale_image, contours, -1, (128,255,255))cv2.imshow(&#x27;image&#x27;, greyscale_image)&lt;/code&gt;&lt;/pre&gt;</Body>
+<Tags>python,opencv,image-processing</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Have you tried this:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;ret,thresh = cv2.threshold(greyscale_image.copy(),127,255,cv2.THRESH_BINARY_INV)   # add this line before findContourscontours, hierarchy = cv2.findContours( thresh, cv2.RETR_TREE , cv2.CHAIN_APPROX_SIMPLE)&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;This works for this specific image, it may not work for other images. The blur might need adjusting for example. Look up any of the function parameters from the opencv documentation: &lt;/p&gt;&lt;pre&gt;&lt;code&gt;import cv2import matplotlib.pyplot as pltimage = cv2.imread(&#x27;t1NHA.jpg&#x27;)#padding since the t-shirt is touching the border, without this we cant get a continious contour around it.image = cv2.copyMakeBorder(image, 10, 10, 10, 10, cv2.BORDER_CONSTANT, value=[255, 255, 255])imgray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)imgray = cv2.GaussianBlur(imgray, (9, 9), 0)ret, thresh = cv2.threshold(imgray, 0, 255, cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)cv2.drawContours(image, contours, -1, (0, 255, 0), 3)plt.imshow(image)plt.show()&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

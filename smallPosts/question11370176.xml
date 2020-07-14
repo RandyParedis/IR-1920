@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Issues with spawning multiple threads</Title>
+<Body>&lt;p&gt;Are there any issues with spawning multiple threads using &lt;code&gt;threading.Thread&lt;/code&gt;? &lt;/p&gt;&lt;p&gt;E.g. everytime a wx.SpinCtrl is clicked? I don&#x27;t know of an implementation that enables you to keep the thread alive and to start the main method multiple times.&lt;/p&gt;&lt;p&gt;PS: I think a &lt;a href=&quot;http://docs.python.org/library/threading.html#timer-objects&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;threading.Timer&lt;/code&gt;&lt;/a&gt; implicits that it&#x27;s not so bad.&lt;/p&gt;</Body>
+<Tags>python,multithreading</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;&#x27;C++&#x27;-like pseudo:&lt;/p&gt;&lt;p&gt;Thread:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;Tthread::run(){  while(true){    semaphore.wait();    mainMethod();  };};&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;GUI:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;MyForm::OnSpinCtrlClick(Control sender){  semaphore.signal();};&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The mainMethod() will run exactly as many times as you click.&lt;/p&gt;</Body>
+</answer>
+</qroot>

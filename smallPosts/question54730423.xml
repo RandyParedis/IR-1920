@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>My exe created with pyinstaller flashes and terminates</Title>
+<Body>&lt;p&gt;I have written small code in python for data scrapping using selenium, and BeautifulSoup.&lt;/p&gt;&lt;p&gt;The code is working great in pyCharm but when I convert my file from .py to EXE using &lt;code&gt;pyinstaller example.py&lt;/code&gt; command, it converts correctly but the EXE file  flashes and terminates and the code doesn&#x27;t execute.&lt;/p&gt;&lt;p&gt;This is the result of the pyinstaller command:&lt;a href=&quot;https://i.stack.imgur.com/Uz6zV.png&quot; rel=&quot;nofollow noreferrer&quot;&gt;&lt;img src=&quot;https://i.stack.imgur.com/Uz6zV.png&quot; alt=&quot;enter image description here&quot;&gt;&lt;/a&gt;&lt;/p&gt;</Body>
+<Tags>python,python-3.x,python-3.7</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;This happens when there is an error being faced by the python script. Try running the &lt;strong&gt;.py&lt;/strong&gt; module file in IDLE or by simple double clicking the &lt;strong&gt;.py&lt;/strong&gt; . &lt;/p&gt;&lt;p&gt;I guess &lt;strong&gt;pyCharm&lt;/strong&gt; creates a virtual environment which might be causing the issue.&lt;/p&gt;&lt;p&gt;Maybe try adding &lt;strong&gt;try/except&lt;/strong&gt; for the code so that it doesn&#x27;t flick away, rather shows the error.&lt;/p&gt;</Body>
+</answer>
+</qroot>

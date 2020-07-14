@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Why SFINAE doesn&#x27;t work in this example?</Title>
+<Body>&lt;pre&gt;&lt;code&gt;#include &amp;lt;iostream&amp;gt;#include &amp;lt;type_traits&amp;gt;class CL{    public:    CL(){}    CL( int ) = delete;};template &amp;lt; class T &amp;gt;class Creator{public:    template&amp;lt; std::enable_if_t&amp;lt; std::is_constructible&amp;lt;T, int&amp;gt;::value, int &amp;gt; = 0 &amp;gt;    static T* Create( int arg ) // 1    {        return new T( arg );    }    template&amp;lt; std::enable_if_t&amp;lt; std::is_default_constructible&amp;lt;T&amp;gt;::value &amp;amp;&amp;amp; !std::is_constructible&amp;lt;T, int&amp;gt;::value, int &amp;gt; = 0 &amp;gt;    static T* Create( int arg ) // 2    {        return new T();    }};int main(){    Creator&amp;lt;CL&amp;gt;::Create( 2 );}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Here I give error that the first Create function can&#x27;t deduce template argument, but then I commented it, the second overload is works fine. Why SFINAE doesn&#x27;t work on first overload?&lt;/p&gt;</Body>
+<Tags>c++,templates,sfinae</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Your method is not template, it is your class which is template. You had to change&lt;/p&gt;&lt;pre&gt;&lt;code&gt;template&amp;lt;typename U = T,         std::enable_if_t&amp;lt; std::is_constructible&amp;lt;U, int&amp;gt;::value, int &amp;gt; = 0 &amp;gt;static T* Create( int arg ) // 1{    return new T( arg );}template&amp;lt;typename U = T,         std::enable_if_t&amp;lt; std::is_default_constructible&amp;lt;U&amp;gt;::value                          &amp;amp;&amp;amp; !std::is_constructible&amp;lt;U, int&amp;gt;::value, int &amp;gt; = 0 &amp;gt;static T* Create( int arg ) // 2{    return new T();}&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

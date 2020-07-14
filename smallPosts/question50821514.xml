@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Where do I write that part of code that executes before exiting a C++ windows form application</Title>
+<Body>&lt;p&gt;This is my first question in Stack Over Flow. So, please bare with my mistakes. I want to write a particular section of my application which needs to run whenever the user closes the application window. I am confused where should I write such part of the code in the visual studio project.&lt;/p&gt;</Body>
+<Tags>c++,windows,visual-studio,winforms</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;&quot;The order in which events are raised in Windows Forms applications is of particular interest to developers concerned with handling each of these events in turn. When a situation calls for meticulous handling of events, such as when you are redrawing parts of the form, an awareness of the precise order in which events are raised at run time is necessary. This topic provides some details on the order of events during several important stages in the lifetime of applications and controls.&quot;&lt;/p&gt;&lt;p&gt;Application Startup and Shutdown EventsThe Form and Control classes expose a set of events related to application startup and shutdown. When a Windows Forms application starts, the startup events of the main form are raised in the following order:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Control.HandleCreated&lt;/li&gt;&lt;li&gt;Control.BindingContextChanged&lt;/li&gt;&lt;li&gt;Form.Load&lt;/li&gt;&lt;li&gt;Control.VisibleChanged&lt;/li&gt;&lt;li&gt;Form.Activated&lt;/li&gt;&lt;li&gt;Form.Shown&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;When an application closes, the shutdown events of the main form are raised in the following order:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Form.Closing&lt;/li&gt;&lt;li&gt;Form.FormClosing&lt;/li&gt;&lt;li&gt;Form.Closed&lt;/li&gt;&lt;li&gt;Form.FormClosed&lt;/li&gt;&lt;li&gt;Form.Deactivate&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;The ApplicationExit event of the Application class is raised after the shutdown events of the main form.&lt;/p&gt;&lt;p&gt;All this same text and more you can find &lt;a href=&quot;https://docs.microsoft.com/en-us/dotnet/framework/winforms/order-of-events-in-windows-forms&quot; rel=&quot;nofollow noreferrer&quot;&gt;here&lt;/a&gt;&lt;/p&gt;</Body>
+</answer>
+</qroot>

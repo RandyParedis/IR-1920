@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Access existing IE11 with pywin32</Title>
+<Body>&lt;p&gt;I am trying my hand at automation, currently playing around with pywin32, but I was wondering if it is possible to interact with a window of Internet Explorer 11 that I manually opened.&lt;/p&gt;&lt;p&gt;I ask because I am working within a specific intranet and think it would be more trouble than it would be worth to go through a new IE window, access the intranet&#x27;s file system, download their copy of the browser, and finally open it.&lt;/p&gt;&lt;p&gt;Thank you!&lt;/p&gt;</Body>
+<Tags>python-2.7,anaconda,pywin32,pywinauto,pywin</Tags>
+</question>
+</qroot>

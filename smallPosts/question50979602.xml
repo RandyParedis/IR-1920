@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>How does this function change the value of a variable declared on the stack?</Title>
+<Body>&lt;p&gt;I am currently learning a bit of programming with the Vulkan API. This is how a typical call in that API goes. Don&#x27;t worry about too much with the meaning if you are not familiar with it.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;pickPhysicalDevices(){    uint32_t deviceCount = 0;    vkEnumeratePhysicalDevices(instance, &amp;amp;deviceCount, nullptr);}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Basically, the vkEnumeratePhysicalDevices function returns the count of physical devices available to the system and places that value into deviceCount. My question is since I declared deviceCount on the pickPhysicalDevices() function stack, why is vkEnumeratePhysicalDevices not causing a segmentation fault?&lt;/p&gt;</Body>
+<Tags>c++,memory,segmentation-fault,memory-address,vulkan</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Short answer is because &lt;code&gt;pickPhysicalDevices&lt;/code&gt; explicitly allows &lt;code&gt;vkEnumeratePhysicalDevices&lt;/code&gt; modify &lt;code&gt;deviceCount&lt;/code&gt; variable by providing its pointer.&lt;/p&gt;&lt;p&gt;C++ offers multiple ways of letting a function modify a value inside another function&#x27;s context - by passing a pointer or by passing a reference.&lt;/p&gt;&lt;p&gt;What you pass, a pointer or a reference, depends on the declaration of the function you call. If a function takes &lt;code&gt;uint32_t&amp;amp;&lt;/code&gt; (with an ampersand) then you pass a variable without an ampersand, and the function receives a reference. If a function takes &lt;code&gt;uint32_t*&lt;/code&gt; (with an asterisk) then you pass a pointer to the variable by using the address-of operator &lt;code&gt;&amp;amp;&lt;/code&gt;.&lt;/p&gt;&lt;p&gt;Once you are inside the function that takes a pointer, you can write &lt;code&gt;*pointer = ...&lt;/code&gt; to assign a new value to the variable to which the pointer is pointing. References, on the other hand, do not need an asterisk.&lt;/p&gt;&lt;p&gt;Try these two approaches in a simple program:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;void by_ref(uint32_t&amp;amp; ref) {    ref = 123; // No asterisk}void by_ptr(uint32_t* ptr) {    *ptr = 456; // Note the asterisk}int main() {    uint32_t a, b;    by_ref(a);    by_ptr(&amp;amp;b);    cout &amp;lt;&amp;lt; a &amp;lt;&amp;lt; &quot; &quot; &amp;lt;&amp;lt; b &amp;lt;&amp;lt; endl;}&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;The param deviceCount&#x27;s address is pushed into the vkEnumeratePhysicalDevices&#x27;s stack frame. &lt;/p&gt;&lt;p&gt;So, when you change the value of deviceCount in vkEnumeratePhysicalDevices, it&#x27;’s actually changing the vkEnumeratePhysicalDevices&#x27;s own stack frame.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;You can&#x27;t &lt;em&gt;return&lt;/em&gt; the address of a local variable because after a function returns its local variables go out of scope. Passing it as a &lt;em&gt;parameter&lt;/em&gt; is fine, though, since the parent function&#x27;s variables are in scope for the duration of the child function.&lt;/p&gt;</Body>
+</answer>
+</qroot>

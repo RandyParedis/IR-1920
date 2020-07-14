@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Python3 variable increment and assignment</Title>
+<Body>&lt;p&gt;I am writing this Fibonacci generator function in python3:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;def fibo(n):    a = b = 1    for i in range(n):         yield a        a,b = b,a + bfor x in fibo(10):    print(x)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Above code gives:11235813213455&lt;/p&gt;&lt;p&gt;But, &lt;/p&gt;&lt;pre&gt;&lt;code&gt;def fibo(n):    a = b = 1    for i in range(n):         yield a        a = b        b = a + bfor x in fibo(10):    print(x)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;the above code gives:11248163264128256&lt;/p&gt;&lt;p&gt;Only difference is assigning &lt;code&gt;b&lt;/code&gt; to &lt;code&gt;a&lt;/code&gt; and &lt;code&gt;a+b&lt;/code&gt; to &lt;code&gt;b&lt;/code&gt; is happening on the same line in first code. How is this affecting the output?&lt;/p&gt;</Body>
+<Tags>python,python-3.x</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;In your second code sample the two lines&lt;/p&gt;&lt;pre&gt;&lt;code&gt;a = bb = a + b&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;have the following effect:&lt;/p&gt;&lt;ol&gt;&lt;li&gt;Assign &lt;code&gt;b&lt;/code&gt; to &lt;code&gt;a&lt;/code&gt;&lt;/li&gt;&lt;li&gt;Assign &lt;code&gt;a+b&lt;/code&gt; to &lt;code&gt;b&lt;/code&gt;, which, since a equals b, is the same as assigning &lt;code&gt;b+b&lt;/code&gt; to &lt;code&gt;b&lt;/code&gt; (or, doubling &lt;code&gt;b&lt;/code&gt;)&lt;/li&gt;&lt;/ol&gt;&lt;p&gt;So, the effect is that each yield is double the previous one, which you have shown with the sample output.&lt;/p&gt;&lt;p&gt;In the first example you are using tuple packing to assign both a and b at once, and everything on the right side of the &lt;code&gt;=&lt;/code&gt; is evaluated before every assignment.&lt;/p&gt;</Body>
+</answer>
+</qroot>

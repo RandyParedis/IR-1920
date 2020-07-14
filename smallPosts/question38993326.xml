@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Encrypted data in REST Services Response</Title>
+<Body>&lt;p&gt;I use Django and Django-rest-framework about REST services from Back-end and Mobile Client Apps.&lt;/p&gt;&lt;p&gt;I would to have some responses with encrypted data. I have to return to my client some sensible and private data and I would to apply an additional security layer (in fact I already use SSL, but I would to disarm some attacks (like man in the middle) where some unwanted element can see some data contained in my responses).&lt;/p&gt;&lt;p&gt;I would to avoid this, so I thought to add in my response the encrypted data. &lt;/p&gt;&lt;p&gt;Does that make sense? Is there something similar in Django - REST- Framework?&lt;/p&gt;</Body>
+<Tags>python,django,encryption,django-rest-framework,restful-architecture</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;A good encryption libary with various implementations is &lt;a href=&quot;https://github.com/google/keyczar&quot; rel=&quot;nofollow noreferrer&quot;&gt;Keyczar&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;What you would need to do is write a global interceptor on all incoming request to your backend application, and when responses are sent back they are encrypted using the Keyczar library.&lt;/p&gt;&lt;p&gt;On the consumer side (your mobile application) you would need to implement something similar that decrypts the responses from your backend.&lt;/p&gt;&lt;p&gt;BONUS: if you&#x27;re not doing this already, you probably want to look at using &lt;a href=&quot;https://stackoverflow.com/a/23202907/4963159&quot;&gt;2-way SSL&lt;/a&gt; to ensure that you authenticate the client that calls your backend.&lt;/p&gt;</Body>
+</answer>
+</qroot>

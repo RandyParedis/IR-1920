@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Python 2.7 and Pyyaml value max line size</Title>
+<Body>&lt;p&gt;We have an issue with PyYaml. &lt;/p&gt;&lt;p&gt;When software uses yaml.load() and the value, in key/value tuple, is longer then 120 characters, parser cuts it. &lt;/p&gt;&lt;p&gt;Is there&#x27;s a way to control max value line length in configuration?&lt;/p&gt;</Body>
+<Tags>python-2.7,pyyaml</Tags>
+</question>
+</qroot>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>GLEW and openGL deprecation</Title>
+<Body>&lt;p&gt;I am using openGL and glew to check the extensions.&lt;/p&gt;&lt;p&gt;Say I wanted to check if I could use multitexture extension:&lt;/p&gt;&lt;p&gt;GLEW_ARB_multitexture   will return true if I can use it.&lt;/p&gt;&lt;p&gt;BUT&lt;/p&gt;&lt;p&gt;arb_multitexture was deprecated in openGL 3.0.&lt;/p&gt;&lt;p&gt;Will it still return true?&lt;/p&gt;&lt;p&gt;What about in 3.1 where it was removed?&lt;/p&gt;&lt;p&gt;Thanks.&lt;/p&gt;</Body>
+<Tags>c++,opengl,deprecated,glew</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;It&#x27;ll return true if your context exports the extension, which it will if it&#x27;s not &quot;forward-compatible&quot; or &quot;core profile&quot;, or possibly if it supports the &quot;GL_ARB_compatibility&quot; extension.&lt;/p&gt;&lt;p&gt;The bottom line is, if GLEW_ARB_multitexture is true, you can use the functionality.  Any higher-level logic (like only using shaders if they&#x27;re available) is up to you.&lt;/p&gt;</Body>
+</answer>
+</qroot>

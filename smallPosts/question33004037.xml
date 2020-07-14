@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>python regex, check last two characters of variable</Title>
+<Body>&lt;p&gt;For a school project I need to write a Python script that validates a Dutch postal code and does this by using regular expressions.&lt;/p&gt;&lt;p&gt;I came up with the following script, two of my regular expressions don&#x27;t work, I&#x27;ve been stuck on this for a while now and don&#x27;t know what I&#x27;m doing wrong.&lt;/p&gt;&lt;p&gt;Below is the script:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;check1=0check2=0check3=0invoer = input (&quot;Fill in a postal code&quot;)if re.match(&quot;^[0-9]{0,4}&quot;, invoer):    check1 = 1#Below if statement doesn&#x27;t work (Should checks that the last 2 charcters are capitals)if re.match(&quot;[A-Z]{2}$&quot;, invoer):    check2 = 1    print (&quot;check 2 works&quot;)#Below if statement doesn&#x27;t work (Should checks for existence of a space on position 5.)if re.match(&quot;\\s{5}&quot;, invoer):    check3 = 1    print (&quot;check 3 works&quot;)if re.match(&quot;^[A-Z0-9]{0,6}&quot;, invoer):    check3 = 1    print (&quot;ding1&quot;)if check1 == 1 and check2 == 1 and check3 == 1:    print (&quot;Postcode is valide&quot;)&lt;/code&gt;&lt;/pre&gt;</Body>
+<Tags>python,regex</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;&lt;a href=&quot;https://docs.python.org/2/library/re.html#re.match&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;re.match()&lt;/code&gt;&lt;/a&gt; looks for a match from the beginning of a string: &lt;/p&gt;&lt;blockquote&gt;  &lt;p&gt;If zero or more characters &lt;em&gt;at the beginning of string&lt;/em&gt; match the  regular expression pattern, return a corresponding MatchObject  instance. Return None if the string does not match the pattern; note  that this is different from a zero-length match.&lt;/p&gt;&lt;/blockquote&gt;&lt;p&gt;You need to use &lt;a href=&quot;https://docs.python.org/2/library/re.html#re.search&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;re.search()&lt;/code&gt;&lt;/a&gt; instead:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;if re.search(&quot;[A-Z]{2}$&quot;, invoer):    # ...&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;&quot;\s{5}&quot; matches 5 spaces. You want to match 4 characters then a single space right? Also I use &quot;raw&quot; strings so that I don&#x27;t have to escape out \&#x27;s.  That is r&quot;.{4}\s&quot;.  &lt;/p&gt;</Body>
+</answer>
+</qroot>

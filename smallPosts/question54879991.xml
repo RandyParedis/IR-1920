@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>how to split the live video feed into four live partitions using opencv python?</Title>
+<Body>&lt;p&gt;i am trying to divide the live feed in to 4 parts. how to split the live video feed into four equal live partitions using  OpenCV python? the four partitions also have to show the live feed.&lt;/p&gt;</Body>
+<Tags>python,opencv,video</Tags>
+</question>
+</qroot>

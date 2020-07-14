@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>How do I set default parameters in a method?</Title>
+<Body>&lt;p&gt;I want this method to update a certain value, unless passed another value, which it should update instead.  Here&#x27;s an example of what I want to do:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;def update_t(self,t=self.t):      &quot;If nothing is passed, then the default parameter is the attribute self.t&quot;    t=t+1  &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I get &quot;self is not defined&quot;  &lt;/p&gt;&lt;p&gt;This is a related question:&lt;a href=&quot;https://stackoverflow.com/questions/13075044/default-value-of-parameter-as-result-of-instance-method&quot;&gt;default value of parameter as result of instance method&lt;/a&gt;&lt;/p&gt;&lt;p&gt;...but since this value is updated, I can&#x27;t have it be None.  I also cant have t be an object, because that would give me an error (can&#x27;t add object and int).  Any ideas? Thanks.&lt;/p&gt;</Body>
+<Tags>python,oop,parameters,default</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Use an object that &lt;em&gt;can&lt;/em&gt; be resolved. Such as &lt;code&gt;None&lt;/code&gt;.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;def update_t(self, t=None):    &quot;If nothing is passed, then the default parameter is the attribute self.t&quot;  if t is None:    self.t += 1  else:    t += 1&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Note that this may not change the value passed to it since the local name may be rebound if the object doesn&#x27;t have a &lt;code&gt;__iadd__()&lt;/code&gt; method.&lt;/p&gt;</Body>
+</answer>
+</qroot>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>How to send Hex Data to Raspberry Pi Serial Port using Python</Title>
+<Body>&lt;p&gt;How to send some Hex Data to a usb device..&lt;/p&gt;</Body>
+<Tags>python</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Have a look at &lt;a href=&quot;http://pyserial.sourceforge.net/&quot; rel=&quot;nofollow&quot;&gt;PySerial&lt;/a&gt;. That is available on RasPi and PC. For sending/receiving data, use &lt;code&gt;bytes&lt;/code&gt; (constant) or &lt;code&gt;bytearray&lt;/code&gt; (variable), which are standard Python types (note the differences between Python3 and 2).&lt;/p&gt;</Body>
+</answer>
+</qroot>

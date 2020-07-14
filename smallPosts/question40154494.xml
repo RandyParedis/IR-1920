@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>How to configure connection timeouts for requests-based utilities?</Title>
+<Body>&lt;p&gt;Python requests &lt;a href=&quot;http://docs.python-requests.org/en/master/user/advanced/#proxies&quot; rel=&quot;nofollow&quot;&gt;honors&lt;/a&gt; (via &lt;a href=&quot;https://docs.python.org/3.5/library/urllib.request.html#urllib.request.getproxies&quot; rel=&quot;nofollow&quot;&gt;urrlib&lt;/a&gt;) the standard &lt;code&gt;HTTP_PROXY&lt;/code&gt; and &lt;code&gt;HTTPS_PROXY&lt;/code&gt; env variables. This is very useful when using a requests based utility: without modifying the source code, it is possible to enable / disable the proxy settings.&lt;/p&gt;&lt;p&gt;I would like to do something similar, but for connection timeouts. Python requests has indeed &lt;a href=&quot;http://docs.python-requests.org/en/master/user/advanced/#timeouts&quot; rel=&quot;nofollow&quot;&gt;support for timeouts&lt;/a&gt;. But I have no way of modifying the utility that is using python requests to add timeouts to all requests calls.&lt;/p&gt;&lt;p&gt;Is there any environment variable which will be evaluated by requests to configure connection timeouts?&lt;/p&gt;</Body>
+<Tags>python,python-requests,connection-timeout</Tags>
+</question>
+</qroot>

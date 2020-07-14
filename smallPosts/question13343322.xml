@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Like Julian number is used to calculate date is there any specific number to calculate time</Title>
+<Body>&lt;p&gt;I want to make time datatype in C++.To calculate date we can use &lt;strong&gt;julian number&lt;/strong&gt;. Is there any specific number to calculate time&lt;/p&gt;</Body>
+<Tags>c++,julian-date</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Most programs use &quot;non-leap seconds since epoc&quot; when they need a number to represent an absolute date/time. The epoc could be anything, but midnight UTC on January 1, 1970 is common since so many OSes use it. If you use a 32 bit signed type then that&#x27;s good for +/- 68 years. A 64 bit type easily covers the age of the universe.&lt;/p&gt;&lt;p&gt;For a few purposes (such as GPS and astronomy) &quot;non-leap seconds&quot; aren&#x27;t good enough, you need actual time elapsed.&lt;/p&gt;&lt;p&gt;You also get variations on that theme, for example the Java standard libraries nudge you towards non-leap milliseconds since epoc, since that&#x27;s what &lt;code&gt;System.currentTimeMillis()&lt;/code&gt; returns. That only fits in 32 bit type for about a month, which is why older environments than Java didn&#x27;t always embrace it.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;Not sure to understand, but maybe you can give a look at &lt;code&gt;struct tm&lt;/code&gt;:&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;http://www.cplusplus.com/reference/clibrary/ctime/tm/&quot; rel=&quot;nofollow&quot;&gt;tm structure&lt;/a&gt;&lt;/p&gt;</Body>
+</answer>
+</qroot>

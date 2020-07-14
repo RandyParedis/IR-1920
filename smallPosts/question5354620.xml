@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>How to configure the display fonts in qtwebkit through the console?</Title>
+<Body>&lt;p&gt;I&#x27;m trying to achieve maximum accuracy in rendering pages in qtwebkit in python (via xvfb). I am I have a problem with fonts. &lt;/p&gt;&lt;p&gt;&lt;a href=&quot;http://i.stack.imgur.com/lL3OP.jpg&quot; rel=&quot;nofollow&quot;&gt;Here&#x27;s an example (image)&lt;/a&gt;.This example shows that there is a problem with displaying in italics, but there is not at all sites. System is ubuntu 10.10 server and it set the standard packs of fonts (msttcorefonts and others), but it seems it does not affect the display of fonts in the qtwebkit. Who knows how to configure this?&lt;/p&gt;&lt;p&gt;Thanks!&lt;/p&gt;</Body>
+<Tags>python,fonts,qtwebkit,text-rendering</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;I think the problem is: what is &quot;maximum accuracy&quot; in this case?&lt;/p&gt;&lt;p&gt;Where does the &quot;true&quot; image come from? I assume that is what you saw when you visited the site in your browser. Depending on your browser&#x27;s settings (your personal settings and/or default settings) and on what styling information (css, style attributes...) the web page provides, it may look different. If the site doesn&#x27;t specify what fonts to use, your browser will just use the default. If this is the case, the &quot;true&quot; and the &quot;qtwebkit&quot; renderings are equally &quot;accurate&quot;, even though they look different.&lt;/p&gt;&lt;p&gt;This means that you probably just have to trust qtwebkit to render correctly.&lt;/p&gt;&lt;p&gt;If you absolutely want to have the rendering look the same as in &lt;em&gt;your&lt;/em&gt; browser, you can try to configure your QWebView with the same settings through &lt;code&gt;QWebView.settings()&lt;/code&gt; (see &lt;a href=&quot;http://www.pyside.org/docs/pyside/PySide/QtWebKit/QWebSettings.html&quot; rel=&quot;nofollow&quot;&gt;QWebSettings&lt;/a&gt;).Note that this still doesn&#x27;t imply that the page will look that way for everyone.&lt;/p&gt;</Body>
+</answer>
+</qroot>

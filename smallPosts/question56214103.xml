@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>How should I get about checking if an object is at a certain position in sfml?</Title>
+<Body>&lt;p&gt;Hi writing a program just for fun to practitce sfml. I made the dvd logo screen (the one where it bounces from point to point but i want to check if it collides at the corner so I can change the color. How do I check if it collides with the corner?&lt;/p&gt;&lt;pre class=&quot;lang-cpp prettyprint-override&quot;&gt;&lt;code&gt;      window.clear();            window.draw(shape);        if (x_direction==1){            shape.move(0.05,0);        }        if (x_direction==2){            shape.move(-0.05,0);        }        if (y_direction==1){            shape.move(0,0.05);        }        if (y_direction==2){            shape.move(0,-0.05);        }        if (shape.getPosition()==)        //draw objects here        window.display();        if (shape.getPosition().x + shape.getLocalBounds().width &amp;gt;= window.getSize().x ) {            x_direction =2;        }        if (shape.getPosition().x &amp;lt;= 0 ) {            x_direction=1;        }        if (shape.getPosition().y &amp;lt;= 0 ) {            y_direction=1;        }        if (shape.getPosition().y + shape.getLocalBounds().height &amp;gt;= window.getSize().y ) {            y_direction=2;        }    }    return EXIT_SUCCESS;}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Trying to use get Position but will this be affected by the size of the object?&lt;/p&gt;</Body>
+<Tags>c++,sfml</Tags>
+</question>
+</qroot>

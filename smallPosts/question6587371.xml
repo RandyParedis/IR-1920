@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Trouble including Qt Headers</Title>
+<Body>&lt;p&gt;In Qt, some headers are included via the more typical &lt;/p&gt;&lt;pre&gt;&lt;code&gt;#include &quot;QtCore/qtheader.h&quot;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;But sometimes it uses this notation:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;#include &amp;lt;QString&amp;gt;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I&#x27;m not sure what the difference is or why this done. Regardless, I&#x27;m having trouble including headers that themselves use the latter notation. Any ideas?&lt;/p&gt;&lt;p&gt;Thanks.&lt;/p&gt;</Body>
+<Tags>c++,qt</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;In C and C++, when you use double-quotes, it means: Search the same directory as this file. When you use &lt;code&gt;&amp;lt;&amp;gt;&lt;/code&gt; it means: Search the include paths.&lt;/p&gt;&lt;p&gt;With gcc you can add include paths with the &lt;code&gt;-I&lt;/code&gt; command line parameter. &lt;/p&gt;&lt;p&gt;Are you using Qt Creator and qmake? If you are, edit the .pro like in this question/answer: &lt;a href=&quot;https://stackoverflow.com/questions/2752352/how-to-add-include-path-in-qt-creator&quot;&gt;How to add include path in Qt Creator?&lt;/a&gt;&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;I don&#x27;t know what is causing you troubles as you don&#x27;t specify sufficient details. Anyway, in C++ when you include using &amp;lt;&gt;, you mean you want to search in the include path. You can specify the include path and add some directories to it in Qt by adding a:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;INCLUDEPATH += ...&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;in the project file.If you use the double quotes you ask to &lt;strong&gt;add&lt;/strong&gt; the current source directory to the include path.&lt;/p&gt;&lt;p&gt;So you&#x27;ll see:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;#include &amp;lt;QString&amp;gt;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;because in your system include path there should be a file named QString. Inside it there is indeed:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;#include &quot;qstring.h&quot;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;which is in fact, usually in the QtCore directory.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;This is odd behaviour you describe. Doing&lt;/p&gt;&lt;pre&gt;&lt;code&gt;#include &amp;lt;QString&amp;gt;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;should &quot;just work&quot; as it&#x27;s pretty much the standard way of doing it.&lt;/p&gt;&lt;p&gt;The only thing I can think of is that you&#x27;ve overwritten the &lt;code&gt;QT&lt;/code&gt; variable in your project file. For example, if you do&lt;/p&gt;&lt;pre&gt;&lt;code&gt;QT=opengl&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;to get at the OpenGL module instead of&lt;/p&gt;&lt;pre&gt;&lt;code&gt;QT+=opengl&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;then you will get the behaviour you describe.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;As you gave little information about the error and what kind of development environment you are using, the following thing could be an issue if you are not using .pro files. If you are actually using .pro files this might not be relevant for you:&lt;/p&gt;&lt;p&gt;If you are using e.g. Visual Studio rather than Qt Project files and you only include $(QTDIR)\include, then you will have to write&lt;/p&gt;&lt;pre&gt;&lt;code&gt;#include &amp;lt;QtCore/QObject&amp;gt;#include &amp;lt;QtGui/QWidget&amp;gt;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;and so on. This is because Qt&#x27;s include directory has the files in subfolders &quot;QtCore&quot;, &quot;QtGui&quot; etc.&lt;/p&gt;&lt;p&gt;If you don&#x27;t want to add the QtCore or QtGui or whatever in your includes, you would have to include $(QTDIR)\include\QtCore, $(QTDIR)\include\QtGui etc&lt;/p&gt;&lt;p&gt;(Note that I&#x27;m not 100% sure about the include path, can&#x27;t look it up on this machine)&lt;/p&gt;</Body>
+</answer>
+</qroot>

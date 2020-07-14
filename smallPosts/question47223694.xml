@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>How to crop out the detected mser region in python?</Title>
+<Body>&lt;p&gt;I am trying to crop out the region detected using mser. The mser.detect() function produces mser-regions and I would like to crop this region to give me the resulting output.I am using python and would really appreciate if someone can help in python. &lt;/p&gt;&lt;pre&gt;&lt;code&gt;  regions, _ = mser.detectRegions(img)        hulls = [cv2.rect(p.reshape(-1, 1, 2)) for p in regions]  print type(hulls);  cv2.polylines(vis, hulls, 1, (0, 255, 0))  #crop_img=[cv2.resize(vis, (b.width, b.height) ,interpolation = cv2.INTER_AREA) for b in bboxes]&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I wanted to crop it according to the hulls.&lt;/p&gt;</Body>
+<Tags>python,opencv,image-processing,mser</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;You can use &lt;code&gt;mask&lt;/code&gt; (in same size with &lt;code&gt;img&lt;/code&gt;) which has value 1 if its pixel in hulls, others is 0. Then simply use &lt;code&gt;bitwise_and&lt;/code&gt; to crop the hulls you want.&lt;/p&gt;</Body>
+</answer>
+</qroot>

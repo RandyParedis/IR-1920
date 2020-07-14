@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Changing between Python 2.x and 3.x in windows CMD?</Title>
+<Body>&lt;p&gt;I have both Python 2.7 and 3.4 installed on my Windows Machine. When I type Python in CMD it defaults to Python2.7.  How do I switch to 3.4?&lt;/p&gt;</Body>
+<Tags>python,windows,cmd</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;You&#x27;ll have to make changes to the PATH environmental variable. To do this, click the Start button, right click on &quot;Computer&quot;, hit &quot;Properties&quot;, click &quot;Advanced System Settings&quot; in the left sidebar. Then click the Environmental Variables button.&lt;/p&gt;&lt;p&gt;Under User or System variables, there will be a variable called &quot;PATH&quot; that includes a path to you Python installation. You can change this to the Python 3 install path.&lt;/p&gt;&lt;p&gt;You can also change the name of the Python 3 executable to &quot;python3.exe&quot;, and add the directory to the path variable, separating it from other directories with a semicolon. Then you can use both 2 and 3 by calling &lt;code&gt;python&lt;/code&gt; and &lt;code&gt;python3&lt;/code&gt; respectively.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;Create two batch files, &lt;code&gt;python2.bat&lt;/code&gt; and &lt;code&gt;python3.bat&lt;/code&gt;. Have each batch file add the appropriate Python directory to the path, then launch &lt;code&gt;python.exe&lt;/code&gt;.&lt;/p&gt;&lt;p&gt;E.G. Python2.bat:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;@echo offset OLDPATH=%PATH%path C:\Python27;%PATH%python.exepath %OLDPATH%&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;Simply changing the name of the python.exe to anything (ex:pytoioion.exe) in your C:/Python34 or C:/Python27 will switch between the two versions. To verify, run this on your command prompt&lt;/p&gt;&lt;p&gt;C:Users/(your_name)&gt;python&lt;/p&gt;</Body>
+</answer>
+</qroot>

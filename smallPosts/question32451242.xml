@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Cannot find file or folder when running appcfg.py update myapp/</Title>
+<Body>&lt;p&gt;I am trying to deploy my application to Google App Engine from the command line.&lt;/p&gt;&lt;p&gt;I open the folder in which my application resides. Next I right click in the folder and click on &quot;Open Git Bash here&quot;.&lt;/p&gt;&lt;p&gt;Git Bash opens up. I type:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;appcfg.py update myapp/&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I get the message &lt;/p&gt;&lt;blockquote&gt;  &lt;p&gt;/usr/bin/env: python: No such file or directory&lt;/p&gt;&lt;/blockquote&gt;&lt;p&gt;Why is this deployment not succeeding?&lt;/p&gt;&lt;p&gt;I am running on Windows 8, not in a virtual machine or enviroment.&lt;/p&gt;</Body>
+<Tags>python,google-app-engine</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Since you&#x27;re on Windows, try naming python explicitly.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;python appcfg.py update myapp/&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

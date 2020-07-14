@@ -1,0 +1,14 @@
+{
+"queries"          :  "./topics/topics.351-400.manual.json",
+"stopper"          :  "./data/stoplist.all",
+"train-index"      :  "/Users/mefron/ir/indexes/FT.train",
+"test-index"       :  "/Users/mefron/ir/indexes/FT.test",
+"train-qrels"      :  "./qrels/qrels.FT.351-400.train",
+"test-qrels"       :  "./qrels/qrels.FT.351-400.test",
+"bg-stat-type"     :  "edu.gslis.docscoring.support.IndexBackedCollectionStats",
+"bg-source-path"   :  "/Users/mefron/ir/indexes/FT.train",
+"scorer-name"      :  "edu.gslis.docscoring.ScorerDirichlet",
+"scorer-param-mu"  :  "2500",
+"optimizer-name"   :  "edu.gslis.filtering.threshold.ThresholdFinderParamSweep",
+"run-name"         :  "stt"
+}

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>VC++ 2010 C2061 error</Title>
+<Body>&lt;p&gt;I am getting VC++ 2010 C2061 error on line: &lt;/p&gt;&lt;pre&gt;&lt;code&gt;#include &quot;queryevaluator_p.h&quot;class QueryEvaluator {public:    vector&amp;lt;AttrValue&amp;gt;* getCandidateList(QueryClause cl, int pos, ResultSet *computedRes);...&lt;/code&gt;&lt;/pre&gt;&lt;blockquote&gt;  &lt;p&gt;&lt;code&gt;Error    41  error C2061: syntax error : identifier &#x27;ResultSet&#x27;  h:\dropbox\sch\cs3202\code\source\includes\queryevaluator.h 40&lt;/code&gt;&lt;/p&gt;&lt;/blockquote&gt;&lt;p&gt;&lt;code&gt;ResultSet&lt;/code&gt; is a struct defined in &quot;queryevaluator_p.h&quot;&lt;/p&gt;&lt;pre&gt;&lt;code&gt;struct ResultSet{ //a set of result    bool valid;    vector&amp;lt;ResultRow&amp;gt; rows;};&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Whats wrong here? ResultSet can be used elsewhere&lt;/p&gt;</Body>
+<Tags>visual-c++</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Maybe you have circular includes (&lt;code&gt;queryevaluator_p.h&lt;/code&gt; includes the main header again) causing confusion. Depending on the exact setup this can lead to such an effect, because one of the files will have to be compiled first.&lt;/p&gt;&lt;p&gt;The solution would be to resolve the circular dependency by using a forward declaration instead of an include in one place. For example you could forward declare &lt;code&gt;struct ResultSet&lt;/code&gt; instead of including the &lt;code&gt;queryevaluator_p.h&lt;/code&gt; header.&lt;/p&gt;</Body>
+</answer>
+</qroot>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Python error no attribute found</Title>
+<Body>&lt;p&gt;Am working on machine learning project so When I import the text file which is a table of values where no columns titles when I wrote this :&lt;/p&gt;&lt;pre&gt;&lt;code&gt;import numpy Data = numpy.genfromtext( « test.txt » , delimiter=none)Data[0:4]&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Shows error no attribute is found &lt;/p&gt;</Body>
+<Tags>python,python-2.7,numpy,machine-learning</Tags>
+</question>
+</qroot>

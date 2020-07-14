@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>use random functions (python)</Title>
+<Body>&lt;p&gt;I wonder if we can do that in python, let&#x27;s suppose we have  3 differents functions to processing dataslike this:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;def main():  def process(data):     .....  def process1(data):     .....  def process2(data):     .....  def run():     test = choice([process,process1,process2])     test(data)  run()main()&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Can we choice one random function to process the data ?If yes, is this a good way to do so ?&lt;/p&gt;&lt;p&gt;Thanks !&lt;/p&gt;</Body>
+<Tags>python,function,random</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Sure is!&lt;/p&gt;&lt;p&gt;That the nice thing in Python, functions are first class objects and can be referenced in such an easy fashion.&lt;/p&gt;&lt;p&gt;The implication is that all three methods have the same expectation with regards to arguments passed to them.  (This probably goes without saying).&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;Just use the random number module in python.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;random.choice(seq)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This will give you a random item from the sequence.&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;http://docs.python.org/library/random.html&quot; rel=&quot;nofollow noreferrer&quot;&gt;http://docs.python.org/library/random.html&lt;/a&gt;&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;Your code will work just like you wrote it, if you add this to the top:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;from random import choice&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Or, I think it would be slightly better to rewrite your code like so:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;import randomdef main():  def process(data):     .....  def process1(data):     .....  def process2(data):     .....  def run():     test = random.choice([process,process1,process2])     test(data)  run()main()&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Seeing &lt;code&gt;random.choice()&lt;/code&gt; in your code makes it quite clear what is going on!&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;Excellent approach (net of some oversimplification in your skeleton code).  Since you ask for an example:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;import randomdef main():  def process(data):     return data + [0]  def process1(data):     return data + [9]  def process2(data):     return data + [7]  def run(data):     test = random.choice([process,process1,process2])     print test(data)  for i in range(7):    run([1, 2, 3])main()&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I&#x27;ve made it loop 7 times just to show that each choice is indeed random, i.e., a typical output might be something like:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;[1, 2, 3, 7][1, 2, 3, 0][1, 2, 3, 0][1, 2, 3, 7][1, 2, 3, 0][1, 2, 3, 9][1, 2, 3, 9]&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;(changing randomly each and every time, of course;-).&lt;/p&gt;</Body>
+</answer>
+</qroot>

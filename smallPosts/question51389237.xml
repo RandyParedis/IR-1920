@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>I have a dataframe with lists of dictionaries. Json_normalize and appending to a new df</Title>
+<Body>&lt;p&gt;This is what one row of themesdf looks like:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;[{&#x27;code&#x27;: &#x27;1&#x27;, &#x27;name&#x27;: &#x27;Economic management&#x27;}, {&#x27;code&#x27;: &#x27;6&#x27;, &#x27;name&#x27;: &#x27;Social protection and risk management&#x27;}]&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I want to normalize each row and add it to a new df. This is what I have right now:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;themesdf = json_df[&#x27;mjtheme_namecode&#x27;]newdf = pd.DataFrame()%timeit() for row in themesdf:    for item in row:        newdf.append(json_normalize(item, &#x27;name&#x27;))newdf&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;After printing out &lt;code&gt;newdf&lt;/code&gt;, it comes it with nothing. My ultimate goal with this data is to get the top ten major project themes (column &lt;code&gt;&#x27;name&#x27;&lt;/code&gt;).&lt;/p&gt;</Body>
+<Tags>python,json,pandas</Tags>
+</question>
+</qroot>

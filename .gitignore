@@ -7,3 +7,6 @@ errors.log
 *.zip
 *.class
 __pycache__
+.build
+target
+/packages/indri-5.11/

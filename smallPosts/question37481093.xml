@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Boost::ASIO: Bidirectional communication using two processes</Title>
+<Body>&lt;p&gt;I want to make two applications (two linux processes) with the following behavior:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;One will open a &lt;code&gt;TCP&lt;/code&gt; server (on a specific port) and will only read the data that will be sent by the connected clients.&lt;/li&gt;&lt;li&gt;One will send data to all the connected clients.&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;This would be easy if i&#x27;d used threads (I would only share the asio &lt;code&gt;tcp::socket&lt;/code&gt; object), but I can&#x27;t use threads for some reason.&lt;/p&gt;&lt;p&gt;How can I achieve this with two different applications? (without some forms of IPC).&lt;/p&gt;</Body>
+<Tags>c++,linux,tcp,boost-asio</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;You don&#x27;t even need two processes, you can post your async_writes and async_reads to the same message loop and they will get processed. Not strictly in parallel, of course, but if your environment restricts the use of threads (why?), this is the easiest option (especially if want to also not use any IPC). To be fair, the I/O happens in parallel to the program execution, but your completion handlers will not be called in parallel, unless more threads are executing the loop.&lt;/p&gt;</Body>
+</answer>
+</qroot>

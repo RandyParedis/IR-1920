@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Collect user input using qDebug</Title>
+<Body>&lt;p&gt;I have been wondering if it is possible to collect user input using the &lt;code&gt;qDebug()&lt;/code&gt; statement in Qt C++.&lt;/p&gt;&lt;p&gt;I tried do it like in the std C++ code like:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;qDebug() &amp;gt;&amp;gt; myvar;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;but it didn&#x27;t work. &lt;/p&gt;&lt;p&gt;How can I read from &lt;code&gt;stdin&lt;/code&gt; using Qt?&lt;/p&gt;</Body>
+<Tags>c++,qt,qdebug</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;No, it isn&#x27;t possible. &lt;a href=&quot;http://qt-project.org/doc/qt-5/qtglobal.html#qDebug&quot; rel=&quot;nofollow&quot;&gt;qDebug&lt;/a&gt; provides only output stream for debugging informations. &lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;&lt;a href=&quot;http://qt-project.org/doc/qt-5/qtglobal.html#qDebug&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;qDebug&lt;/code&gt;&lt;/a&gt; is used to make output to &lt;code&gt;stderr&lt;/code&gt;. If you want to read from &lt;code&gt;stdin&lt;/code&gt; using Qt, you should use &lt;a href=&quot;http://qt-project.org/doc/qt-5/qtextstream.html#QTextStream-3&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;QTextStream&lt;/code&gt;&lt;/a&gt;:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;#include &amp;lt;stdio.h&amp;gt;QTextStream in(stdin);QString line;in &amp;gt;&amp;gt; line;&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;&lt;code&gt;qDebug&lt;/code&gt; and friends write text to an appropriate location. This can be stderr, but it can be a system log just as well. Thus not all locations where &lt;code&gt;qDebug&lt;/code&gt; writes to even support user input. But even if they would: How could Qt determine if user input should go to &lt;code&gt;qDebug&lt;/code&gt;, &lt;code&gt;qWarning&lt;/code&gt;, or one of the others? It&#x27;s not possible.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;Since you want to use &lt;em&gt;QDebug&lt;/em&gt;, I presume the input might be for debug purposes. In that case, if it is a GUI application, you might consider using &lt;a href=&quot;http://qt-project.org/doc/qt-5/qinputdialog.html&quot; rel=&quot;nofollow&quot;&gt;&lt;em&gt;QInputDialog&lt;/em&gt;&lt;/a&gt; to launch a modal dialog to get the input. It has a bunch of static convenience methods, but as an example, to get a string you could do this:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;qDebug() &amp;lt;&amp;lt; &quot;before debug input dialog&quot;;QString debugText = QInputDialog::getText(NULL, &quot;Input debug text&quot;, &quot;Your input:&quot;);qDebug() &amp;lt;&amp;lt; &quot;got text&quot; &amp;lt;&amp;lt; debugText;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The difference with this, and simply reading from &lt;em&gt;stdin&lt;/em&gt; is, this will not block the whole event loop (it will disable the GUI in the usual modal dialog way). In contrast, simple read from &lt;em&gt;stdin&lt;/em&gt; will block the whole event loop. Wether this is irrelevant in debug situation, or if you specifically want one or the other, depends on what else is happening in the event loop (like, network stuff). However, if you use &lt;em&gt;stdin&lt;/em&gt; for other purposes, then this dialog trick can be very handy.&lt;/p&gt;</Body>
+</answer>
+</qroot>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>How to properly use semilogy?</Title>
+<Body>&lt;p&gt;For class, we are supposed to calculate the absolute error, realistic error for an e series. In the end, we have to graph both the relative error and the absolute error using a &quot;semilogy&quot; graph. The code itself works fine and produces a numerical calculation as expected. But in terms of the graph, it doesn&#x27;t get near the actual result.Any idea of why this isn&#x27;t working?An image of the graph has been attached at the end.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;import numpy as npimport math as mimport matplotlib.pyplot as pltExp_List = []Relative_Error = []Absolute_Error = []def ExpCalc(x,N,t):    exp = 0.0    for i in range(N-1):        fac = m.factorial(i)        next_term = x**i/fac        Exp_List.append(next_term)        exp += next_term        Relative = abs((sum(Exp_List)-t)/sum(Exp_List))        Relative_Error.append(Relative)        Absolute = abs(sum(Exp_List)-t)        Absolute_Error.append(Absolute)        i += 1   return (Absolute_Error, Relative_Error)A = m.exp(1)B = m.exp(20)C = m.exp(100)print(ExpCalc(1,20,A))plt.figure()plt.semilogy(ExpCalc(1,20,A))plt.show()&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The image shows the numerical calculations as well as the graph obtained from the code&lt;/p&gt;&lt;p&gt;&lt;img src=&quot;https://i.stack.imgur.com/SDWkJ.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;</Body>
+<Tags>python,matplotlib,graph</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;If you look at the result of your &lt;code&gt;print(ExpCalc(1,20,A))&lt;/code&gt; it is actually a tuple, which is causing the plotting behaviour you are seeing.&lt;/p&gt;&lt;p&gt;To fix this you can call the function and unpack the values, then do the plotting seperately to ensure you are plotting the correct values.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;x, y = ExpCalc(1,20,A)plt.figure()plt.semilogy(x,y)plt.show()&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Which gives:&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://i.stack.imgur.com/IqBnF.png&quot; rel=&quot;nofollow noreferrer&quot;&gt;&lt;img src=&quot;https://i.stack.imgur.com/IqBnF.png&quot; alt=&quot;enter image description here&quot;&gt;&lt;/a&gt;&lt;/p&gt;</Body>
+</answer>
+</qroot>

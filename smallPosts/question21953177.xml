@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>What does typecasting char* do in read function?</Title>
+<Body>&lt;pre&gt;&lt;code&gt;customer c1;ifstream fin ;fin.open(&quot;savings.txt&quot;, ios :: in | ios :: binary) ;fin.read((char *) &amp;amp; c1, sizeof(customer));&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I just wanted to be clear what I understood so far from the the last read statement. The read operation reads the required number of bytes (length of customer object) from the position of get pointer, and typecast the address of customer type to pointer to character type and store the read bytes into c1 object. I&#x27;d appreciate if anyone could make the process more clear. I took many references but couldn&#x27;t find the better explanations.&lt;/p&gt;</Body>
+<Tags>c++</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;The cast tells the compiler that the address of c1 should be considered to actually point to data of type &lt;code&gt;char&lt;/code&gt;.  It&#x27;s done because the &lt;code&gt;read&lt;/code&gt; function expects the first argument o be of that type - it&#x27;s designed towork with &quot;binary&quot; data and accesses/uses that data based purely on the starting address and number of bytes. &lt;/p&gt;</Body>
+</answer>
+</qroot>

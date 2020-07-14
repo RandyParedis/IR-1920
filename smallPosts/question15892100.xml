@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Index of the max element of a list?</Title>
+<Body>&lt;p&gt;So I need to write and test a function that returns the index of the largest element in the list (or, if several elements have he largest value, the index of the first one of them) and I&#x27;m not allowed to use the max function.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;def largestElementIndex(lst):    x=0    maxNum=0    while x+1 &amp;lt; len(lst):        if lst[x] &amp;gt; maxNum:            maxNum=x        x+=1    return maxNumprint &quot;Program Output&quot;indexOfMax = largestElementIndex([1, 4, 3, 3, 2])print &#x27;Index Of Max Value is&#x27;,indexOfMax&lt;/code&gt;&lt;/pre&gt;</Body>
+<Tags>python,list,max</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;You need to store the largest number as well as the index:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;def largestElementIndex(lst):    x=0    maxNum=0    maxIndex=0    while x &amp;lt; len(lst):        if lst[x] &amp;gt; maxNum:            maxIndex=x            maxNum=lst[x]        x+=1    return maxIndex&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I&#x27;d also use a &lt;code&gt;for&lt;/code&gt; loop:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;def largestElementIndex(lst):    max_index = 0    max_value = lst[0]    for index, value in enumerate(lst)        if value &amp;gt; max_value:            max_index = index            max_value = value    return max_index&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;To do this with &lt;code&gt;max&lt;/code&gt;, you use &lt;code&gt;enumerate&lt;/code&gt; the same way:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;max_index = max(enumerate(lst), key=lambda pair: pair[1])[0]&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;You can also use this simple approach if you don&#x27;t want to use max function:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;res = lst.index(sorted(lst)[-1])&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;cheers!&lt;/p&gt;</Body>
+</answer>
+</qroot>

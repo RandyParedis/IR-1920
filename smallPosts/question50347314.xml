@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Execute function in C++ after asyncranous 60 sec delay?</Title>
+<Body>&lt;p&gt;I&#x27;ve read this can be achieved using &lt;strong&gt;std::this_thread::sleep_for&lt;/strong&gt; and &lt;strong&gt;std::async&lt;/strong&gt;, but it&#x27;s not working for me.&lt;/p&gt;&lt;p&gt;Here is the function to be called:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;bool Log::refresh_data(){       std::this_thread::sleep_for( std::chrono::minutes( 1 ) );    std::vector&amp;lt;std::string&amp;gt; file_info = this-&amp;gt;file.read_pending_if();    for( auto line : file_info )    {        this-&amp;gt;append( line );    }    return true;}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Which is called from another function.  There are two examples of failed usage in the code below:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;void MVC::refresh_data(){    // Error C3867  &#x27;Log::refresh_data&#x27;: non-standard syntax; use &#x27;&amp;amp;&#x27; to create a pointer to member    std::future&amp;lt;bool&amp;gt; retCode = std::async( this-&amp;gt;model_log.refresh_data, 0 );            std::future&amp;lt;bool&amp;gt; retCode = std::async( this-&amp;gt;model_log.refresh_data(), 0 );}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Originally, &lt;strong&gt;bool Log::refresh_data()&lt;/strong&gt; was &lt;strong&gt;void Log::refresh_data()&lt;/strong&gt; but &lt;strong&gt;std::async&lt;/strong&gt; didn&#x27;t seem to like the void return...&lt;/p&gt;</Body>
+<Tags>c++,stdasync</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Because &lt;code&gt;refresh_data&lt;/code&gt; is a method of &lt;code&gt;Log&lt;/code&gt; you need to use &lt;code&gt;std::bind&lt;/code&gt; with &lt;code&gt;model_log&lt;/code&gt;, or use a lambda:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;std::future&amp;lt;bool&amp;gt; retCode = std::async( [this] {return model_log.refresh_data(); }); &lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;You cannot pass a non-static method like this in C++, you can do:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;auto retCode = std::async(&amp;amp;Log::refresh_data, model_log);// Or with a lambda:auto retCode = std::async([this]() {     return model_log.refresh_data(); });&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;These codes work with a &lt;code&gt;void&lt;/code&gt; return type (you simply need to remove the &lt;code&gt;return&lt;/code&gt; statement in the lambda).&lt;/p&gt;</Body>
+</answer>
+</qroot>

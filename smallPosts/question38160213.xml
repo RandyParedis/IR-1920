@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>filter by row_number in sqlalchemy</Title>
+<Body>&lt;p&gt;how can I filter the row_number ==1 in the following query:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;query = session.query(Foo, func.row_number().over(        partition_by=Foo.foo_field, order_by=desc(Foo.foo_date_time)).label(&quot;row_number&quot;))    query = query.filter(Foo.time_key &amp;lt;= time_key)    # query = query.filter(row_number == 1)    result = query.all()&lt;/code&gt;&lt;/pre&gt;</Body>
+<Tags>python,sqlalchemy,row-number</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;I found it:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;    row_number_column = func.row_number().over(partition_by=Foo.foo_field, order_by=desc(Foo.foo_date_time)).label(&#x27;row_number&#x27;)    query = self.session.query(Foo)    query = query.filter(Foo.time_key &amp;lt;= time_key)    query = query.add_column(row_number_column)    query = query.from_self().filter(row_number_column == 1)&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;It can also be done using a subquery:&lt;/p&gt;&lt;pre class=&quot;lang-py prettyprint-override&quot;&gt;&lt;code&gt;sub_query = session.query(Foo,func.row_number().over(partition_by=Foo.foo_field, order_by=desc(Foo.foo_date_time)).label(&quot;row_number&quot;))sub_query = sub_query.filter(Foo.time_key &amp;lt;= time_key).subquery()query = session.query(sub_query).filter(sub_query.c.row_number == 1)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;It basically generates an equivalent SQL Statement as adding the row_number as a column.&lt;/p&gt;&lt;p&gt;Compiling the statement.&lt;/p&gt;&lt;pre class=&quot;lang-py prettyprint-override&quot;&gt;&lt;code&gt;sub_query = session.query(Foo,func.row_number().over(partition_by=Foo.foo_field, order_by=desc(Foo.foo_date_time)).label(&quot;row_number&quot;))sub_query = sub_query.filter(Foo.time_key &amp;lt;= time_key).subquery()query = session.query(sub_query).filter(sub_query.c.row_number == 1)str(query.statement.compile())&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Will generate the following:&lt;/p&gt;&lt;pre class=&quot;lang-sql prettyprint-override&quot;&gt;&lt;code&gt;-- SubQuery functionSELECT anon_1.time_key,        anon_1.foo_field,        anon_1.foo_date_time,        anon_1.row_number FROM (        SELECT  foo.time_key AS time_key,                foo.foo_field AS foo_field,                 foo.foo_date_time AS foo_date_time,                 row_number() OVER (PARTITION BY foo.foo_field ORDER BY foo.foo_date_time DESC) AS row_number         FROM foo         WHERE foo.time_key &amp;lt;= %(time_key_1)s    ) AS anon_1 WHERE anon_1.row_number = %(row_number_1)s&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

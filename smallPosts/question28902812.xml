@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Overloading std::streambuf for escaping data</Title>
+<Body>&lt;p&gt;I have an external library which is able to write a bunch of data by passing it a &lt;code&gt;std::ostream*&lt;/code&gt; pointer. It writes in binary format&lt;/p&gt;&lt;p&gt;I want to write this data inside a text file, which contains other stuff, by converting it to hexadecimal or base64.&lt;/p&gt;&lt;p&gt;As the data written by the lib can be very large, I want to avoid writing the data to a memory buffer, then convert to text format. I would like to convert on the fly.&lt;/p&gt;&lt;p&gt;Therefore, I am com.stackoverflow.searching how to overload std::streambuf for that purpose. I need to overload the &lt;code&gt;overflow&lt;/code&gt; virtual function, and I found the necessary info for this.&lt;/p&gt;&lt;p&gt;The question is, should I write to the file&#x27;s &lt;code&gt;ostream&lt;/code&gt;, or directly to its &lt;code&gt;streambuf&lt;/code&gt; which I can get using &lt;code&gt;rdbuf()&lt;/code&gt;? Is it allowed to write directly to a &lt;code&gt;stream&lt;/code&gt; &lt;code&gt;stringbuf&lt;/code&gt;?&lt;/p&gt;&lt;p&gt;Thanks in advance!&lt;/p&gt;</Body>
+<Tags>c++,stream,overloading,streambuf</Tags>
+</question>
+</qroot>

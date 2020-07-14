@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Weird error in wxPython, what should I do?</Title>
+<Body>&lt;pre&gt;&lt;code&gt;(python:6006): Gtk-CRITICAL **: IA__gtk_widget_set_parent: assertion `GTK_IS_WIDGET     (parent)&#x27; failed(python:6006): Gtk-CRITICAL **: IA__gtk_widget_get_direction: assertion `GTK_IS_WIDGET    (widget)&#x27; failedCommand terminated&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I&#x27;m not sure how to approach this at all. I&#x27;m building a front end GUI in wxPython which has been running fine before today. I would post my source code, but it&#x27;s large and I have no idea where the problem is. If I could get an idea of what this problem means I might be able to find the relevant source. Thanks in advance!&lt;/p&gt;</Body>
+<Tags>wxpython</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;If it&#x27;s not causing wxPython to crash, then you probably just have the debug version of wxPython installed. It lets you see stuff like that, but they don&#x27;t actually hurt anything. At least, that was what I gathered from several conversations about this problem on the wxPython mailing list.&lt;/p&gt;</Body>
+</answer>
+</qroot>

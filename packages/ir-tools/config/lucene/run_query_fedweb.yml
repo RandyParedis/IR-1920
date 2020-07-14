@@ -1,0 +1,10 @@
+index: /Users/cwillis/dev/uiucGSLIS/indexes/lucene/fedweb
+field: text,title
+queryfile:
+    path: fedwebtopics
+    delimiter: tab
+queries:
+   - number: 351
+     text: falkland petroleum exploration
+   - number: 352
+     text: british chunnel impact

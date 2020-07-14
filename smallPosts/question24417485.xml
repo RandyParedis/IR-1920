@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>How to loop through columns in a dataframe?</Title>
+<Body>&lt;p&gt;I have a dataframe with many metric columns all containing float output. I need to round them all to four digits. I want to loop through all the columns to do this. &lt;/p&gt;&lt;pre&gt;&lt;code&gt;import numpy as npimport pandas as pdtest_df = pd.DataFrame(np.random.randn(10,4), columns=[&#x27;a&#x27;,&#x27;b&#x27;,&#x27;c&#x27;,&#x27;d&#x27;])metrics = test_df.columnsmetrics = metrics.tolist()for x in metrics:    test_df.x = np.round(test_df.x, 4)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;However, this gives me the error: &lt;/p&gt;&lt;pre&gt;&lt;code&gt;AttributeError: &#x27;DataFrame&#x27; object has no attribute &#x27;x&#x27;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Whats the best way to do this? &lt;/p&gt;</Body>
+<Tags>python,pandas</Tags>
+</question>
+<answer>
+<Body>&lt;pre&gt;&lt;code&gt;import functoolstest_df.apply(functools.partial(np.round, decimals=4))&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;if you want to iterate through columns, it&#x27;s straightforward:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;for c in test_df.columns:    test_df[c] = np.round(test_df[c], 4)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;what you tried to do that&#x27;s busted has to do with attribute access in python. when you try to do &lt;code&gt;test_df.x&lt;/code&gt;, that &lt;code&gt;x&lt;/code&gt; has absolutely nothing to do with the &lt;code&gt;x&lt;/code&gt; in your &lt;code&gt;for&lt;/code&gt; loop. this would have the same result:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;for unused_value in metrics:    test_df.x = ...&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

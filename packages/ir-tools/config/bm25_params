@@ -1,0 +1,11 @@
+{
+"queries"          	:  "/scratch/topics/topics.101-200.title",
+"index"				:  "/scratch/indexes/AP",
+"qrels"      		:  "/scratch/qrels/qrels.AP.101-200",
+"bg-source-path"   	:  "/scratch/indexes/AP",
+"scorer-name"      	:  "edu.gslis.docscoring.ScorerBM25",
+"scorer-param-k1"  	:  "1.2",
+"scorer-param-b"	:  "0.75",
+"scorer-param-k2"	:  "7",
+"run-name"         	:  "bm25"
+}

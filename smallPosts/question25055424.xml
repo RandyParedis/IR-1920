@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Does lxml have proxy support?</Title>
+<Body>&lt;p&gt;I am behind a corporate proxy attempting to use &lt;code&gt;lxml&lt;/code&gt;. I cannot find any reference for proxy support for &lt;code&gt;lxml&lt;/code&gt; (like there is for &lt;code&gt;urllib2&lt;/code&gt;). Does &lt;code&gt;lxml&lt;/code&gt; have the ability to reach through a proxy? Are there any workarounds?&lt;/p&gt;</Body>
+<Tags>python,proxy,lxml</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;So you need to download some xml using a proxy and then parse it using lxlm, correct?&lt;/p&gt;&lt;p&gt;First download the xml page using python requests library. It has proxy support:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;import requestsproxies = {  &quot;http&quot;: &quot;http://10.10.1.10:3128&quot;,  &quot;https&quot;: &quot;http://10.10.1.10:1080&quot;,}requests.get(&quot;http://example.org&quot;, proxies=proxies)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;More info about its settings:&lt;a href=&quot;http://docs.python-requests.org/en/latest/user/advanced/#proxies&quot; rel=&quot;nofollow&quot;&gt;http://docs.python-requests.org/en/latest/user/advanced/#proxies&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Then use lxml to parse it. Or use BeautifulSoup4 which may be better suited for your needs. It will use lxml as its parsing engine if you have it installed. Example of usage:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;from bs4 import BeautifulSouphtml = &quot;&amp;lt;body&amp;gt;&amp;lt;/body&amp;gt;&quot;x = BeautifulSoup(html, &quot;xml&quot;)         # Note the xml as second argument.&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

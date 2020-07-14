@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>How to find out what&#x27;s happening in build-in __exit__?</Title>
+<Body>&lt;p&gt;An example is python&#x27;s &lt;code&gt;file.__exit__&lt;/code&gt; (i.e. if it does anything in addition to close). Is this documented anywhere? I tried Googling but didn&#x27;t find good results.&lt;/p&gt;</Body>
+<Tags>python,with-statement,contextmanager</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Python&#x27;s built-in functions and types are written in C (in the reference implementation, CPython). You can read its source code, if you want. For the &lt;code&gt;__exit__&lt;/code&gt; method you&#x27;re asking about, in Python 3, I think you are looking for the file &lt;a href=&quot;https://hg.python.org/cpython/file/default/Modules/_io/iobase.c#l444&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;Modules/_io/iobase.c&lt;/code&gt;&lt;/a&gt;:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;static PyObject *iobase_exit(PyObject *self, PyObject *args){    return PyObject_CallMethodObjArgs(self, _PyIO_str_close, NULL);}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;It looks like it doesn&#x27;t do anything but call &lt;code&gt;close&lt;/code&gt;.&lt;/p&gt;&lt;p&gt;The equivalent bit of code for Python 2 is in a differnt file, since it is still using its own IO classes (rather than the IO module, which is also available as a backport from Python 3). Look in &lt;a href=&quot;https://hg.python.org/cpython/file/2.7/Objects/fileobject.c#l2012&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;Objects/fileobject.c&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;static PyObject *file_exit(PyObject *f, PyObject *args){    PyObject *ret = PyObject_CallMethod(f, &quot;close&quot;, NULL);    if (!ret)        /* If error occurred, pass through */        return NULL;    Py_DECREF(ret);    /* We cannot return the result of close since a true     * value will be interpreted as &quot;yes, swallow the     * exception if one was raised inside the with block&quot;. */    Py_RETURN_NONE;}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I&#x27;m not exactly sure why this code needs a test for &lt;code&gt;None&lt;/code&gt; where the Python 3 code doesn&#x27;t, but you can still see that it doesn&#x27;t do anything other than call &lt;code&gt;close&lt;/code&gt; (and ignore its return value).&lt;/p&gt;</Body>
+</answer>
+</qroot>

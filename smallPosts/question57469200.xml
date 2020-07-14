@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>How to count how much times different methods of the imported class were executed?</Title>
+<Body>&lt;p&gt;I want to count imported class&#x27; methods executions while script running. And stop the script according the method executions limit.&lt;/p&gt;&lt;p&gt;I tried to use the &lt;code&gt;__getattribute__&lt;/code&gt; to count executions in inherited class, but it is too hard to use it for such a simple problem (at least at first glance).&lt;/p&gt;</Body>
+<Tags>python,python-3.x,class,methods</Tags>
+</question>
+</qroot>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>To get notification is that must to keep pycharm open in my pc?</Title>
+<Body>&lt;p&gt;To get notifications is that must to keep the &lt;em&gt;pycharm&lt;/em&gt; online? &lt;/p&gt;&lt;p&gt;Everything work fine and pushing notifications  but when i close the pycharm then the notification stops and not working!&lt;/p&gt;</Body>
+<Tags>python,pycharm</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Your question isn&#x27;t exactly clear to me. What notifications? From your python script? I guess so, then you should run this script from command line instead of running it inside PyCharm. Open cmd in your working directory, where your program is and run it using &#x27;python myscript.py&#x27;. I believe that should help (obviously now you need to keep your terminal open), but please try to phrase your questions in clearer way.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;Is that possible to run multiple codes in multiple terminals at a time?&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;If by &#x27;codes&#x27; you mean python scripts, then the answer is yes. Each terminal instance can run an independent application, script, whatever you want basically. So in your case you could open multiple terminals and run multiple scripts.&lt;/p&gt;</Body>
+</answer>
+</qroot>

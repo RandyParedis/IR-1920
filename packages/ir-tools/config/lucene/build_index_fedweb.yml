@@ -1,0 +1,11 @@
+indexPath: /Users/cwillis/dev/uiucGSLIS/indexes/lucene/fedweb
+corpus: 
+   path: /Users/cwillis/dev/uiucGSLIS/data/fedweb-test
+   type: tika
+fields:
+   - name: docno
+     source: filename
+     type: id
+   - name: text
+     source: file
+     type: text

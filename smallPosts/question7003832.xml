@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Checking for attributes in BeautifulSoup?</Title>
+<Body>&lt;p&gt;I&#x27;m parsing some data from HTML by walking through elements at a certain level using nextSibling, and doing different things depending on the tag name and class of each element encountered. &lt;/p&gt;&lt;p&gt;e.g.,&lt;/p&gt;&lt;pre&gt;&lt;code&gt;if n.name == &quot;p&quot; and n.class == &quot;poem&quot;: blah()&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;But this raises an error if the element doesn&#x27;t have a class or if it isn&#x27;t an instance of Tag and hence has no name.&lt;/p&gt;&lt;p&gt;Testing before accessing like this &lt;/p&gt;&lt;pre&gt;&lt;code&gt;if &quot;name&quot; in n:&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;always return false. I could check the type of the object returned by nextSibling to try to weed out NavigableString and Comment, but there&#x27;s got to be an easier way. &lt;/p&gt;&lt;p&gt;EDIT&lt;/p&gt;&lt;p&gt;Emailed the dev of BeautifulSoup with this question and he recommended testing with &lt;/p&gt;&lt;pre&gt;&lt;code&gt;n.get(&quot;class&quot;)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;which returns None if &quot;class&quot; is unset, which makes it possible to just do:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;if n.get(&quot;class&quot;) == &quot;poem&quot;: blah()&lt;/code&gt;&lt;/pre&gt;</Body>
+<Tags>python,beautifulsoup</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Why not?&lt;/p&gt;&lt;pre&gt;&lt;code&gt;if hasattr(n,&quot;name&quot;):&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;In this case exceptions may be your friend:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;try:    if n.name == &#x27;p&#x27; and n[&#x27;class&#x27;] == &quot;poem&quot;:        blah()except AttributeError: # element does not have .name attribute    do_something()except KeyError: # element does not have a class    do_something_else()&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You may also wrap it into one &lt;code&gt;except&lt;/code&gt; if this is in case:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;try:    if n.name == &#x27;p&#x27; and n[&#x27;class&#x27;] == &quot;poem&quot;:        blah()except (AttributeError, KeyError):    pass&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;Besides using &lt;code&gt;get()&lt;/code&gt; method &lt;/p&gt;&lt;pre&gt;&lt;code&gt;n.get(&quot;class&quot;)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Another option is to use &lt;code&gt;has_attr()&lt;/code&gt; (use &lt;code&gt;has_key()&lt;/code&gt; pre BeautifulSoup 4):&lt;/p&gt;&lt;pre&gt;&lt;code&gt;n.has_attr(&quot;class&quot;)&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;Try this~:&lt;/p&gt;&lt;p&gt;&lt;code&gt;if class in n.attrs&lt;/code&gt; &lt;/p&gt;</Body>
+</answer>
+</qroot>

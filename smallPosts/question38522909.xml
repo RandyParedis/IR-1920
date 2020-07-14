@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>How to print color box on the console in python?</Title>
+<Body>&lt;p&gt;I want to plot HeatMap on the console. For that purpose I want to plot small boxex of different colors i.e | | this size. I got different color Unicode symbols to plot HeatMap on the console but they are not working good. whenever I&#x27;m printing color on the 1st line it gets reflected on the 2nd line also. &lt;/p&gt;&lt;p&gt;&lt;strong&gt;I have following Unicode&#x27;s-&lt;/strong&gt; &lt;/p&gt;&lt;pre&gt;&lt;code&gt;&#x27;\033[0;37;40m  &#x27;&#x27;\033[0;37;46m  &#x27;&#x27;\033[0;37;44m  &#x27;&#x27;\033[0;37;45m  &#x27;&#x27;\033[0;37;42m  &#x27;&#x27;\033[48;5;226m  &#x27;&#x27;\033[48;5;214m  &#x27;&#x27;\033[48;5;202m  &#x27;&#x27;\033[48;5;196m  &#x27;&#x27;\033[0;37;41m  &#x27;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;program-code-&lt;/strong&gt;&lt;/p&gt;&lt;pre&gt;&lt;code&gt;print(&#x27;\033[0;37;40m  &#x27;)print &#x27;hello&#x27;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Whenever I&#x27;m trying to print some text between color code It get fetched. Anyone have any Idea about How I can plot a different colors of empty box i.e. only color not text on the python console in a efficient way?&lt;/p&gt;</Body>
+<Tags>python,unicode,colors,console</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;That&#x27;s not &quot;unicode&quot;, they&#x27;re called &lt;a href=&quot;https://en.wikipedia.org/wiki/ANSI_escape_code&quot; rel=&quot;nofollow&quot;&gt;ANSI escape codes&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;For your purpose, you can print a space character with a modified background color, and don&#x27;t forget to set the colors back to normal afterwards (with &lt;code&gt;\033[0m&lt;/code&gt;):&lt;/p&gt;&lt;pre&gt;&lt;code&gt;print(&#x27;\033[;41m  &#x27;)print(&#x27;\033[0mhello&#x27;)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;A list of colors can be found &lt;a href=&quot;https://en.wikipedia.org/wiki/ANSI_escape_code#Colors&quot; rel=&quot;nofollow&quot;&gt;here&lt;/a&gt;. 42 would be green, 43 would be yellow, etc.&lt;/p&gt;</Body>
+</answer>
+</qroot>

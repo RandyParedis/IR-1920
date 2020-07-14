@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>strip sides of a string in python</Title>
+<Body>&lt;p&gt;I have a list like this:&lt;/p&gt;&lt;blockquote&gt;  &lt;p&gt;Tomato4439, &gt;gi|224089052|ref|XP_002308615.1| predicted protein [Populus trichocarpa]&lt;/p&gt;&lt;/blockquote&gt;&lt;p&gt;I want to strip the unwanted characters using python so the list would look like:TomatoPopulus trichocarpa&lt;/p&gt;&lt;p&gt;I can do the following for the first one:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;name = &quot;&amp;gt;Tomato4439&quot;name = name.strip(&quot;&amp;gt;1234567890&quot;)print nameTomato&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;However, I am not sure what to do with the second one. Any suggestion would be appreciated.&lt;/p&gt;</Body>
+<Tags>python,string,strip</Tags>
+</question>
+<answer>
+<Body>&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; import re&amp;gt;&amp;gt;&amp;gt; line = &quot;Tomato4439, &amp;gt;gi|224089052|ref|XP_002308615.1| predicted protein [Populus trichocarpa]&quot;&amp;gt;&amp;gt;&amp;gt; match = re.match(&quot;^([a-zA-Z]+).*\[([a-zA-Z ]+)\].*&quot;,line)&amp;gt;&amp;gt;&amp;gt; match.groups()(&#x27;Tomato&#x27;, &#x27;Populus trichocarpa&#x27;)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;edited to not include the &lt;code&gt;[]&lt;/code&gt; on the 2nd part...  this should work for any thing that matches the pattern of your query (eg starts with name, ends with something in []) it would also match &lt;code&gt;&quot;Tomato4439, &amp;gt;gi|224089052|ref|XP_002308615.1| predicted protein [Populus trichocarpa apples]&quot;&lt;/code&gt; for example&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;pre&gt;&lt;code&gt;import rea = &quot;Tomato4439, &amp;gt;gi|224089052|ref|XP_002308615.1| predicted protein [Populus trichocarpa]&quot;re.sub(r&quot;^([A-Za-z]+).+\[([^]]+)\]$&quot;, r&quot;\1 \2&quot;, a)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This gives&lt;/p&gt;&lt;pre&gt;&lt;code&gt;&#x27;Tomato Populus trichocarpa&#x27;&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;If the strings you&#x27;re trying to parse are consistent semantically, then your best option might be classifying the different &quot;types&quot; of strings you have, and then creating regular expressions to parse them using python&#x27;s &lt;code&gt;re&lt;/code&gt; module. &lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;given:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;s=&#x27;Tomato4439, &amp;gt;gi|224089052|ref|XP_002308615.1| predicted protein [Populus trichocarpa]&#x27;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;this:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;s = s.split()[s[0].strip(&#x27;0123456789,&#x27;), s[-2].replace(&#x27;[&#x27;,&#x27;&#x27;), s[-1].replace(&#x27;]&#x27;,&#x27;&#x27;)]&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;will give you&lt;/p&gt;&lt;pre&gt;&lt;code&gt;[&#x27;Tomato&#x27;, &#x27;Populus&#x27;, &#x27;trichocarpa&#x27;]&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;It might be worth investigating regular expressions if you are going to do this frequently and the &quot;rules&quot; might not be that static as regular expressions are much more flexible dealing with the data in that case. For the sample problem you present though, this will work.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;Previous answers were simpler than mine, but:&lt;/p&gt;&lt;p&gt;Here is one way to print the stuff that you don&#x27;t want. &lt;/p&gt;&lt;pre&gt;&lt;code&gt;tag = &quot;Tomato4439, &amp;gt;gi|224089052|ref|XP_002308615.1| predicted protein [Populus trichocarpa]&quot;import re, osfind = re.search(&#x27;&amp;gt;(.+?) \[&#x27;, tag).group(1)print find&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Gives you&lt;/p&gt;&lt;pre&gt;&lt;code&gt;gi|224089052|ref|XP_002308615.1| predicted protein&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Then you can use the replace function to remove that from the original string. And the translate function to remove the extra unwanted characters.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;tag2 = tag.replace(find, &quot;&quot;)tag3 = str.translate(tag2, None, &quot;&amp;gt;[],&quot;)print tag3&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Gives you&lt;/p&gt;&lt;pre&gt;&lt;code&gt;Tomato4439  Populus trichocarpa&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

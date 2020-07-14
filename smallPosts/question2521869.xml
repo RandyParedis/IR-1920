@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Constant expression with custom object</Title>
+<Body>&lt;p&gt;I&#x27;m trying to use an instant of a custom class as a template parameter.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;class X {public:  X() {};};template &amp;lt;class Foo, Foo foo&amp;gt;struct Bar {};const X x;Bar&amp;lt;X, x&amp;gt; foo;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The compiler states that &lt;code&gt;x&lt;/code&gt; cannot appear in a constant expression. Why that? There is everything given to construct that object at compile time.&lt;/p&gt;</Body>
+<Tags>c++,templates,constant-expression</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;You can&#x27;t do it. Standard 14.1 says:&lt;/p&gt;&lt;blockquote&gt;  &lt;p&gt;&lt;strong&gt;4&lt;/strong&gt; A non-type template-parameter shall have one of the following (optionally cv-qualified) types:&lt;br&gt;  — integral or enumeration type,&lt;br&gt;  — pointer to object or pointer to function,&lt;br&gt;  — reference to object or reference to function,&lt;br&gt;  — pointer to member.&lt;br&gt;  &lt;strong&gt;5&lt;/strong&gt; [ Note: other types are disallowed either explicitly below or implicitly by the rules governing the form of &lt;em&gt;template-arguments&lt;/em&gt;  (14.3). —end note ] The top-level cv-qualifiers on the template-parameter are ignored when determining its  type.&lt;/p&gt;&lt;/blockquote&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;Template parameters can be types, or integral constants.  &lt;code&gt;X&lt;/code&gt; is a type, but &lt;code&gt;x&lt;/code&gt; is not.  You also can&#x27;t use constant floating point values.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;As others have pointed out you can&#x27;t do it. So long as you are not playing  meta-programming games, the normal way to pass an actual instance of a class is in the constructor:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;template &amp;lt;class Foo&amp;gt;struct Bar {    Bar( const Foo &amp;amp; f ) {      ...    }};&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

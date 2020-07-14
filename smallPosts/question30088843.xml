@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Adding a row to a Pandas DataFrame that would duplicate index</Title>
+<Body>&lt;p&gt;I have a DataFrame with an index of type datetime objects. I am ultimately going to write this DataFrame to an HDF5 file using HDFStore.append. I am adding a lot of rows that need to be written to this HDF5 file. If i use HDFStore.append for every row, this takes way too long. If I collect everything in a DataFrame first, I run out of memory. So I need to chunk and write to HDF5 intermittently.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;df = DataFrame([[&#x27;Bob&#x27;,&#x27;Mary&#x27;]], columns=[&#x27;Boy&#x27;, &#x27;Girl&#x27;], index=[datetime.today()])&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now i would like to add another row to this WITH THE SAME INDEX&lt;/p&gt;&lt;pre&gt;&lt;code&gt;row = [&#x27;John&#x27;, &#x27;Sue&#x27;]&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Using .loc or .ix replaces the existing row&lt;/p&gt;&lt;pre&gt;&lt;code&gt;df.loc[datetime.today()] = row&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Using append works, but for my purposes is WAY TOO SLOW&lt;/p&gt;&lt;pre&gt;&lt;code&gt;new_df = DataFrame([row], columns=df.columns, index=[datetime.today()])df.append(new_df)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Is there a better way to do this ?&lt;/p&gt;</Body>
+<Tags>python,pandas,hdf5</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Create a list of lists and making a dataframe of that will be faster than append. Since you are already creating data frames of small chunks, why not create it in one go:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;In [1303]: pd.DataFrame([[0,1], [1,2], [2,3]], index=[pd.datetime.today()] * 3)Out[1303]:                             0  12015-05-07 09:02:30.327473  0  12015-05-07 09:02:30.327473  1  22015-05-07 09:02:30.327473  2  3&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

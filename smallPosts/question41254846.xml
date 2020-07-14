@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Whitenoise and/or static files causing Server Error (500)</Title>
+<Body>&lt;p&gt;I am able to deploy my app (via Django) to Heroku when DEBUG = True but when DEBUG = False I get a Server Error. I think it has to do with how I&#x27;ve set up my static files. When I comment out &quot;STATICFILES_STORAGE = &#x27;whitenoise.django.GzipManifestStaticFilesStorage&#x27;&quot; I don&#x27;t get an error message but the site is completely unformatted. Here&#x27;s the relevant settings.py code:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;INSTALLED_APPS = [...        &#x27;django.contrib.staticfiles&#x27;,...]ALLOWED_HOSTS = [&#x27;*&#x27;]PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))STATIC_ROOT= os.path.join(PROJECT_ROOT, &#x27;staticfiles&#x27;)STATIC_URL = &#x27;/static/&#x27;STATICFILES_STORAGE = &#x27;whitenoise.django.GzipManifestStaticFilesStorage&#x27;STATICFILES_DIRS = (    os.path.join(PROJECT_ROOT, &#x27;static&#x27;),)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I&#x27;ve added my static folder in all sorts of locations (same folder as settings.py, in the root folder, etc) to no avail.&lt;/p&gt;&lt;p&gt;Any ideas?&lt;/p&gt;</Body>
+<Tags>python,django,heroku</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Those staticfile settings came directly from the Heroku website (&lt;a href=&quot;https://devcenter.heroku.com/articles/django-assets&quot; rel=&quot;nofollow noreferrer&quot;&gt;https://devcenter.heroku.com/articles/django-assets&lt;/a&gt;). When I ran &lt;code&gt;python manage.py collectstatic&lt;/code&gt; I got a key error &#x27;DATABASE_URL&#x27; which I had to &lt;code&gt;export&lt;/code&gt; a value for and then when I pushed my files to Heroku the website worked properly.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;You may have forgotten to include the whitenoice middleware in your settings.py MIDDLEWARE setting.  Edit your settings.py file and add WhiteNoise to the MIDDLEWARE_CLASSES list, above all other middleware apart from Django’s SecurityMiddleware:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;MIDDLEWARE_CLASSES = [# &#x27;django.middleware.security.SecurityMiddleware&#x27;,&#x27;whitenoise.middleware.WhiteNoiseMiddleware&#x27;,#...]&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;More information can be found in the whitenoise docs: &lt;a href=&quot;http://whitenoise.evans.io/en/stable/django.html&quot; rel=&quot;nofollow noreferrer&quot;&gt;http://whitenoise.evans.io/en/stable/django.html&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Go through the step-by-step setup to see what you&#x27;re missing.  The Heroku docs tend to omit the middleware addition--which causes the bug--and perhaps there&#x27;s something else missing for your application.&lt;/p&gt;</Body>
+</answer>
+</qroot>

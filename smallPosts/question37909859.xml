@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>xPath: Select one of multiple Following elements, if it exists (OR)</Title>
+<Body>&lt;p&gt;Using xPath for Selenium, I want to look for an element that follows a conditional parent node. However, I want it to look for &lt;em&gt;multiple&lt;/em&gt; possible following nodes.&lt;/p&gt;&lt;p&gt;Is there a way to select the element following the conditional node, as either &lt;code&gt;span&lt;/code&gt; or &lt;code&gt;p&lt;/code&gt;, &lt;strong&gt;&lt;em&gt;if&lt;/em&gt;&lt;/strong&gt; one of them are present? &lt;/p&gt;&lt;pre&gt;&lt;code&gt;try:    elmnt = driver.find_element_by_xpath(                                        (&quot;//*[text()[contains(., &#x27;myConditionString&#x27;)]]&quot; +                                         &quot;/following::span or following::p&quot;) #← Find this                                         ).textexcept:    passelse:    print elmnt&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The xPath should be looking for both:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;&amp;lt;root&amp;gt;    &amp;lt;b&amp;gt;myConditionString&amp;lt;/b&amp;gt;        &amp;lt;span&amp;gt;Find me!&amp;lt;/span&amp;gt;&amp;lt;/root&amp;gt;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;and this at the same time:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;&amp;lt;root&amp;gt;    &amp;lt;b&amp;gt;myConditionString&amp;lt;/b&amp;gt;    &amp;lt;p&amp;gt;Find me!&amp;lt;/p&amp;gt;&amp;lt;/root&amp;gt;&lt;/code&gt;&lt;/pre&gt;</Body>
+<Tags>python,xml,selenium,xpath</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Try following &lt;code&gt;XPath&lt;/code&gt; and let me know if it still not correct:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;driver.find_element_by_xpath(&#x27;//b[text()=&quot;myConditionString&quot;]/span[text()=&quot;Find me!&quot;] | //b[text()=&quot;myConditionString&quot;]/p[text()=&quot;Find me!&quot;]&#x27;)&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

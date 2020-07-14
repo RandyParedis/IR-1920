@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Why doesn&#x27;t my C++ compiler optimize these memory writes away?</Title>
+<Body>&lt;p&gt;I created this program. It does nothing of interest but use processing power.&lt;/p&gt;&lt;p&gt;Looking at the output with &lt;code&gt;objdump -d&lt;/code&gt;, I can see the three &lt;code&gt;rand&lt;/code&gt; calls and corresponding &lt;code&gt;mov&lt;/code&gt; instructions near the end even when compiling with O3 .&lt;/p&gt;&lt;p&gt;Why doesn&#x27;t the compiler realize that memory isn&#x27;t going to be used and just replace the bottom half with &lt;code&gt;while(1){}&lt;/code&gt;? I&#x27;m using &lt;code&gt;gcc&lt;/code&gt;, but I&#x27;m mostly interested in what is required by the standard.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;/* * Create a program that does nothing except slow down the computer. */#include &amp;lt;cstdlib&amp;gt;#include &amp;lt;unistd.h&amp;gt;int getRand(int max) {  return rand() % max;}int main() {  for (int thread = 0; thread &amp;lt; 5; thread++) {    fork();  }  int len = 1000;  int *garbage = (int*)malloc(sizeof(int)*len);  for (int x = 0; x &amp;lt; len; x++) {    garbage[x] = x;  }  while (true) {    garbage[getRand(len)] = garbage[getRand(len)] - garbage[getRand(len)];  }}&lt;/code&gt;&lt;/pre&gt;</Body>
+<Tags>c++,optimization</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;It can&#x27;t, in general, tell that &lt;code&gt;rand()&lt;/code&gt; doesn&#x27;t have observable side-effects here, and it isn&#x27;t required to remove those calls.&lt;/p&gt;&lt;p&gt;It could remove the writes, but it may be the use of arrays is enough to suppress that.&lt;/p&gt;&lt;p&gt;The standard neither requires nor prohibits what it is doing. As long as the program has the correct observable behaviour any optimisation is purely a quality of implementation matter.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;Because GCC isn&#x27;t smart enough to perform this optimization on dynamically allocated memory. However, if you change &lt;code&gt;garbage&lt;/code&gt;to be a local array instead, GCC compiles the loop to this:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;.L4:    call    rand    call    rand    call    rand    jmp .L4&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This just calls &lt;code&gt;rand&lt;/code&gt; repeatedly (which is needed because the call has side effects), but optimizes out the reads and writes.&lt;/p&gt;&lt;p&gt;If GCC was even smarter, it could also optimize out the &lt;code&gt;rand&lt;/code&gt;calls, because its side effects only affect any later &lt;code&gt;rand&lt;/code&gt;calls, and in this case there aren&#x27;t any. However, this sort of optimization would probably be a waste of compiler writers&#x27; time.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;This code causes &lt;em&gt;undefined behaviour&lt;/em&gt; because it has an infinite loop with no observable behaviour.  Therefore any result is permissible.&lt;/p&gt;&lt;p&gt;In C++14 the text is 1.10/27:&lt;/p&gt;&lt;blockquote&gt;  &lt;p&gt;The implementation may assume that any thread will eventually do one of the following:&lt;/p&gt;    &lt;ul&gt;  &lt;li&gt;terminate,&lt;/li&gt;  &lt;li&gt;make a call to a library I/O function,&lt;/li&gt;  &lt;li&gt;access or modify a volatile object, or&lt;/li&gt;  &lt;li&gt;perform a synchronization operation or an atomic operation.&lt;/li&gt;  &lt;/ul&gt;    &lt;p&gt;[Note: This is intended to allow compiler transformations such as removal of empty loops, even when termination cannot be proven. —end note ]&lt;/p&gt;&lt;/blockquote&gt;&lt;p&gt;I wouldn&#x27;t say that &lt;code&gt;rand()&lt;/code&gt; counts as an I/O function.&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://stackoverflow.com/questions/3592557/optimizing-away-a-while1-in-c0x/&quot;&gt;Related question&lt;/a&gt;&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;Leave it a chance to crash by array overflow ! The compiler won&#x27;t speculate on the range of outputs of &lt;code&gt;getRand&lt;/code&gt;.&lt;/p&gt;</Body>
+</answer>
+</qroot>

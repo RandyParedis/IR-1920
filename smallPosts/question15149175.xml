@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Is there a python pickle equivalent library which dumps out ascii instead of binary stream?</Title>
+<Body>&lt;p&gt;The output from &lt;code&gt;pickle&lt;/code&gt; is non-human readable, and thus, non editable.&lt;/p&gt;&lt;p&gt;I&#x27;m looking for something which can do exactly the same (or very close to) pickle, whereby it can dump out all the python understandable objects into a file, and later on be able to directly load it back.&lt;/p&gt;</Body>
+<Tags>python,serialization,pickle</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Look no further, go for &lt;a href=&quot;http://docs.python.org/2/library/json.html&quot; rel=&quot;nofollow noreferrer&quot;&gt;json&lt;/a&gt;. json is a text format and can be edited easily. Out of the box you can use it for serializing objects of Python&#x27;s built-in types like lists, dictionaries, strings, etc., but there are ways to serialize objects of your own classes to json as well, see here:  &lt;a href=&quot;https://stackoverflow.com/questions/3768895/python-how-to-make-a-class-json-serializable&quot;&gt;How to make a class JSON serializable&lt;/a&gt;&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;hmmm ........ I find that this somewhat kinda work for me.&lt;/p&gt;&lt;p&gt;&lt;strong&gt;Dumping Object to File&lt;/strong&gt;&lt;/p&gt;&lt;pre&gt;&lt;code&gt;import pprintf = open(&#x27;a.txt&#x27;, &#x27;w&#x27;)pprint.pprint(myobject, f)f.close()&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Loading object from file&lt;/strong&gt;&lt;/p&gt;&lt;pre&gt;&lt;code&gt;import pprintf = open(&#x27;a.txt&#x27;)lines = f.read()myobject = eval(lines)f.close()&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;If you want to have all the flexibility of pickle, I would say the most sensible thing to do is to create an specific format which can help you.&lt;/p&gt;&lt;p&gt;I do not know any tool which would be as powerful as pickle and yet would generate editable exported data, but you can create your own. Some time ago, I created a toy module which would wrap a Python module so it could send and receive XML messages, mostly to show to a friend how it is easy to work with Python :) It is not &lt;em&gt;exactly&lt;/em&gt; what you are looking for but can be a starting point so &lt;a href=&quot;https://bitbucket.org/brandizzi/telepython/overview&quot; rel=&quot;nofollow&quot;&gt;take a look at it&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;(BTW, I would be happy to know some other tools which do the same thing, in a better way. It &lt;em&gt;should&lt;/em&gt; exist, I believe I just didn&#x27;t find it yet.)&lt;/p&gt;</Body>
+</answer>
+</qroot>

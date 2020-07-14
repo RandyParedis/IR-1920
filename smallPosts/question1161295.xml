@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Reading .docx in C++</Title>
+<Body>&lt;p&gt;I&#x27;m trying to create a program that reads a .docx file and posts it content to a blog/forum for personal use.  I finally have figured out how to use libcurl to do (what I figured) was the harder part of the program.  Now I just have to read the .docx file, but have come under a snag.  I can&#x27;t seem to find any documentation on how to do this.  Any ideas?&lt;/p&gt;</Body>
+<Tags>c++,file-io,ms-word,docx</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;The easiest way is to use Word to do this. It has limitations on licensing.&lt;/p&gt;&lt;p&gt;The SO question &lt;a href=&quot;https://stackoverflow.com/questions/145573/creating-opening-and-printing-a-word-file-from-c&quot;&gt;Creating, opening and printing a word file from C++&lt;/a&gt; has some good references.&lt;/p&gt;&lt;p&gt;&lt;strong&gt;Edit:&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;According to these questions/answers can unzip the Open XML file and process the XML file directly:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;a href=&quot;https://stackoverflow.com/questions/116139/how-can-i-read-a-word-2007-docx-file&quot;&gt;How can I read a Word 2007 .docx file?&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;If you use .NET there are more (C#) questions to read:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;a href=&quot;https://stackoverflow.com/questions/1099458/how-to-grab-text-from-word-docx-document-in-c&quot;&gt;How to grab text from word (docx) document in C#?&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href=&quot;https://stackoverflow.com/questions/215620/how-to-load-ms-word-document-in-c-net&quot;&gt;How to load MS Word document in C# (.NET)?&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href=&quot;https://stackoverflow.com/questions/247666/how-can-i-programatically-use-c-to-append-multiple-docx-files-together&quot;&gt;How can I programatically use C# to append multiple DOCX files together?&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;If you want to stay on the open-source world, OpenOffice 3 should be able to process .docx files. There is a project to implement an API for many languages, I don&#x27;t really know how complete or complex it is.&lt;/p&gt;&lt;p&gt;There is a &lt;a href=&quot;http://www.freedownloadmanager.org/es/downloads/dir/go.php?id=38982&quot; rel=&quot;nofollow noreferrer&quot;&gt;script&lt;/a&gt; in PHP that can convert from .docx into plain text. That is, if you are not scared that all docs are in russian). That could be another option (triggering the php script with a system call and parsing the results from a file)&lt;/p&gt;</Body>
+</answer>
+</qroot>

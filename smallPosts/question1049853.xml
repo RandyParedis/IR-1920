@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Net-SNMP variables using C++</Title>
+<Body>&lt;p&gt;I am having trouble with a few of the variables that the Net-SNMP library provides, specifically the ability to capture in/out Octets.&lt;/p&gt;&lt;p&gt;In/OutOctets Issue: I have another check for ASN_INTEGER and I am catching this oid put the output does not seem to be correct. I am using *vars-&gt;val.integer and pushing this into a long but I am currently getting negative numbers so I have tried to push this into a double but the output is a completely different value from that of the actual value attached to that oid.&lt;/p&gt;&lt;p&gt;Has anyone else had this issues and if so can you provide some insight please?&lt;/p&gt;&lt;p&gt;Thanks in advance.&lt;/p&gt;</Body>
+<Tags>c++,linux,snmp</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;I have partially resolved this issue by using ASN_COUNTER instead of ASN_INTEGER. Although a counter32 is in fact an integer it is a type of ASN_COUNTER. So using a check of ASN_COUNTER with *vars-&gt;val.integer is in fact the correct method to catch a counter32.&lt;/p&gt;</Body>
+</answer>
+</qroot>

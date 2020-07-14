@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Reference a dictionary within itself</Title>
+<Body>&lt;p&gt;Is it possible to get a value from a dictionary entry, within that same dictionary?I&#x27;d like to build up a list of directories whilst referencing previously added directories..&lt;/p&gt;&lt;pre&gt;&lt;code&gt;common_dirs = {    &#x27;root&#x27;: &#x27;/var/tmp&#x27;,    &#x27;java_path&#x27;: os.path.join(dict.get(&#x27;root&#x27;), &#x27;java&#x27;),    &#x27;application_path&#x27;: os.path.join(dict.get(&#x27;java_path&#x27;), &#x27;my_app&#x27;)}&lt;/code&gt;&lt;/pre&gt;</Body>
+<Tags>python,dictionary</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Why not update the dictionary:  &lt;/p&gt;&lt;pre&gt;&lt;code&gt;my_dict = {&#x27;root&#x27;: &#x27;/var/tmp&#x27;}my_dict.update({&#x27;file&#x27;: os.path.join(my_dict.get(&#x27;root&#x27;), &#x27;file&#x27;)})&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Don&#x27;t use &lt;code&gt;dict&lt;/code&gt; as a name. You may need the real &lt;code&gt;dict&lt;/code&gt; builtin later on.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;You could also try using a class instead of a dictionary:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;import osclass Paths:    def __init__(self, root, filename):        self.root = root        self.file = os.path.join(self.root, filename)root = &#x27;/var/tmp&#x27;filename = &#x27;file&#x27;p = Paths(root, filename)print(p.file)# /var/tmp/file&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;No. At the point at which you are filling in the dictionary initializer, the dictionary does not exist, so you cannot reference it!&lt;/p&gt;&lt;p&gt;But in principle there is no reason why a dictionary cannot contain itself as one of the values, as the other answers explain, but you just can&#x27;t refer to it in its own initializer &lt;code&gt;{}&lt;/code&gt;.&lt;/p&gt;</Body>
+</answer>
+</qroot>

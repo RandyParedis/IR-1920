@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>BeautifulSoup and prettify() function</Title>
+<Body>&lt;p&gt;To parse html codes of a website, I decided to use &lt;code&gt;BeautifulSoup&lt;/code&gt; class and &lt;code&gt;prettify()&lt;/code&gt; method. I wrote the code below.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;import requestsimport bs4response = requests.get(&quot;https://www.doviz.com&quot;)soup = bs4.BeautifulSoup(response.content, &quot;html.parser&quot;)print(soup.prettify())&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;When I execute this code on Mac terminal, indentation of the codes are not set. On the other hand, If I execute this code on windows cmd or PyCharm, all codes are set. &lt;/p&gt;&lt;p&gt;Do you know the reason for this ?&lt;/p&gt;</Body>
+<Tags>html,python-3.x,parsing,beautifulsoup</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;try this code:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;import requestsimport bs4response = requests.get(&quot;https://www.doviz.com&quot;)soup = bs4.BeautifulSoup(response.text, &quot;html.parser&quot;)print(soup.prettify()&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

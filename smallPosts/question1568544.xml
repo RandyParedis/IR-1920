@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Given a Python class, how can I inspect and find the place in my code where it is defined?</Title>
+<Body>&lt;p&gt;I&#x27;m building a debugging tool.&lt;/p&gt;&lt;p&gt;IPython lets me do stuff like&lt;/p&gt;&lt;pre&gt;&lt;code&gt;MyCls??&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;And it will show me the source.&lt;/p&gt;</Body>
+<Tags>python</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Here&#x27;s a pretty good overview of many of Python&#x27;s meta-info capabilities:&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;http://www.ibm.com/developerworks/library/l-pyint.html&quot; rel=&quot;nofollow noreferrer&quot;&gt;http://www.ibm.com/developerworks/library/l-pyint.html&lt;/a&gt;&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;pre&gt;&lt;code&gt;sys.modules[MyCls.__module__].__file__&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;or&lt;/p&gt;&lt;pre&gt;&lt;code&gt;inspect.getsourcefile(MyCls)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;There are more &lt;a href=&quot;http://docs.python.org/library/inspect.html#types-and-members&quot; rel=&quot;nofollow noreferrer&quot;&gt;&lt;code&gt;__xxx__&lt;/code&gt; attributes&lt;/a&gt; on various objects you might find useful.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;The &lt;a href=&quot;http://docs.python.org/library/inspect&quot; rel=&quot;nofollow noreferrer&quot;&gt;inspect&lt;/a&gt; module has everything you need.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;If you just want to see the source, &lt;a href=&quot;http://docs.python.org/library/inspect.html#inspect.getsource&quot; rel=&quot;nofollow noreferrer&quot;&gt;inspect.getsource&lt;/a&gt; is a very direct way to do that; for more advanced uses (getting the source &lt;em&gt;file&lt;/em&gt;, line numbers, etc), see other functions in &lt;code&gt;inspect&lt;/code&gt; documented at the same URL just before &lt;code&gt;getsource&lt;/code&gt;.  Note that each such function will raise an exception if source is not available, so make sure to be within a &lt;code&gt;try&lt;/code&gt;/&lt;code&gt;except&lt;/code&gt; block when you call it, and handle the exception as appropriate for your case. (Also, as I might hope goes without saying, you do need to &lt;code&gt;import inspect&lt;/code&gt; in your modules in which you want to call &lt;code&gt;inspect&lt;/code&gt; functionality).&lt;/p&gt;</Body>
+</answer>
+</qroot>

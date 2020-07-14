@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>installing yui compressor for django pipeline</Title>
+<Body>&lt;p&gt;I&#x27;m trying to use django pipeline, should be able to get it working but I&#x27;m just unsure as to how to install yui compressor on my system so pipeline recognizes it?&lt;/p&gt;</Body>
+<Tags>python,django,compression,yui-compressor</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;You can &lt;a href=&quot;http://yuilibrary.com/download/yuicompressor/&quot; rel=&quot;nofollow&quot;&gt;download&lt;/a&gt; it and install manually or you can use your system package manager (e.g. in Debian: &lt;code&gt;sudo apt-get install yui-compressor&lt;/code&gt;). After that you need to point binary in your settings:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;PIPELINE_YUI_BINARY = &#x27;&amp;lt;path to yuicompressor&amp;gt;&#x27;&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>&#x27;thread&#x27; is not a member of &#x27;std&#x27; in Eclipse Neon with MinGW 6.3 GCC on Windows</Title>
+<Body>&lt;p&gt;I am receiving the error &quot;thread is not a member of std&quot;. I have tried every solution that I found online and none have worked so far. I have tried adding -pthread and --std=c++11 to the compiler and linker options and the compiler specs, as well as setting the language standard to ISO C++11. I am using Eclipse neon.3 with minGW 6.3.0-1, and I have updated all of my packages.&lt;/p&gt;&lt;p&gt;The code does run, but I would like to get rid of the error if possible.(EDIT: I was incorrect. When I choose to &quot;Proceed with Launch&quot; despite the error, it is running code that was compiled before I was using std::thread. The current code does not get run.)&lt;/p&gt;&lt;p&gt;Do I need a different version of mingw? Should I just switch to mingw-w64?&lt;/p&gt;&lt;p&gt;Here is my toolchain, for reference:&lt;/p&gt;&lt;p&gt;GCC Assembler&lt;/p&gt;&lt;p&gt;GCC Archiver&lt;/p&gt;&lt;p&gt;GCC C++ Compiler&lt;/p&gt;&lt;p&gt;GCC C Compiler&lt;/p&gt;&lt;p&gt;MinGW C Linker&lt;/p&gt;&lt;p&gt;MinGW C++ Linker&lt;/p&gt;&lt;p&gt;And the simple code that gives this error:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;#include &amp;lt;thread&amp;gt;#include &amp;lt;iostream&amp;gt;void call_from_thread() {    std::cout &amp;lt;&amp;lt; &quot;Hello!&quot; &amp;lt;&amp;lt; std::endl;}int main() {    std::thread t1(call_from_thread);    return 0;}&lt;/code&gt;&lt;/pre&gt;</Body>
+<Tags>c++,eclipse,c++11,gcc,mingw32</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;The only way that I can reproduce that error w/ your example code is to not include the --std=c++11 switch.  I notice in your text that you only put one dash before the switch, could that be your problem?  Try two dashes.&lt;/p&gt;&lt;p&gt;I reproduced it here:&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://godbolt.org/g/GQFTc9&quot; rel=&quot;nofollow noreferrer&quot;&gt;https://godbolt.org/g/GQFTc9&lt;/a&gt;&lt;/p&gt;&lt;p&gt;EDIT:  BTW, in your comment you said:&lt;/p&gt;&lt;blockquote&gt;  &lt;p&gt;When I run it, it notifies me that errors exist and I choose &quot;proceed with launch&quot;&lt;/p&gt;&lt;/blockquote&gt;&lt;p&gt;This is running the result of a previous compilation, it is not just continuing and ignoring the error.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;With the advice of sbabbi, &quot;Mingw32 does not support std::thread. ...You can switch to mingw64+winpthread (but TLS is utterly broken in that config) or use Boost.thread.&quot;, I decided to set up Boost and use that instead. I also switched to cygwin because it has the Boost libraries built in and I switched to Netbeans because installing Boost in eclipse was proving itself to be unnecessarily difficult.&lt;/p&gt;</Body>
+</answer>
+</qroot>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>how to make recursive function performs faster</Title>
+<Body>&lt;p&gt;I have to find the 6th fibbonacci number in fibbonacci sequence . fib(6) calls fib(4) and fib(5) first fib(5) say . fib(5) calls fib(4) and fib(3) and finally reach base case and fib(2) , fib(3)  fib(4) and finally fib(5) is calculated . When fib(5) calculated fib(6) calls fib(4) . This time by same process f(2) f(3) and finally f(4) is calculated . But if we can save value for fiv(4) when fiv(5) is called , we don&#x27;t need to calculate again when fiv(4)&#x27;s called . Instead we can use the saved value for fiv(4) when fiv(5) is called . How can i do that &lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://i.stack.imgur.com/sRZDE.png&quot; rel=&quot;nofollow noreferrer&quot;&gt;&lt;img src=&quot;https://i.stack.imgur.com/sRZDE.png&quot; alt=&quot;enter image description here&quot;&gt;&lt;/a&gt;&lt;/p&gt;&lt;pre&gt;&lt;code&gt;int fib(int n){    if(n==0)         return 0;    else if(n==1)            return 1;    return fib(n-1)+fib(n-2);}&lt;/code&gt;&lt;/pre&gt;</Body>
+<Tags>c++,recursion</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;The term you are looking for is &quot;&lt;a href=&quot;https://en.wikipedia.org/wiki/Memoization&quot;&gt;memoization&lt;/a&gt;.&quot;  This is a quite standard optimization, for which the Fibonacci sequence is literally a textbook example.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;As John Zwinck has pointed out, the term is &lt;a href=&quot;https://en.wikipedia.org/wiki/Memoization&quot; rel=&quot;noreferrer&quot;&gt;memoization&lt;/a&gt;.  What it means is, in every step, we are storing the intermediate values that are calculated (because the recursive calls are expensive).&lt;/p&gt;&lt;p&gt;Consider your code modified as below:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;#include &amp;lt;iostream&amp;gt;using namespace std;int main() {    int fibboA[10];    fibboA[0]=0;                 //1st Fibonacci number is always 0;    fibboA[1]=1;                 //2nd Fibonacci number is always 1;    cout&amp;lt;&amp;lt;fibboA[0]&amp;lt;&amp;lt;&quot;\t&quot;&amp;lt;&amp;lt;fibboA[1]&amp;lt;&amp;lt;&quot;\t&quot;;    //3rd onwards, it is the sum of the previous 2;    for(int i=2;i&amp;lt;10;i++)    {        fibboA[i]=fibboA[i-1]+fibboA[i-2];        cout&amp;lt;&amp;lt;fibboA[i]&amp;lt;&amp;lt;&quot;\t&quot;;    }    return 0;}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;In this code, we are storing the previous values in the array &lt;code&gt;fibboA[]&lt;/code&gt; and using the previously stored latest two values (&lt;code&gt;i-1&lt;/code&gt;th and &lt;code&gt;i-2&lt;/code&gt;th) while calculating the current fibonacci number (&lt;code&gt;i&lt;/code&gt;).&lt;/p&gt;&lt;p&gt;Hope this is helpful.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;You get a simple and efficient (linear time) recursive solution by computing two Fibonacci numbers at a time.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;void fib(int n, int&amp;amp; f1, int&amp;amp; f0){  if (n == 1)    { f1= 1; f0= 0; }  else    { fib(n - 1, f0, f1); f1+= f0; }}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The function returns both &lt;code&gt;Fn&lt;/code&gt; and &lt;code&gt;Fn-1&lt;/code&gt;. Notice the swap of the arguments.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;pre&gt;&lt;code&gt;#include &amp;lt;iostream&amp;gt;using namespace std;int ar[20];int fib (int n){    if(n==0||n==1)       return n;    if(ar[n]!=-1)//check if ar[n] exists than just return values      return ar[n];    else    {        ar[n]= fib(n-1)+ fib(n-2);        return ar[n];    }}int main(){    for(int i=0;i&amp;lt;20;i++)        ar[i]=-1;//initialise all to empty    cout&amp;lt;&amp;lt;fib(8);}&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;Here&#x27;s one more example of recursive dynamic programming solution:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;#include &amp;lt;vector&amp;gt;#include &amp;lt;iostream&amp;gt;int fib(int n, std::vector&amp;lt;int&amp;gt;&amp;amp; data) {  if (n &amp;gt;= 2) {    int&amp;amp; num = data[n - 2];    if (num) {      return num;    }    return (num = fib(n - 1, data) + fib(n - 2, data));  }  return n;}int fib(int n) {  if (n &amp;gt;= 2) {    std::vector&amp;lt;int&amp;gt; data(n - 1, 0);    return fib(n, data);  }  return n;}int main(int argc, char *argv[]) {  std::cout &amp;lt;&amp;lt; fib(23) &amp;lt;&amp;lt; std::endl;  return 0;}&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

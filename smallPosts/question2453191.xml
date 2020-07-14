@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>How get Win32_OperatingSystem.LastBootUpTime in datetime format</Title>
+<Body>&lt;p&gt;I have been trying to get LastBootUpTime using Win32_OperatingSystem class (WMI).&lt;/p&gt;&lt;pre&gt;&lt;code&gt;HRESULT hr = pEnumerator-&amp;gt;Next(WBEM_INFINITE, 1,         &amp;amp;pclsObj, &amp;amp;uReturn);    if(0 == uReturn)    {        break;    }    VARIANT vtProp;    // Get the value of the Name property    hr = pclsObj-&amp;gt;Get(L&quot;LastBootUpTime&quot;, 0, &amp;amp;vtProp, 0, 0);              VariantClear(&amp;amp;vtProp);&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I want to write this time to CTime or COleDateTime variable. But variable vtProp has BSTR type and look like &lt;strong&gt;20100302185848.499768+300&lt;/strong&gt;Also any datetime property of any WMI class have BSTR type&lt;/p&gt;&lt;p&gt;How can I put datetime property of WMI class to CTime?&lt;/p&gt;&lt;hr&gt;&lt;p&gt;But how use SWbemDateTime.GetVarDate() in C++? In MSDN just scripting sample for this function&lt;/p&gt;</Body>
+<Tags>c++,wmi</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;You can safely ignore anything after the decimal point as in the format yyyymmddhhmmss..&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;You&#x27;ll have to do some parsing to convert it.  The format is yyyyMMddhhmmss.ffffff+zzz (zzz is UTC offset in minutes).  The &lt;a href=&quot;http://msdn.microsoft.com/en-us/library/aa393691%28VS.85%29.aspx&quot; rel=&quot;nofollow noreferrer&quot;&gt;SWbemDateTime.GetVarDate() method&lt;/a&gt; can do it for you.&lt;/p&gt;</Body>
+</answer>
+</qroot>

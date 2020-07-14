@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>invalid user-defined conversion to rvalue reference</Title>
+<Body>&lt;p&gt;What is reasoning behind the fact that most versions gcc, except  4.9.0-4.9.4 and 9.1.0, consider this C++11 code ill-formed unless &lt;code&gt;-pedantic&lt;/code&gt; and &lt;code&gt;-fpermissive&lt;/code&gt; options are used at same time?clang compiles it.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;struct A {    int a;    operator int() &amp;amp;&amp;amp;  { return a; }    operator int&amp;amp;() &amp;amp;  { return a; }};void b(int &amp;amp;&amp;amp;) {}int main(){    b(A{});}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Output is similar to:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;prog.cc: In function &#x27;int main()&#x27;:prog.cc:11:10: error: invalid user-defined conversion from &#x27;A&#x27; to &#x27;int&amp;amp;&amp;amp;&#x27; [-fpermissive]     b(A{});          ^prog.cc:4:5: note: candidate is: A::operator int&amp;amp;() &amp;amp; &amp;lt;near match&amp;gt;     operator int&amp;amp;() &amp;amp;  { return a; &lt;/code&gt;&lt;/pre&gt;</Body>
+<Tags>c++,c++11,gcc</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;According to StoryTeller comment, the problem  is clearly related to intermediate bugs in implementation and they fixes, possible solution may be:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;#include &amp;lt;utility&amp;gt; //std::move#include &amp;lt;iostream&amp;gt;struct A {    int a;    operator int const&amp;amp; () const  { std::cout &amp;lt;&amp;lt;__PRETTY_FUNCTION__&amp;lt;&amp;lt;std::endl; return a; }    operator int&amp;amp;&amp;amp;() &amp;amp;&amp;amp;   { std::cout &amp;lt;&amp;lt;__PRETTY_FUNCTION__&amp;lt;&amp;lt;std::endl;  return std::move(a); }};void b(int &amp;amp;&amp;amp;) {}void b(const int &amp;amp;) {}int main(){    b(A{});    b(std::move(A{}));    A a;    b(a);}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Output:&lt;/p&gt;&lt;blockquote&gt;&lt;pre&gt;&lt;code&gt;A::operator int&amp;amp;&amp;amp;() &amp;amp;&amp;amp;A::operator int&amp;amp;&amp;amp;() &amp;amp;&amp;amp;A::operator const int&amp;amp;() const&lt;/code&gt;&lt;/pre&gt;&lt;/blockquote&gt;</Body>
+</answer>
+</qroot>

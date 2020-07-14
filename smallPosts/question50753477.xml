@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>What does data.norm() &lt; 1000 do in PyTorch?</Title>
+<Body>&lt;p&gt;I am following the PyTorch tutorial &lt;a href=&quot;https://pytorch.org/tutorials/beginner/blitz/autograd_tutorial.html&quot; rel=&quot;noreferrer&quot;&gt;here&lt;/a&gt;.It says that&lt;/p&gt;&lt;pre&gt;&lt;code&gt;x = torch.randn(3, requires_grad=True)y = x * 2while y.data.norm() &amp;lt; 1000:    y = y * 2print(y)Out:    tensor([-590.4467,   97.6760,  921.0221])&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Could someone explain what data.norm() does here?When I change &lt;code&gt;.randn&lt;/code&gt; to &lt;code&gt;.ones&lt;/code&gt; its output is  &lt;code&gt;tensor([ 1024.,  1024.,  1024.])&lt;/code&gt;.&lt;/p&gt;</Body>
+<Tags>python,deep-learning,linear-algebra,pytorch,tensor</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;It&#x27;s simply the L2 norm (a.k.a Euclidean norm) of the tensor. Below is a reproducible illustration:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;In [15]: x = torch.randn(3, requires_grad=True)In [16]: y = x * 2In [17]: y.dataOut[17]: tensor([-1.2510, -0.6302,  1.2898])In [18]: y.data.norm()Out[18]: tensor(1.9041)# computing the norm using elementary operationsIn [19]: torch.sqrt(torch.sum(torch.pow(y, 2)))Out[19]: tensor(1.9041)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;First, it squares every element in tensor &lt;code&gt;y&lt;/code&gt;, then sums them and finally takes a square root. These operations compute the so-called &lt;strong&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Norm_(mathematics)#Euclidean_norm&quot; rel=&quot;nofollow noreferrer&quot;&gt;L2 or Euclidean norm&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;Building on what @kmario23 says, it multiplies the elements of a vector by 2 until the Euclidean distance / magnitude of the vector is at least 1000.&lt;/p&gt;&lt;p&gt;With the example of the vector with (1,1,1): it increases to (512, 512, 512), where the l2 norm is about 886. This is less than 1000, so it gets multiplied by 2 again and becomes (1024, 1024, 1024). This has a magnitude greater than 1000, so it stops.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;pre&gt;&lt;code&gt;y.data.norm() &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;is equivalent to&lt;/p&gt;&lt;pre&gt;&lt;code&gt;torch.sqrt(torch.sum(torch.pow(y, 2)))&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

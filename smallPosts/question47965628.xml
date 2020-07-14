@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>spark structured streaming: parquet partition name uniqueness</Title>
+<Body>&lt;p&gt;While streaming from Kafka using Spark Structured stream 2.1, with partitionBy a string column(containing a string of a date in this format yyyy-mm-dd), I expected one &lt;/p&gt;&lt;pre&gt;&lt;code&gt;interval27e/_spark_metadatainterval27e/interval_read_date=2010-10-27 08%3A02%3A48interval27e/interval_read_date=2010-10-30 04%3A27%3A34interval27e/interval_read_date=2010-11-03 02%3A22%3A13interval27e/interval_read_date=2010-11-03 07%3A27%3A08interval27e/interval_read_date=2010-11-14 08%3A37%3A52interval27e/interval_read_date=2010-11-19 01%3A46%3A50&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Spark is appending strings (&quot;08%3A02%3A48&quot;) with multiple directories per date. &lt;/p&gt;&lt;p&gt;This is the writeStream command:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;interval3=interval2     \  .writeStream   .format(&quot;parquet&quot;)   .option(&quot;path&quot;,&quot;/user/usera/interval27e&quot;)   .partitionBy(&quot;interval_read_date&quot;)   .trigger(processingTime=&#x27;15 seconds&#x27;)   .option(&quot;checkpointLocation&quot;, &quot;/user/usera/checkpoint27e&quot;)   .start()&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I dont observe this happening on other stackOverflow questions concerning writing parquet with partitioning. &lt;/p&gt;&lt;p&gt;How can I write the partition the parquet directories without that string being appended to the directory name?&lt;/p&gt;</Body>
+<Tags>python,apache-spark,spark-streaming</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Looks like &lt;code&gt;interval_read_date&lt;/code&gt; is not data / date-like string at all but timestamp. &lt;code&gt;%3A&lt;/code&gt; &lt;a href=&quot;https://en.wikipedia.org/wiki/Percent-encoding&quot; rel=&quot;nofollow noreferrer&quot;&gt;is percent encoded&lt;/a&gt; &lt;code&gt;:&lt;/code&gt; therefore names you have are:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;interval_read_date=2010-10-27 08:02:48interval_read_date=2010-10-30 04:27:34...&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Please double check you&#x27;re using the right data and truncate or cast if necessary.&lt;/p&gt;</Body>
+</answer>
+</qroot>

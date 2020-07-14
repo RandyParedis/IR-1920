@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>C++: #include file search?</Title>
+<Body>&lt;p&gt;&lt;a href=&quot;http://msdn.microsoft.com/en-us/library/36k2cdd4%28VS.80%29.aspx&quot; rel=&quot;nofollow noreferrer&quot;&gt;This MSDN document&lt;/a&gt; quotes:  &lt;/p&gt;&lt;blockquote&gt;  &lt;p&gt;look for include files in the same  directory of the file that contains  the #include statement, and &lt;strong&gt;then in  the directories of any files that  include (#include) that file&lt;/strong&gt;&lt;/p&gt;&lt;/blockquote&gt;&lt;p&gt;Wait, what?&lt;br&gt;What does that actually mean (the bold stuff)?&lt;/p&gt;</Body>
+<Tags>c++,visual-c++,include,header</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;It probably means that if &lt;code&gt;foo/bar/baz.c&lt;/code&gt; includes &lt;code&gt;../bog/bog.h&lt;/code&gt;, and the latter contains&lt;/p&gt;&lt;pre&gt;&lt;code&gt;#include &quot;fix.h&quot;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;it would find &lt;code&gt;foo/bar/fix.h&lt;/code&gt;. In other words, it looks in the directory that contained the C file that included the header containing the include. Clear? :)&lt;/p&gt;&lt;p&gt;So, the file layout rendered as gorgeous ASCII graphics, is:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;  foo/  |  +-bar/  | |  | +-baz.c  | |  | +-fix.h  |  +-bog/    |    +-bog.h&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;And &lt;code&gt;bog.h&lt;/code&gt; is then able to find &lt;code&gt;fix.h&lt;/code&gt; in the sibling directory &lt;code&gt;foo&lt;/code&gt;.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;I think it says that if you have a file &lt;code&gt;foo.h&lt;/code&gt; which is included in some other files &lt;code&gt;bar.cpp&lt;/code&gt;, &lt;code&gt;baz.cpp&lt;/code&gt; etc and then use an &lt;code&gt;#include &quot;somefile.h&quot;&lt;/code&gt; statement in &lt;code&gt;foo.h&lt;/code&gt; the compiler will also search in the directories of &lt;code&gt;bar.cpp&lt;/code&gt; and &lt;code&gt;baz.cpp&lt;/code&gt; for it.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;Please read the below for the MSDN document.&lt;/p&gt;&lt;blockquote&gt;  &lt;p&gt;If the filename enclosed in double quotation marks is an incomplete path specification, the preprocessor first searches the &quot;parent&quot; file&#x27;s directory. A parent file is the file containing the #include directive. For example, if you include a file named file2 within a file named file1, file1 is the parent file.&lt;/p&gt;    &lt;p&gt;Include files can be &quot;nested&quot;; that is, an #include directive can appear in a file named by another #include directive. For example, file2, above, could include file3. In this case, file1 would still be the parent of file2 but would be the &quot;grandparent&quot; of file3.&lt;/p&gt;    &lt;p&gt;When include files are nested and when compiling from the command line, directory com.stackoverflow.searching begins with the directories of the parent file and then proceeds through the directories of any grandparent files. Thus, com.stackoverflow.searching begins relative to the directory containing the source currently being processed. If the file is not found, the search moves to directories specified by the /I compiler option. Finally, the directories specified by the INCLUDE environment variable are searched.&lt;/p&gt;&lt;/blockquote&gt;</Body>
+</answer>
+</qroot>

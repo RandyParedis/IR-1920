@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Search value in OpenCV vector</Title>
+<Body>&lt;p&gt;I can&#x27;t find in the docs any implementstion, that will show, how i can retrieve indexes of values in vector (1d matrix), that have matching values. The closest example is:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;Mat b;Mat a = b == 5;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;So this should give me a matrix of booleans. And then I can use it to extract indexes of values that are equal to 5. Is there a more performant way? It should send all the values in vector to the GPU in parallel and then return the index of the only (or first) value that equals 5. And it shouldn&#x27;t be anything from &quot;algorithm&quot; framework, like:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;std::find(...);&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Only interested in parallel GPU solutions. &lt;/p&gt;</Body>
+<Tags>c++,opencv,parallel-processing,gpgpu,stl-algorithm</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;It can be easily done by transform reduction.&lt;/p&gt;&lt;p&gt;First you transform the matched vector element to its index and unmatched elements to a large number, say vector  size. &lt;/p&gt;&lt;p&gt;Then in the reduction stage you find the minimum, which is the index of the first matching element in the array.&lt;/p&gt;&lt;p&gt;This is an O(log(n)) algorithm and can be done by GPU efficiently. &lt;/p&gt;&lt;p&gt;You could implement it either by thrust or writing your own kernel. &lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://thrust.github.io/doc/group__transformed__reductions.html&quot; rel=&quot;nofollow&quot;&gt;https://thrust.github.io/doc/group__transformed__reductions.html&lt;/a&gt;&lt;/p&gt;</Body>
+</answer>
+</qroot>

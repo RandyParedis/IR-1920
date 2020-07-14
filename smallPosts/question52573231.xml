@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Selenium can&#x27;t find element (xpath)</Title>
+<Body>&lt;p&gt;So Im trying to click this element: &lt;/p&gt;&lt;blockquote&gt;  &lt;p&gt;//*[@id=&quot;ember1720&quot;]&lt;/p&gt;&lt;/blockquote&gt;&lt;p&gt;But Selenium tells me it can&#x27;t find it. Im doing the operation like so: &lt;code&gt;driver.find_element_by_xpath(&#x27;//*[@id=&quot;ember1720&quot;]&#x27;).click()&lt;/code&gt;&lt;/p&gt;&lt;p&gt;I&#x27;ve tried the same program on the official python website and it works perfectly there.&lt;/p&gt;&lt;p&gt;Thanks in advanced.&lt;/p&gt;</Body>
+<Tags>python-3.x,selenium</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;First make sure the element has been loaded correctly:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;from selenium.webdriver.common.by import Byfrom selenium.webdriver.support.ui import WebDriverWait from selenium.webdriver.support import expected_conditions as EC...WebDriverWait(driver, 20).until(  EC.presence_of_element_located((By.XPATH, &quot;&quot;&quot;//*[@id=&quot;ember1720&quot;]&quot;&quot;&quot;)))&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;or maybe:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;WebDriverWait(driver, 20).until(  EC.element_to_be_clickable((By.XPATH, &quot;&quot;&quot;//*[@id=&quot;ember1720&quot;]&quot;&quot;&quot;)))&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Alternatively, try to find the element by id:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;driver.find_element_by_id(&#x27;ember1720&#x27;).click()&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I&#x27;ve faced issues in the past where I could find the element by its ID but not by xpath.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;I&#x27;m not sure if that&#x27;s your exact problem, but depending on IDs like this, which seems to be auto generated are not a good practice.Please read &lt;a href=&quot;https://medium.com/@arnonaxelrod/best-practices-for-choosing-locators-for-selenium-8946ecf0abf5&quot; rel=&quot;nofollow noreferrer&quot;&gt;my blog post&lt;/a&gt; for the best practices for choosing the best locator.&lt;/p&gt;</Body>
+</answer>
+</qroot>

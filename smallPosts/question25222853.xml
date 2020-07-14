@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Subscribers added by Youtube API diappearing</Title>
+<Body>&lt;p&gt;I&#x27;m using Youtube Data API V3 to subscribe users to a channel. The subscription process basically tells the users that they will subscribe to certain channels by clicking a button. They can walk away from it if they don&#x27;t want to subscribe. Once they click the button, they will go through Youtube&#x27;s authorization process and finish the subscriptions. So there&#x27;s no cheating or whatever. What I find is that on certain days, there might be over one thousand people that subscribe. Before I&#x27;d like to celebrate, all the subscribers on that day are gone. But if the subscription acitivities are not that active, say only dozens of people subscribe, nothing would happen. So I wonder if there&#x27;s any &quot;soft limit&quot; on the number of subscribers within a period of time for API subscription. Google never mentions such limit but I&#x27;ve encountered this problem several times.&lt;/p&gt;</Body>
+<Tags>python,youtube,youtube-api,youtube-data-api</Tags>
+</question>
+</qroot>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>minimax with alpha beta pruning and write search tree to disk</Title>
+<Body>&lt;p&gt;I am using minimax algorithm with alpha beta pruning for an AI project. When the opponent human player is thinking, the AI wants to continue generating possible moves. But as the move depth increases ( say beyond 7-8), the system consumes too much memory space. Is it advisable to store the search tree on disk or is there any other possible way out?  &lt;/p&gt;</Body>
+<Tags>c++,artificial-intelligence</Tags>
+</question>
+</qroot>

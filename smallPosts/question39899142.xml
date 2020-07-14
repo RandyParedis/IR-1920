@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>How can I store in a variable certain lines in python?</Title>
+<Body>&lt;p&gt;I have this code: &lt;/p&gt;&lt;pre&gt;&lt;code&gt;with open(&quot;/etc/network/interfaces&quot;, &quot;r&quot;) as file:    content = file.read()    print content&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;it&#x27;s working and showing this:&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://i.stack.imgur.com/Zauen.png&quot; rel=&quot;nofollow noreferrer&quot;&gt;&lt;img src=&quot;https://i.stack.imgur.com/Zauen.png&quot; alt=&quot;enter image description here&quot;&gt;&lt;/a&gt;&lt;/p&gt;&lt;p&gt;How can I store in a variable any word and print that word?&lt;/p&gt;</Body>
+<Tags>python,linux,python-2.7,python-3.x,debian</Tags>
+</question>
+<answer>
+<Body>&lt;pre&gt;&lt;code&gt;with open(&quot;/etc/network/interfaces&quot;, &quot;r&quot;) as file:for line in file:    words=line.split(&#x27; &#x27;)#break the line into a list of words.    print(words[0],words[1]) #&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I have not tested it, but gives you an idea.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;blockquote&gt;  &lt;p&gt;For example, I want to store the word (lo) in the second line in a variable and then print that variable.&lt;/p&gt;&lt;/blockquote&gt;&lt;p&gt;Use the re module in Python&#x27;s builtin library:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;import rewith open(&quot;/etc/network/interfaces&quot;, &quot;r&quot;) as file:    content = file.readlines()target_word = re.findall(&quot;lo()&quot;, content[3]) # save the string &#x27;lo&#x27; into target wordprint &#x27;&#x27;.join(target_word) # prints: lo&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If you plan on trying to find more words, just add more words to the regular expression. For example, if you wanted to find the words lo and auto, you would say &lt;code&gt;re.findall(&quot;lo|auto&quot;, content)&lt;/code&gt;. If you use this method, I recommend reading the &lt;a href=&quot;https://docs.python.org/3/library/re.html&quot; rel=&quot;nofollow&quot;&gt;official documentation on the &lt;code&gt;re&lt;/code&gt; module&lt;/a&gt;.&lt;/p&gt;</Body>
+</answer>
+</qroot>

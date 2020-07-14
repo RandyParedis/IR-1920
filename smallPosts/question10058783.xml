@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Is a radix tree (Patricia Trie) an efficient data structre for a mobile-phone address book</Title>
+<Body>&lt;p&gt;I have been thinking on implementing an address book in C++. Since it&#x27;s developed for mobile application the address book should use as less memory as possible and also the user should still be able to search or sort contacts by name fast ( paradox I know ).&lt;/p&gt;&lt;p&gt;After I&#x27;ve researched a bit I found that most of the people suggest that a &lt;a href=&quot;http://en.wikipedia.org/wiki/Trie&quot; rel=&quot;nofollow&quot;&gt;Trie&lt;/a&gt; would be the best data structure tp fit my needs. More precisely a &lt;a href=&quot;http://en.wikipedia.org/wiki/Radix_tree&quot; rel=&quot;nofollow&quot;&gt;radix tree&lt;/a&gt;( Patricia Trie ). Using this data structure would also be great for implementing autocomplete too.&lt;/p&gt;&lt;p&gt;Are there other viable solutions or is it ok if I start coding using this idea ?&lt;/p&gt;</Body>
+<Tags>c++,addressbook,trie</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;tries are the best for such purpose as they offer quick search,insertiona and deletion.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;Beware of tries for small collections. Though they do offer good asymptotical behavior, their hidden constant in both time and space might be too big.&lt;/p&gt;&lt;p&gt;Especially, tries tend to have poor &lt;strong&gt;cache performace, which should be the main concern for small collections&lt;/strong&gt;.&lt;/p&gt;&lt;p&gt;Assuming your data is relatively small [&amp;lt;10,000 entries], a &lt;code&gt;std::vector&lt;/code&gt; can offer good cache performance, which will probably be much more influence then the size factor. So even the search time for it is asymptotically higher then trie or a std::set, practically - it might be better then both, thanks to good caching behavior.&lt;/p&gt;&lt;p&gt;If you can also maintain the &lt;code&gt;vector&lt;/code&gt; sorted, using &lt;a href=&quot;http://en.wikipedia.org/wiki/Binary_search_algorithm&quot; rel=&quot;nofollow&quot;&gt;binary search&lt;/a&gt; - you can benefit from both logarithmic search time and good cache behavior.&lt;/p&gt;&lt;p&gt;(*)This answer assumes the hardware where the app will be deployed on has &lt;a href=&quot;http://en.wikipedia.org/wiki/CPU_cache&quot; rel=&quot;nofollow&quot;&gt;CPU-Cache&lt;/a&gt;.&lt;/p&gt;</Body>
+</answer>
+</qroot>

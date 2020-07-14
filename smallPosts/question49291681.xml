@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>How to replace values in python numpy array in multiple dimensions using a mask?</Title>
+<Body>&lt;p&gt;I would like to replace values in a numpy array using boolean logic in dimensions &lt;code&gt;&amp;gt;= 3&lt;/code&gt;.  All the examples I can find are for 1d or 2d arrays such that you can say something like &lt;code&gt;A[A&amp;gt;.5] = 1&lt;/code&gt;.  That I understand.  I want to do something like this:&lt;/p&gt;&lt;p&gt;&lt;code&gt;A[B==0,2 &amp;gt; 128] = 0&lt;/code&gt;.  Basically, I have a 2D map (&lt;code&gt;B&lt;/code&gt;) whose dimensions are the same as the first two in &lt;code&gt;A&lt;/code&gt;.  So everywhere &lt;code&gt;B == 0&lt;/code&gt; and the third channel (like B of RGB in an image) is greater than 128 I want to set the 3rd channel to zero, leaving the other two channels.&lt;/p&gt;&lt;p&gt;I can do this in a loop or doing a for value in array loop, but I was hoping someone could tell me if I could do it in a similar manner to &lt;code&gt;A[A&amp;gt;.5] = 1&lt;/code&gt;.&lt;/p&gt;&lt;p&gt;I have tried &lt;code&gt;A[B==0,2 &amp;gt; 128] = 0&lt;/code&gt;, but I get &lt;code&gt;IndexError: in the future, 0-d boolean arrays will be interpreted as a valid boolean index&lt;/code&gt; and I can&#x27;t really think of any other ways to write this.&lt;/p&gt;&lt;p&gt;One thing I forgot to mention - currently I can do &lt;code&gt;A[B==0,2] = 0&lt;/code&gt;.  I am just trying how to fit that extra conditional in.&lt;/p&gt;&lt;p&gt;Thanks!&lt;/p&gt;</Body>
+<Tags>python,arrays,numpy</Tags>
+</question>
+<answer>
+<Body>&lt;pre&gt;&lt;code&gt;A[(B == 0)*(A[..., 2] &amp;gt; 128), 2] = 0&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Explanation:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;code&gt;B == 0&lt;/code&gt; and &lt;code&gt;A[..., 2] &amp;gt; 128&lt;/code&gt; are the same dimensions, where &lt;code&gt;[..., 2]&lt;/code&gt; specifies that slicing occurs in all axes in all dimensions until the last dimension, where only the axis indexed by &lt;code&gt;2&lt;/code&gt; is sliced. This product of the two is &lt;code&gt;False&lt;/code&gt; for any condition which doesn&#x27;t fulfils your requirements.&lt;/li&gt;&lt;li&gt;&lt;code&gt;2&lt;/code&gt; is the third axis of &lt;code&gt;A&lt;/code&gt; on the last dimension.&lt;/li&gt;&lt;/ul&gt;</Body>
+</answer>
+</qroot>

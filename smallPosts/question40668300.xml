@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>how to print a certain amount of characters before a string in python</Title>
+<Body>&lt;p&gt;hi i have a python script that is going to a website and com.stackoverflow.searching for strings inside of certain tags and printing it. my screen will look like this after it prints it -  textidontwant textiwanthere.com how can i search for the .com and print a number of characters before it to only get the textiwanthere.com to show up instead of all of it. here is my code - &lt;/p&gt;&lt;pre&gt;&lt;code&gt;import urllib.requestimport reimport osurl = &quot;http://www.throwawaymail.com/&quot;request = urllib.request.Request(url, headers={&#x27;User-Agent&#x27;: &#x27;Mozilla/5.0&#x27;})sourcecode = urllib.request.urlopen(request).read()output = sourcecode.decode(&quot;utf-8&quot;)findemail = re.findall(&#x27;&amp;gt;(.*?)&amp;lt;/span&amp;gt;&#x27;, str(output))print(findemail)os.system(&quot;pause&quot;)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;i want to search &quot;findemail&quot; for it i want to print the phamepracl@throwam.com but its different everytime but the length is the same this is what my console says - &lt;/p&gt;&lt;p&gt;[&#x27;Toggle navigation&#x27;, &#x27;&#x27;, &#x27;&#x27;, &#x27;&#x27;, &#x27;&#x27;, &#x27;phamepracl@throwam.com&#x27;]&lt;/p&gt;</Body>
+<Tags>python,python-3.4</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Just print the last entry of the list&lt;/p&gt;&lt;pre&gt;&lt;code&gt;print(findemail)[-1]&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You could also assign this value to &lt;code&gt;findmail&lt;/code&gt; if you don&#x27;t want the other stuff&lt;/p&gt;&lt;pre&gt;&lt;code&gt;findemail = re.findall(&#x27;&amp;gt;(.*?)&amp;lt;/span&amp;gt;&#x27;, str(output))[-1]&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This worked for me:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;import urllib.requestimport reimport osurl = &quot;http://www.throwawaymail.com/&quot;request = urllib.request.Request(url, headers={&#x27;User-Agent&#x27;: &#x27;Mozilla/5.0&#x27;})sourcecode = urllib.request.urlopen(request).read()output = sourcecode.decode(&quot;utf-8&quot;)findemail = re.findall(&#x27;&amp;gt;(.*?)&amp;lt;/span&amp;gt;&#x27;, str(output))print(findemail[-1])&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;This is my solution:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;for i in findemail:    if i.find(&#x27;.com&#x27;)&amp;gt;=0:        print(i)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Output:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;hudininona@throwam.com&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

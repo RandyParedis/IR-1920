@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Find lexicographical order of Reverse Polish Notation (postfix) expression?</Title>
+<Body>&lt;p&gt;I have written a python program to convert an infix expression to a postfix expression (aka Reverse Polish Notation). In my problem, only digits 0-9 appear, as well as the operators * and +.I now need to find the lexicographically largest string that represents the postfix equation.Example:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Infix eq: 2*4*3+9*3+5 &lt;/li&gt;&lt;li&gt;Postfix eq: 24*3*93*+5+&lt;/li&gt;&lt;li&gt;Lex. largest: 243**93*5++ &amp;lt;---- I have no idea how to get this&lt;/li&gt;&lt;/ul&gt;</Body>
+<Tags>python,postfix-notation</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Given those constraints (only digits between 0 and 9, no spaces, only multiplication and summation), the following will do what you want:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;expr1 = &#x27;2*4*3+9*3+5&#x27;expr2 = &#x27;9*3+5+3*4*2&#x27;def reverse_polish_nation(expr):    terms = expr.split(&#x27;+&#x27;)    facs = [ sorted(term.split(&#x27;*&#x27;)) for term in terms ]    rpn_terms = [&#x27;{}{}&#x27;.format(&#x27;&#x27;.join(factors),        &#x27;*&#x27;*(len(factors)-1)) for factors in facs]    rpn_expr = &#x27;{}{}&#x27;.format(&#x27;&#x27;.join(sorted(rpn_terms)), &#x27;+&#x27;*(len(rpn_terms)-1))    return rpn_exprprint(reverse_polish_nation(expr1), reverse_polish_nation(expr2) )# output: (&#x27;234**39*5++&#x27;, &#x27;234**39*5++&#x27;)&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Inheritance class C++</Title>
+<Body>&lt;p&gt;I would like to call the parent constructor like this :&lt;/p&gt;&lt;pre&gt;&lt;code&gt;Character::Character(int x, int y, int h, int s, int a, char dir) : health(h), strength(s), armor(a), direction(dir){    if(direction == &#x27;N&#x27;) {        Visual(&#x27;^&#x27;, x, y);    } else if(direction == &#x27;S&#x27;) {        Visual(&#x27;v&#x27;, x, y);    } else if(direction == &#x27;W&#x27;) {        Visual(&#x27;&amp;lt;&#x27;, x, y);    } else if(direction == &#x27;E&#x27;) {        Visual(&#x27;&amp;gt;&#x27;, x, y);    }}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;But it doesn&#x27;t work well because it call the default constructor of the parent which is &lt;code&gt;private&lt;/code&gt;&lt;/p&gt;&lt;pre&gt;&lt;code&gt;class Visual {    private:        Visual();        Visual(const Visual &amp;amp;);    protected:        Position coordinate;        char chara;    public:        Visual(char c, int x, int y);};&lt;/code&gt;&lt;/pre&gt;</Body>
+<Tags>c++,inheritance</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Create a function to convert the direction into a different character, and pass that to the public constructor:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;namespace { //Anonymous Namespace for functions local to your .cpp files to avoid definition conflicts    char convert_direction(char c) {        switch(c) {        case &#x27;N&#x27;: return &#x27;^&#x27;;        case &#x27;S&#x27;: return &#x27;v&#x27;;        case &#x27;E&#x27;: return &#x27;&amp;gt;&#x27;;        case &#x27;W&#x27;: return &#x27;&amp;lt;&#x27;;        default: return &#x27;?&#x27;;        }    }}Character::Character(int x, int y, int h, int s, int a, char dir) :     Visual(convert_direction(dir), x, y),    health(h), strength(s), armor(a), direction(dir) {}&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

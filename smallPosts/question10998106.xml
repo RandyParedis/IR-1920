@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Performance of auto_ptr vs. shared_ptr</Title>
+<Body>&lt;p&gt;I didn&#x27;t find information about performance issues with &lt;strong&gt;auto_ptr&lt;/strong&gt; and &lt;strong&gt;shared_ptr&lt;/strong&gt;(I use &lt;em&gt;tr1&lt;/em&gt; implementation). As shared_ptr is more complicated compared to auto_ptr so auto_ptr is faster? So in general question sounds like what can you say about performance of shared_ptr with comparison with auto_ptr?&lt;/p&gt;&lt;p&gt;PS: I know that now unique_ptr is preferable than auto_ptr, but not all compilers support it, so question is about auto_ptr and shared_ptr&lt;/p&gt;</Body>
+<Tags>c++,boost,shared-ptr,smart-pointers,auto-ptr</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;In general the only good answer is to &lt;strong&gt;measure&lt;/strong&gt;.&lt;/p&gt;&lt;p&gt;But for this case you know that &lt;code&gt;shared_ptr&lt;/code&gt;, unless you&#x27;re using &lt;code&gt;make_shared&lt;/code&gt; it involves a dynamic allocation of a counter block, and unless you have a really good small objects allocator, it&#x27;s bound to be really slow (talking orders of magnitude) to create the first shared pointer to an object.&lt;/p&gt;&lt;p&gt;But then, perhaps with Boost and the standard library that allocation is really optimized. And maybe, probably!, you can use &lt;code&gt;make_shared&lt;/code&gt; to use just 1 allocation for both the object and its control block. So &amp;hellip; &lt;em&gt;measure&lt;/em&gt;.&lt;/p&gt;&lt;p&gt;By the way, &lt;code&gt;auto_ptr&lt;/code&gt; is deprecated.&lt;/p&gt;&lt;p&gt;With any modern compiler use &lt;code&gt;unique_ptr&lt;/code&gt; instead.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;ol&gt;&lt;li&gt;&lt;p&gt;When dereferencing there are no performance differences.&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;If you allocate your shared_ptr&#x27;s with make_shared you don&#x27;t waste any heap allocations.&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;When copying the pointer (not the object), a shared_ptr is a little bit slower because it needs to increase it&#x27;s reference counter.&lt;/p&gt;&lt;/li&gt;&lt;/ol&gt;&lt;p&gt;However, these probably does not matter, so stick with shared_ptr combined with make_shared.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;As with all performance issues: you need to measure it for yourself in your particular setup.&lt;/p&gt;&lt;p&gt;In general, though, you can expect some more overhead for a &lt;code&gt;shared_ptr&amp;lt;&amp;gt;&lt;/code&gt; than for &lt;code&gt;auto_ptr&amp;lt;&amp;gt;&lt;/code&gt; as it has to do some more work behind the scene to ensure proper shared behavior for the enclosed pointer.&lt;/p&gt;&lt;p&gt;On the other hand, the two are not really comparable: &lt;code&gt;auto_ptr&amp;lt;&amp;gt;&lt;/code&gt; supports only one copy (the ownership is transfered on copy), while &lt;code&gt;shared_ptr&amp;lt;&amp;gt;&lt;/code&gt; supports multiple copies.  So unless you only use the above pointers for one copy-pointer, you cannot make a meaningful comparision.  If you &lt;em&gt;do&lt;/em&gt; use one-copy pointer and you are sure you will not need more copies, use the specialized &lt;code&gt;auto_ptr&amp;lt;&amp;gt;&lt;/code&gt;.&lt;/p&gt;&lt;p&gt;In any case, whether the performance differences are significant depends on your particular project.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;&lt;code&gt;auto_ptr&lt;/code&gt; is a deprecated C++98 construct. As such, any performance benefit it &lt;em&gt;might&lt;/em&gt; have is far outweighed by the fact that you shouldn&#x27;t use it anymore in newly-written C++11 code, and instead badger the compiler / library maintainers to implement support for &lt;code&gt;unique_ptr&lt;/code&gt;.&lt;/p&gt;&lt;p&gt;That being said, use what &lt;em&gt;semantically&lt;/em&gt; fits your use case, unless you have &lt;em&gt;profiled&lt;/em&gt; that you have a problem with &lt;code&gt;*_ptr&lt;/code&gt;...&lt;/p&gt;</Body>
+</answer>
+</qroot>

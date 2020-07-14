@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Threading in Python port scanner</Title>
+<Body>&lt;p&gt;I&#x27;m trying to write a very simple Port Scanner in Python, and it was working great until I decided to introduce threading, in order to speed things up.  &lt;/p&gt;&lt;p&gt;I want to include a brief summary at the end, which lists the ports that are open. I&#x27;ve put this in a function called finish. However, since introducing threading, that summary appears as the first line in the output of my code, no matter where I put it. &lt;/p&gt;&lt;p&gt;Is there a way I can effectively confine threading to the functions I need it for, and then turn it off before it gets to the summary/finish(), or am I just making an obvious mistake? Any help would be much appreciated. &lt;/p&gt;&lt;p&gt;Code:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;from socket import *from threading import *screenLock = Semaphore(value=1)open_ports = []def scan(ip,port):    try:        s = socket(AF_INET, SOCK_STREAM)        s.connect((ip, port))        screenLock.acquire()        print (&#x27;Scanning &#x27;, ip , &#x27;on port&#x27;,  port)        print(&quot;Port&quot;,port, &quot;is open&quot;)        s.close()        summary(port)    except:        screenLock.acquire()        print (&#x27;Scanning &#x27;, ip , &#x27;on port&#x27;,  port)        print(&quot;Port&quot;,port,&quot;is closed&quot;)    finally:        screenLock.release()        s.close()def loop():    for i in range(1,100):        ip = &#x27;192.168.0.38&#x27;        port = int(i)        t = Thread(target=scan, args=(ip,int(port)))        t.start()    returndef summary(port):    global open_ports    open_ports.append(port)    return      def main():        loop()    finish()def finish():    print(&#x27;The following ports are open:&#x27;,open_ports) main()&lt;/code&gt;&lt;/pre&gt;</Body>
+<Tags>python,multithreading</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;You have to wait for all the Threads to finish:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;def loop():    threads = []    for i in range(1,100):        ip = &#x27;192.168.0.38&#x27;        port = int(i)        t = Thread(target=scan, args=(ip,int(port)))        t.start()        threads.append(t)    [t.join() for t in threads]&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

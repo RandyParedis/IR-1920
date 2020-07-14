@@ -1,0 +1,36 @@
+00:How use Django for web development
+01:Recursion speed
+02:Templates usage c++
+03:How to loop over data
+04:Python Tkinter button not working
+05:Issues with Qt
+06:Drawing in PyGame on collision
+07:Python Opencv cannot detect
+08:How to read and write to a file
+09:Using nested dictionary
+10:Computing with timestamps
+11:Lamdba not working
+12:How to use class inheritance
+13:Using class methods
+14:Class private members
+15:How can you use lists in python
+16:Manipulating a list
+17:How to work with sockets
+18:REST API requests
+19:Create testing environment in python
+20:Using nested JSON
+21:Operations on Pandas dataframe
+22:The best way to implement a Numpy array
+23:Multithreading and synchonization
+24:Sorting Algorithms
+25:What’s the difference between passing a parameter by reference or by value
+26:Pointers in C++
+27:How to Plot data in Python
+28:Sql database
+29:How to get my regex to work
+30:Neural Networks tensors in keras
+31:Beautifulsoup web scrapers
+32:New to programming
+
+98:Python
+99:C++

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Why do I have this difference when subtracting terms to near zero in Python?</Title>
+<Body>&lt;p&gt;When I run this into the compiler:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;print (7/3)print (4/3)print (7/3-4/3-1)print (&quot;&quot;)print (5/3)print (2/3)print (5/3-2/3-1)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The console outputs: &lt;/p&gt;&lt;pre&gt;&lt;code&gt;2.33333333333333351.33333333333333332.220446049250313e-161.66666666666666670.66666666666666660.0&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Why does the compiler round 7/3 to 5 at the 16th digit?  Other calculators say 7/3 is just 2.333(repeating 3)Also, why does the compiler round the solution for 5/3 but not 2/3?&lt;/p&gt;</Body>
+<Tags>python,python-3.x,math,calculator</Tags>
+</question>
+</qroot>

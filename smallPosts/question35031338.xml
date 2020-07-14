@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Sqlalchemy: Purpose of .all()</Title>
+<Body>&lt;p&gt;What is the use of .all(). When the following function &lt;/p&gt;&lt;pre&gt;&lt;code&gt;def showRestaurants():restaurants = session.query(Restaurant)return render_template(&#x27;restaurant.html&#x27;,restaurants=restaurants)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Returns the same result as this function&lt;/p&gt;&lt;pre&gt;&lt;code&gt;def showRestaurants():restaurants = session.query(Restaurant).all()return render_template(&#x27;restaurant.html&#x27;,restaurants=restaurants)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;For this restaurant.html file&lt;/p&gt;&lt;pre&gt;&lt;code&gt;&amp;lt;html&amp;gt;&amp;lt;body&amp;gt;&amp;lt;h1&amp;gt; Restaurants &amp;lt;/h1&amp;gt;{% for x in restaurants %}&amp;lt;/br&amp;gt;{% endfor %}&amp;lt;/body&amp;gt;&amp;lt;/html&amp;gt;&lt;/code&gt;&lt;/pre&gt;</Body>
+<Tags>python,sqlalchemy</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;it just executes your query and returns a list with results, see &lt;a href=&quot;http://docs.sqlalchemy.org/en/rel_1_0/orm/query.html#sqlalchemy.orm.query.Query.all&quot; rel=&quot;nofollow&quot;&gt;http://docs.sqlalchemy.org/en/rel_1_0/orm/query.html#sqlalchemy.orm.query.Query.all&lt;/a&gt;&lt;/p&gt;&lt;p&gt;alternatively you can execute the query manually:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;session.execute(Restaurant.select())&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;First example returns &lt;code&gt;Query&lt;/code&gt; object and you can apply additional methods on it, such as &lt;code&gt;all()&lt;/code&gt; - it will return results represented by that &lt;code&gt;Query&lt;/code&gt; as a list.&lt;/p&gt;&lt;p&gt;&lt;code&gt;Query&lt;/code&gt; object works on each row before give it, while the second works on all rows, before starting to give them.&lt;/p&gt;</Body>
+</answer>
+</qroot>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Compiling/Running Issues with C++ in Visual Studio, CodeBlocks, and Eclipse?</Title>
+<Body>&lt;p&gt;I wrote some code for a new assignment I got for a class, and noticed that whenever I tried to debug it, it would freeze Visual Studio 2015 completely.&lt;/p&gt;&lt;p&gt;I tried the code in CodeBlocks, and it just puts up a blank command prompt.&lt;/p&gt;&lt;p&gt;I tried the code in Eclipse and it just gets stuck trying to run it.&lt;/p&gt;&lt;p&gt;Opening the executable by itself creates a process that I can&#x27;t terminate.&lt;/p&gt;&lt;p&gt;Now, whenever I try and write a simple &quot;Hello World&quot; program, this freezes Visual Studio and Codeblocks as well. What do I do? This assignment is due tomorrow and I can&#x27;t debug or run the program without my IDEs freezing completely.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;#include &amp;lt;iostream&amp;gt;using namespace std;int main(){   cout &amp;lt;&amp;lt; &quot;Hello World&quot; &amp;lt;&amp;lt; endl;   return 0;}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;causes Visual Studio 2015 to freeze.&lt;/p&gt;</Body>
+<Tags>c++,eclipse,compiler-errors,visual-studio-2015,codeblocks</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;this sounds like a virus in your system or a conflict between the Compilers (two or more) running at the same time! Reboot the machine and just try to run it only one once if not reboot again and the try the 2nd compiler..and so on..if nothing helps... download a free antivirus (or buy one) to check your system!&lt;/p&gt;</Body>
+</answer>
+</qroot>

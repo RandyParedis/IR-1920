@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Choose a specific row in single column</Title>
+<Body>&lt;p&gt;I&#x27;m having a problem with my code. I can&#x27;t locate a specific row in a single column. I want to start the output on the second row of may dataframe.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;for row in dataframe.itertuples():    print (row.last[1][0])&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I&#x27;m having &lt;code&gt;IndexError: string index out of range&lt;/code&gt; error which I don&#x27;t understand. Thank you in advance for helping&lt;/p&gt;</Body>
+<Tags>python,python-3.x,dataframe</Tags>
+</question>
+</qroot>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Is there any better method of adding extra parameters during object serialization?</Title>
+<Body>&lt;p&gt;I want to add indent during serialization of object. But since &lt;code&gt;operator&amp;lt;&amp;lt;&lt;/code&gt; can only contains &lt;code&gt;2&lt;/code&gt; parameters:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;struct A {    int member;};ostream&amp;amp; operator&amp;lt;&amp;lt;(ostream&amp;amp; str, const A&amp;amp; a){  return str;}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now my solution is like this:  &lt;/p&gt;&lt;pre&gt;&lt;code&gt;struct A {    int m1;    int m2;};void print(const A&amp;amp; a, const int indent){    cout &amp;lt;&amp;lt; string(indent, &#x27;\t&#x27;) &amp;lt;&amp;lt; m1 &amp;lt;&amp;lt; endl;    cout &amp;lt;&amp;lt; string(indent + 1, &#x27;\t&#x27;) &amp;lt;&amp;lt; m2 &amp;lt;&amp;lt; endl;}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Is there any better method of adding extra parameters during object serialization?&lt;/p&gt;</Body>
+<Tags>c++,serialization</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;You could make a tuple or pair and send it to a &lt;code&gt;operator&amp;lt;&amp;lt;&lt;/code&gt;function&lt;/p&gt;&lt;p&gt;or you could also do something like&lt;/p&gt;&lt;pre&gt;&lt;code&gt;std::ostream&amp;amp; operator&amp;lt;&amp;lt;(std::ostream&amp;amp; os, const A&amp;amp; param)  {      auto width = os.width();    auto fill = os.fill();    os &amp;lt;&amp;lt; std::setfill(fill) &amp;lt;&amp;lt; std::right;    os &amp;lt;&amp;lt; std::setw(width) &amp;lt;&amp;lt; param.m1 &amp;lt;&amp;lt; std::endl;    os &amp;lt;&amp;lt; std::setw(width) &amp;lt;&amp;lt; fill &amp;lt;&amp;lt; param.m2 &amp;lt;&amp;lt; std::endl;    return os;  }  int main(){    struct A a{1,2};    std::cout.width(4);    std::cout.fill(&#x27;\t&#x27;);    std::cout &amp;lt;&amp;lt; a &amp;lt;&amp;lt; std::endl;}&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

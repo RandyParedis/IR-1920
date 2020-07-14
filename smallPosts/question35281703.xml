@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Pandas, groupby, rolling STD</Title>
+<Body>&lt;p&gt;I&#x27;m trying to calculate a grouped &lt;code&gt;rolling_std&lt;/code&gt;for a series of data and keep getting a value error &lt;code&gt;cannot reindex from a duplicate axis&lt;/code&gt;. I think from basic googling it&#x27;s referring to the fact that &lt;code&gt;trip_id&lt;/code&gt; are a series of duplicates, but I&#x27;ve grouped and applied functions using this same dataset before, so I can&#x27;t understand why it works in some respects and not in others. Both functions work on their own.&lt;/p&gt;&lt;p&gt;Hoping SO can educate me. &lt;/p&gt;&lt;p&gt;Code:&lt;/p&gt;&lt;p&gt;&lt;code&gt;df[&#x27;std&#x27;] = df.groupby(&#x27;trip_id&#x27;)[&#x27;knots&#x27;].apply(pd.rolling_std,2,min_periods=1)&lt;/code&gt;&lt;/p&gt;&lt;p&gt;DF:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;                     trip_id     knotstime                                  2016-01-03 23:42:20    18526  0.2332612016-01-03 23:43:16    18526  8.5723342016-01-03 23:43:15    18527  0.2526992016-01-03 23:42:49    18528  6.4341102016-01-03 23:42:48    18528  0.719221&lt;/code&gt;&lt;/pre&gt;</Body>
+<Tags>python,pandas</Tags>
+</question>
+</qroot>

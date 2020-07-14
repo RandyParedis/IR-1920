@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Python--Timedelta expression ignoring days (treating 6 mins the same as 24 hours + 6mins)</Title>
+<Body>&lt;p&gt;I&#x27;m trying to calculate the number of hours since a post has gone live.  It works, except it treats 24 hours later as 0 hours.  In other words, it seems to just subtract the current time from the baseline time without taking into consideration day differentials. &lt;/p&gt;&lt;pre&gt;&lt;code&gt;    def hours_live(self):         diff=((datetime.datetime.today() - self.created).seconds)/3600         return &#x27;%d Hours Ago&#x27; %diff&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;self.created refers to a Django DateTimeField:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;      created=models.DateTimeField(auto_now_add=True)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;What am I missing about the datetime object here?&lt;/p&gt;</Body>
+<Tags>python,django,datetime</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;You want &lt;code&gt;total_seconds()&lt;/code&gt;, not &lt;code&gt;seconds&lt;/code&gt;.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;Don&#x27;t forget you can use Django &lt;code&gt;timesince&lt;/code&gt; filter too as an option :)&lt;/p&gt;&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; import datetime&amp;gt;&amp;gt;&amp;gt; past = datetime.datetime.now() - datetime.timedelta(hours=6, minutes=20)&amp;gt;&amp;gt;&amp;gt;&amp;gt;&amp;gt;&amp;gt; from django.template.defaultfilters import timesince&amp;gt;&amp;gt;&amp;gt; timesince(past)u&#x27;6 hours, 20 minutes&#x27;&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

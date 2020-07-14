@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Python: Iterating through worksheets to export to csv</Title>
+<Body>&lt;p&gt;I&#x27;m doing a summary compare of two workbooks and outputting a third.  I&#x27;m doing this by exporting each workbook (identically structured, containing 15 worksheets) to a series of csv files and then doing a table-to-table compare by reading in csv file A and its correspondingly named csv file B converted from the second workbook.&lt;/p&gt;&lt;p&gt;I am using &lt;code&gt;xlrd&lt;/code&gt; and &lt;code&gt;csv&lt;/code&gt;&lt;/p&gt;&lt;p&gt;Here&#x27;s the part of the code that is failing:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;outpath_a = os.path.join(working_directory, &quot;out_a&quot;)  # dir set earlierworkbook_a_sheets = workbook_a.sheet_names()workbook_b_sheets = workbook_b.sheet_names()for a in workbook_a_sheets:    out_csv = os.path.join(outpath_a, a)    with open(out_csv, &#x27;wb&#x27;) as oca:        cw = csv.writer(oca, dialect=csv.excel, quoting=csv.QUOTE_ALL)        for rownum in xrange(a.nrows):            cw.writerow(a.row_values(rownum))&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;It is giving me the error:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;AttributeError: &#x27;unicode&#x27; object has no attribute &#x27;nrows&#x27;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I tried using &lt;code&gt;unicodecsv&lt;/code&gt; instead of &lt;code&gt;csv&lt;/code&gt; (&lt;code&gt;import unicodecsv as csv&lt;/code&gt;), but the error is the same.&lt;/p&gt;</Body>
+<Tags>python,excel,csv</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;You&#x27;re trying to access the sheet name like if it was the sheet object.&lt;/p&gt;&lt;p&gt;You need to call the &lt;code&gt;sheet_by_name&lt;/code&gt; method on your workbook to get it&lt;/p&gt;&lt;p&gt;fixed loop:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;for a in workbook_a_sheets:    out_csv = os.path.join(outpath_a, a)    with open(out_csv, &#x27;wb&#x27;) as oca:        cw = csv.writer(oca, dialect=csv.excel, quoting=csv.QUOTE_ALL)        # get sheet object from its name        a_sheet = workbook_a.sheet_by_name(a)        for rownum in xrange(a_sheet.nrows):            cw.writerow(a_sheet.row_values(rownum))&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

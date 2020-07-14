@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Fitting data with a complex function in python</Title>
+<Body>&lt;p&gt;I have some data that I am trying to fit with a model&lt;/p&gt;&lt;p&gt;Here&#x27;s the relevant part of my code &lt;/p&gt;&lt;pre&gt;&lt;code&gt;path=&#x27;D:/ParPhy/2-BESIII15_new.dat&#x27;data = pd.read_table(path,header=None)y=np.array(data[1])x=np.array(data[0]**(1/2))s=x**2def F_w(s,alpha,m_p,gamma_p):    P_s=1+alpha*s    A=-m_p**2    B=complex(s-m_p**2,m_p*gamma_p)    return abs(P_s*A/B)**2popt, pcov = curve_fit(F_w, x, y)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;and I keep getting a type error:&lt;/p&gt;&lt;blockquote&gt;  &lt;p&gt;&quot;only length-1 arrays can be converted to Python scalars&quot; about &quot;File &quot;D:/PYTHON/Particle Physics/fit_2.py&quot;, line 31, in F_w    &lt;strong&gt;B=complex(s-m_p**2,m_p*gamma_p)&quot;&lt;/strong&gt;&lt;/p&gt;&lt;/blockquote&gt;&lt;p&gt;Any help would be greatly appreciated.&lt;/p&gt;</Body>
+<Tags>python,scipy,curve-fitting,least-squares,data-fitting</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;The function &lt;code&gt;complex&lt;/code&gt; receives a scalar and you&#x27;re passing a numpy array. You have to apply the &lt;code&gt;complex&lt;/code&gt; function to each element of the arrays like that:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;B = np.zeros(m_p.size, dtype=np.complex)for i in range(m_p.size):    B[i] = complex(x[i], y[i])&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

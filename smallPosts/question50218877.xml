@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>trying to write code in python that will loop through server names in a url</Title>
+<Body>&lt;p&gt;This is what i have it works when there is only 1 server name in the URL It reads from. But when there is any more than the one server name it doesn&#x27;t work. so i&#x27;m trying to do a loop however it loops through each character instead of each line. Im writing this in python 2.7. any advice &lt;/p&gt;&lt;pre&gt;&lt;code&gt;#!/usr/bin/python2.7import urllib2import subprocessimport sysdef stuff ():    data = urllib2.urlopen(&#x27;url&#x27;)    next(data)    for line in data:        return(line).rstripHOST=stuff()COMMAND= &quot;uname -a&quot;for i in HOST:ssh = subprocess.Popen([&quot;ssh&quot;, &quot;%s&quot; % HOST, COMMAND],                   shell=False,                   stdout=subprocess.PIPE,                   stderr=subprocess.PIPE)result = ssh.stdout.readlines()if result == []:    error = ssh.stderr.readlines()    print &amp;gt;&amp;gt;sys.stderr, &quot;ERROR: %s&quot; % errorelse:    print result&lt;/code&gt;&lt;/pre&gt;</Body>
+<Tags>python,python-2.7,for-loop</Tags>
+</question>
+</qroot>

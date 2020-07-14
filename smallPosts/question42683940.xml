@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Running shell commands within Python, can not debug other Python modules called</Title>
+<Body>&lt;p&gt;I call shell commands from a Python script (init) to caffe functions, this specific example trains a model using solver prototxt. What it does is to use caffe framework&#x27;s built in functions, such as &quot;train&quot; and pass arguments. The train code is mainly built in C++ but it calls a Python script for a custom data layer. When I run the script below, it works, however I can not debug the custom Python data layer that is called by the training process. I have placed breakpoints and I try to run debug inline but it just works completely disregarding those breakpoints in the custom Python data layer. It only debugs the breakpoints in the init. I am using PyCharm. What can I do to debug this custom layer?&lt;/p&gt;&lt;pre&gt;&lt;code&gt;# Make a copy of the current environment, then add a few additional variablesenv = os.environ.copy()env[&#x27;HDF5_DISABLE_VERSION_CHECK&#x27;] = &#x27;1&#x27;env[&#x27;PYTHONPATH&#x27;] = &#x27;.&#x27;env[&#x27;GLOG_logtostderr&#x27;] = &#x27;1&#x27;subprocess.call([&quot;sampleexact/samplepath/build/tools/caffe&quot;, &quot;train&quot;, &quot;-solver&quot;,&quot;lstm_solver_flow.prototxt&quot;, &quot;-weights&quot;,&quot;single_frame_all_layers_hyb_flow_iter_50000.caffemodel&quot;], env=env)&lt;/code&gt;&lt;/pre&gt;</Body>
+<Tags>python,bash,shell,debugging,pycharm</Tags>
+</question>
+</qroot>

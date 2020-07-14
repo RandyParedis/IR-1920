@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Just-in-time compilation to bytecode/native code</Title>
+<Body>&lt;p&gt;It seems that the bytecode approach is very popular, as it is used by many popular programming languages, e.g., Java (with the JVM) and Python (using CPython). Although VM allows the same bytecode runs on different machine architectures without modification, when the speed is critical, is it still faster to native code instead of bytecode?&lt;/p&gt;&lt;p&gt;Does anybody know the pros and cons of JIT to bytecode vs native code (e.g, the approach used by libjit)? Thanks.&lt;/p&gt;</Body>
+<Tags>python,jvm,bytecode,jit,native-code</Tags>
+</question>
+</qroot>

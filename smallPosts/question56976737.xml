@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Python list membership with different types</Title>
+<Body>&lt;p&gt;I have a list of Python literals of various types, e.g.:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;literals = [1, 2, &#x27;a&#x27;, False]&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;By &quot;literal&quot; I mean any Python object that could be the output of &lt;a href=&quot;https://docs.python.org/2/library/ast.html#ast.literal_eval&quot; rel=&quot;nofollow noreferrer&quot;&gt;&lt;code&gt;ast.literal_eval&lt;/code&gt;&lt;/a&gt;. I want to write a function &lt;code&gt;literalInList&lt;/code&gt; to check if some other Python literal &lt;code&gt;x&lt;/code&gt; is in the &lt;code&gt;literals&lt;/code&gt; list:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;x = Trueif literalInList(x, literals):  # Should be False.  print(&#x27;The literal is in the list.&#x27;)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Notice that I can&#x27;t just do &lt;code&gt;x in literals&lt;/code&gt; because the &lt;code&gt;==&lt;/code&gt; and &lt;code&gt;in&lt;/code&gt; operators don&#x27;t check the literal type:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; True == 1True&amp;gt;&amp;gt;&amp;gt; False == 0True&amp;gt;&amp;gt;&amp;gt; 1 == 1.0True&amp;gt;&amp;gt;&amp;gt; True in [1, 2, &#x27;a&#x27;, False]True&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;So, my best attempt is the following:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;def literalInList(x, literals):  return any(x is lit for lit in literals)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This is admittedly quite ugly for a simple-sounding task. Is there a more elegant, efficient, or Pythonic way?&lt;/p&gt;</Body>
+<Tags>python</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;How about the following:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;def literalInList(x, literals):  def eq_x(y):    return x == y and type(x) is type(y)  return any(eq_x(y) for y in literals)literals = [1, 2, &#x27;a&#x27;, False]print(literalInList(True, literals))   # Falseprint(literalInList(False, literals))  # Trueprint(literalInList(1, literals))      # Trueprint(literalInList(1.0, literals))    # False&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

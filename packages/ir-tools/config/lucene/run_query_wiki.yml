@@ -1,0 +1,11 @@
+index: /Users/cwillis/dev/uiucGSLIS/indexes/lucene/wiki
+analyzer: org.apache.lucene.analysis.standard.StandardAnalyzer
+stopwords: /Users/cwillis/dev/uiucGSLIS/data/stoplist.all
+similarity: org.apache.lucene.search.similarities.DefaultSimilarity
+field: text
+docno: title
+queries:
+   - number: 1
+     text: '"jesus christ"~10'
+   - number: 2
+     text: '"Aleister Crowley"~10'

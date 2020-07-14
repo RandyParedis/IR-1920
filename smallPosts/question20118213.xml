@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>QT qmake instructions in defines?</Title>
+<Body>&lt;p&gt;is it possible to use QT qmake instructions in defines?&lt;/p&gt;&lt;p&gt;I tried to create an QT Plugin Interface class by a define:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;#define PLUGIN(NAME) \class NAME ## Plugin : public QObject, public IPluginInterface \{ \Q_OBJECT \Q_PLUGIN_METADATA(IID &quot;org.my.Plugins&quot; FILE &quot;NAME ## .json&quot;) \Q_INTERFACES(IPluginInterface) \public: \virtual ~NAME ## PluginInterface(){} \NAME ## PluginInterface(){} \/* implementation of interface */}; \NAME ## Plugin NAME ## plugininterface;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;but after running qmake and make my program does not load the plugin.Message is: Plugin verification data mismatch&lt;/p&gt;</Body>
+<Tags>c++,qt,plugins</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;No, it&#x27;s not (directly) possible, as &lt;code&gt;moc&lt;/code&gt; does not do preprocessing. See the relevant section in the &lt;a href=&quot;http://qt-project.org/doc/qt-4.8/moc.html#limitations&quot; rel=&quot;nofollow&quot;&gt;Qt docs for &lt;code&gt;moc&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;You might get away with it if you run the preprocessor manually (with some hacking not to expand &lt;code&gt;moc&lt;/code&gt;-used macros like &lt;code&gt;Q_OBJECT&lt;/code&gt;) and then run &lt;code&gt;moc&lt;/code&gt; on the preprocessed file. But that would require significnat support in your buildsystem.&lt;/p&gt;</Body>
+</answer>
+</qroot>

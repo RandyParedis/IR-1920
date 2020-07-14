@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Generic vector class, make 0 size reference to generic array members;</Title>
+<Body>&lt;p&gt;I have a simple template vector class like this:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;template &amp;lt;typename T, size_t N&amp;gt;class Vec {public:    T v[N];    //T const&amp;amp; x = v[0];    ...}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Can I make references to the array members without size cost? Becuse if I write the commented out code, it will allocate the size for the pointer, is there a workaround or a #define or some kind of magic?&lt;/p&gt;</Body>
+<Tags>c++,arrays,templates,generics,vector</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;No, there is no way to add a reference-type member to a class for 0 size cost. A reference is just a fancier, safer, and more convenient pointer. It still points to some specific memory location and needs to store the address of that location.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;blockquote&gt;  &lt;p&gt;Can I make references to the array members without size cost?&lt;/p&gt;&lt;/blockquote&gt;&lt;p&gt;Yes. References with automatic storage duration do not (always) need to require storage. Depending on the case, they may need to be stored on the stack, but will not grow the size of &lt;code&gt;Vec&lt;/code&gt;. So, you can use a function that returns the reference:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;T const&amp;amp; Vec::first() const { return v[0]; }&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Incidentally, &lt;code&gt;std::vector&lt;/code&gt; and other containers also provide similar functionality.&lt;/p&gt;</Body>
+</answer>
+</qroot>

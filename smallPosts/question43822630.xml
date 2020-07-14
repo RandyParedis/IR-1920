@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>how to fix appending in the wrong row using open()</Title>
+<Body>&lt;p&gt;I have a &lt;code&gt;CSV&lt;/code&gt; file has two columns and has the header on the first row. it looks like:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;95%  |  99%     |&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I try to use:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;with open(&#x27;XXXXX&#x27;,&#x27;a&#x27;) as f:    writer = csv.writer(f)    writer.writerow([a, b])&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;after I run this code twice, I tend to get result like:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;95%  |  99% a   |   b a   |   b&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;but my output is&lt;/p&gt;&lt;pre&gt;&lt;code&gt;95%  |  99%a | b a   |    b  |&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;How can I make it right? Thanks!&lt;/p&gt;</Body>
+<Tags>python-2.7,csv</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Your output file doesn&#x27;t end with a newline, so &lt;code&gt;writer&lt;/code&gt; is just appending to the end of the last, unterminated line. If you know this to be the case in general and want to just append a newline before writing, you can do this:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;import csvwith open(&#x27;blah.csv&#x27;,&#x27;a&#x27;) as f:  # using \r\n since that&#x27;s the default line terminator  f.write(&#x27;\r\n&#x27;);  writer = csv.writer(f)  writer.writerow([&#x27;a&#x27;, &#x27;b&#x27;])&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Another option is to read end of the file to check whether you need to append a newline or not, and only do so if the file doesn&#x27;t have a line terminator at the end:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;import csvunterminated = Falsetry:  with open(&#x27;blah.csv&#x27;,&#x27;rb&#x27;) as f:    f.seek(-2, 2)    if f.read(2) != &#x27;\r\n&#x27;:      unterminated = Trueexcept IOError:  passwith open(&#x27;blah.csv&#x27;,&#x27;ab&#x27;) as f:  if unterminated:    f.write(&#x27;\r\n&#x27;);  writer = csv.writer(f)  writer.writerow([&#x27;a&#x27;, &#x27;b&#x27;])&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

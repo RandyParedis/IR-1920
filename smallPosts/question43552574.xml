@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>What determines if a 32-bit library built on a 64-bit machine needs x86_64 or i386 dependencies?</Title>
+<Body>&lt;p&gt;I am updating some old C++ projects to build on a 64-bit Linux machine for the first time, and I don&#x27;t have much Linux experience. I need to build everything as 32-bit binaries, so I&#x27;m building everything with &lt;code&gt;-m32&lt;/code&gt; in the compiler and linker flags. I&#x27;m finding that, when linking to their dependencies, some must link with i386 shared objects, and some must link with x86_64 shared objects. If I only include the wrong folder in the linking path (&lt;code&gt;-L/path/to/wrong/folder&lt;/code&gt;), it says&lt;/p&gt;&lt;pre&gt;&lt;code&gt;/usr/bin/ld: skipping incompatible xxx.so when com.stackoverflow.searching for -lxxx&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;which I&#x27;ve come to understand &lt;a href=&quot;https://stackoverflow.com/questions/3119714/skipping-incompatible-libraries-at-compile&quot;&gt;means the architecture doesn&#x27;t match what I&#x27;m trying to build&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;The makefiles are nearly identical for two such differing projects, so it doesn&#x27;t seem like I&#x27;m doing something obviously wrong there, and &lt;code&gt;-m32&lt;/code&gt; appears in the calls to &lt;code&gt;gcc&lt;/code&gt; and &lt;code&gt;g++&lt;/code&gt; in the terminal. What could be causing this difference? Should I be concerned, or is it typical for this to happen?&lt;/p&gt;&lt;p&gt;Let me know if more information is needed to answer; I&#x27;m not really sure, due to inexperience with Linux and gcc, so apologies in advance.&lt;/p&gt;</Body>
+<Tags>c++,linux,gcc,linker,g++</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Thanks @Wyzard and @duskwuff for the tips. I was indeed able to find my problem by using &lt;code&gt;file&lt;/code&gt; on my .o files. It was just a silly mistake; I had inadvertently reverted the changes I made to one of the projects&#x27; &lt;code&gt;make&lt;/code&gt; files, which included adding the &lt;code&gt;-m32&lt;/code&gt; flag. I think I misunderstood what the &quot;x86_64&quot; libraries are for, and that confused me (I had assumed it meant &quot;32-bit process for 64-bit machine&quot;).&lt;/p&gt;</Body>
+</answer>
+</qroot>

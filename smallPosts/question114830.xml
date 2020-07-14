@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Is a Python dictionary an example of a hash table?</Title>
+<Body>&lt;p&gt;One of the basic data structures in Python is the dictionary, which allows one to record &quot;keys&quot; for looking up &quot;values&quot; of any type.  Is this implemented internally as a hash table?  If not, what is it?&lt;/p&gt;</Body>
+<Tags>python,hash,dictionary,hashmap,hashtable</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;Yes, it is a hash mapping or hash table. You can read a description of python&#x27;s dict implementation, as written by Tim Peters, &lt;a href=&quot;http://mail.python.org/pipermail/python-list/2000-March/048085.html&quot; rel=&quot;noreferrer&quot; title=&quot;Tim Peters&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;That&#x27;s why you can&#x27;t use something &#x27;not hashable&#x27; as a dict key, like a list:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; a = {}&amp;gt;&amp;gt;&amp;gt; b = [&#x27;some&#x27;, &#x27;list&#x27;]&amp;gt;&amp;gt;&amp;gt; hash(b)Traceback (most recent call last):  File &quot;&amp;lt;stdin&amp;gt;&quot;, line 1, in &amp;lt;module&amp;gt;TypeError: list objects are unhashable&amp;gt;&amp;gt;&amp;gt; a[b] = &#x27;some&#x27;Traceback (most recent call last):  File &quot;&amp;lt;stdin&amp;gt;&quot;, line 1, in &amp;lt;module&amp;gt;TypeError: list objects are unhashable&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You can &lt;a href=&quot;http://en.wikipedia.org/wiki/Hash_table&quot; rel=&quot;noreferrer&quot; title=&quot;Hash table on wikipedia&quot;&gt;read more about hash tables&lt;/a&gt; or &lt;a href=&quot;https://hg.python.org/cpython/file/10eea15880db/Objects/dictobject.c&quot; rel=&quot;noreferrer&quot; title=&quot;Dict Object in Python source code&quot;&gt;check how it has been implemented in python&lt;/a&gt; and &lt;a href=&quot;https://hg.python.org/cpython/file/10eea15880db/Objects/dictnotes.txt&quot; rel=&quot;noreferrer&quot; title=&quot;Notes on optimizing dictionaries in the CPython distribution&quot;&gt;why it is implemented that way&lt;/a&gt;.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;Yes.  Internally it is implemented as open hashing based on a primitive polynomial over Z/2 (&lt;a href=&quot;https://mail.python.org/pipermail/python-list/2000-February/036421.html&quot; rel=&quot;noreferrer&quot;&gt;source&lt;/a&gt;).&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;To expand upon nosklo&#x27;s explanation:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;a = {}b = [&#x27;some&#x27;, &#x27;list&#x27;]a[b] = &#x27;some&#x27; # this won&#x27;t worka[tuple(b)] = &#x27;some&#x27; # this will, same as a[&#x27;some&#x27;, &#x27;list&#x27;]&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;There must be more to a Python dictionary than a table lookup on hash(). By brute experimentation I found this &lt;strong&gt;hash collision&lt;/strong&gt;:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; hash(1.1)2040142438&amp;gt;&amp;gt;&amp;gt; hash(4504.1)2040142438&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Yet it doesn&#x27;t break the dictionary:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; d = { 1.1: &#x27;a&#x27;, 4504.1: &#x27;b&#x27; }&amp;gt;&amp;gt;&amp;gt; d[1.1]&#x27;a&#x27;&amp;gt;&amp;gt;&amp;gt; d[4504.1]&#x27;b&#x27;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Sanity check:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; for k,v in d.items(): print(hash(k))20401424382040142438&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Possibly there&#x27;s another lookup level beyond hash() that avoids collisions between dictionary keys. Or maybe dict() uses a different hash.&lt;/p&gt;&lt;p&gt;(By the way, this in Python 2.7.10. Same story in Python 3.4.3 and 3.5.0 with a collision at &lt;code&gt;hash(1.1) == hash(214748749.8)&lt;/code&gt;.)&lt;/p&gt;</Body>
+</answer>
+</qroot>

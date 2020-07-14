@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Clean dde session in Python</Title>
+<Body>&lt;p&gt;In a python script, I&#x27;m able to open a working dde session:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;import win32uiimport dde server = dde.CreateServer() server.Create(&#x27;MyServer&#x27;) ch = dde.CreateConversation(server)ch.ConnectTo(&#x27;ExternalProgram&#x27;,&#x27;calculation&#x27;)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Then, in the same script, I need to correctly close and &quot;clean&quot; that session, because I want to run again the same script in a second moment.&lt;/p&gt;&lt;p&gt;Unfortunately, I cannot find a way to close the dde session. Also after using server.Destroy() or server.Shutdown(), I still get an error when I try to create a new server and new conversation running the same script:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;error: ConnectTo failed&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Can you help? Thanks&lt;/p&gt;&lt;p&gt;My Python version:&#x27;2.7.8 |Anaconda 2.1.0 (64-bit)| (default, Jul  2 2014, 15:12:11) [MSC v.1500 64 bit (AMD64)]&#x27;Running Windows 10, but problem was present also in Win 8.&lt;/p&gt;</Body>
+<Tags>python,dde</Tags>
+</question>
+</qroot>

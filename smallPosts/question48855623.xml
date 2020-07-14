@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>How to vizualise Nan in a Tensorflow dataset</Title>
+<Body>&lt;p&gt;I have created a Tensorflow dataset from a Pandas dataframe the following way:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;train_dataset = tf.data.Dataset.from_tensor_slices((X_train,Y_train))&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I have verified that my dataframe has no NaN AND no NULL, but when I use tfdbg I can see that there are NaNs in my tf train_dataset (&lt;code&gt;lt -f has_inf_or_nan&lt;/code&gt; returns &lt;code&gt;[11.787]  28.89M   Const   tensors/component_0:0&lt;/code&gt; and component 0 is my train_dataset).&lt;/p&gt;&lt;p&gt;How can I find where are these NaN in order to debug what went wrong during the convertion ?&lt;/p&gt;&lt;p&gt;I have tried &lt;code&gt;tf.is_nan(train_dataset)&lt;/code&gt; but I get the following error:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;TypeError: Failed to convert object of type &amp;lt;class &#x27;tensorflow.python.data.ops.dataset_ops.TensorSliceDataset&#x27;&amp;gt; to Tensor. Contents: &amp;lt;TensorSliceDataset shapes: ((45,), (2,)), types: (tf.float64, tf.uint8)&amp;gt;. Consider casting elements to a supported type.&lt;/code&gt;&lt;/pre&gt;</Body>
+<Tags>python,pandas,tensorflow</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;this problem happen to me with images because I use the false index when I generate the datasets    &lt;/p&gt;&lt;p&gt;&lt;code&gt;NaN&lt;/code&gt; value means you have &lt;code&gt;NULL&lt;/code&gt; value inserted in dataSet &lt;/p&gt;</Body>
+</answer>
+</qroot>

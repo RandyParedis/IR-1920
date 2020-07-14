@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Error when loading Twitter search results</Title>
+<Body>&lt;p&gt;This may be a dumb question but I cannot figure it out for the life of mePlease excuse my confusing variable naming. I would be ecstatic if anyone could tell me why the following error is happening and/or any other mistakes any my code.&lt;/p&gt;&lt;blockquote&gt;  &lt;p&gt;JSON: error expecting property name line 1 column 2 (char 1)&lt;/p&gt;&lt;/blockquote&gt;&lt;pre&gt;&lt;code&gt;import jsonimport twittera = twitter.get_account(&quot;@Suppert2&quot;)q = &quot;cxdffcfctftcvft&quot;ac = twitter.search(a,q, count=1, parameters=None)abg = str(ac)print (abg)ah = json.loads(abg)  # here is where the error is occurring print ah[&quot;completed_in&quot;] &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;And when you print &lt;code&gt;abg&lt;/code&gt; it comes out as:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;{u&#x27;search_metadata&#x27;: {u&#x27;count&#x27;: 1, u&#x27;completed_in&#x27;: 0.048, u&#x27;max_id_str&#x27;: u&#x27;718234026394443782&#x27;, u&#x27;since_id_str&#x27;: u&#x27;0&#x27;, u&#x27;refresh_url&#x27;: u&#x27;?since_id=718234026394443782&amp;amp;q=x597567654dfv&amp;amp;include_entities=1&#x27;, u&#x27;since_id&#x27;: 0, u&#x27;query&#x27;: u&#x27;x597567654dfv&#x27;, u&#x27;max_id&#x27;: 718234026394443782L}, u&#x27;statuses&#x27;: []}&lt;/code&gt;&lt;/pre&gt;</Body>
+<Tags>python,json,twitter</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;That is not a valid JSON, you can use &lt;a href=&quot;http://jsonlint.com&quot; rel=&quot;nofollow&quot;&gt;http://jsonlint.com&lt;/a&gt; to verify it.&lt;/p&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;There is no need to load JSON here, &lt;code&gt;twitter.search()&lt;/code&gt; returns you a Python dictionary in the first place, just use it:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;ac = twitter.search(a,q, count=1, parameters=None)print(ac[&quot;statuses&quot;])print(ac[&quot;search_metadata&quot;][&quot;completed_in&quot;])&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+<answer>
+<Body>&lt;p&gt;&lt;strong&gt;It looks kind of like JSON, but it isn&#x27;t JSON.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Those &lt;code&gt;u&lt;/code&gt; prefixes, the &lt;code&gt;L&lt;/code&gt; suffix and the use of single-quotes all make it invalid JSON. That&#x27;s why treating it as JSON fails (and you can see that it&#x27;s not JSON by attempting to validate it at &lt;a href=&quot;http://jsonlint.com&quot; rel=&quot;nofollow&quot;&gt;http://jsonlint.com&lt;/a&gt;, always a good first debugging step).&lt;/p&gt;&lt;p&gt;This string is actually the string representation of a Python dictionary, which you got from &lt;code&gt;str(ac)&lt;/code&gt; because &lt;strong&gt;the Twitter API gave you a Python dictionary&lt;/strong&gt; (in &lt;code&gt;ac&lt;/code&gt;).&lt;/p&gt;&lt;p&gt;So use &lt;code&gt;ac&lt;/code&gt; directly, e.g.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;print(ac[&quot;search_metadata&quot;][&quot;completed_in&quot;])&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

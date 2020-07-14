@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Fix invalid polygon in Shapely</Title>
+<Body>&lt;p&gt;Shapely defines a Polygon as invalid if any of its segments intersect, including segments that are colinear. Many software packages will create a region or area with a &quot;cutout&quot; as shown here which has colinear segments:&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://i.stack.imgur.com/0t9hR.png&quot; rel=&quot;nofollow noreferrer&quot;&gt;&lt;img src=&quot;https://i.stack.imgur.com/0t9hR.png&quot; alt=&quot;enter image description here&quot;&gt;&lt;/a&gt;&lt;/p&gt;&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; pp = Polygon([(0,0), (0,3), (3,3), (3,0), (2,0),                   (2,2), (1,2), (1,1), (2,1), (2,0), (0,0)])&amp;gt;&amp;gt;&amp;gt; pp.is_validWARNING:shapely.geos:Self-intersection at or near point 2 0False&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Naturally, the cutout can be implemented natively in Shapely, or this same geometry can be implemented as two valid polygons, but if I only have the list of points shown above, is there an easy to &quot;fix&quot; this (create valid geometry from this list of points)?&lt;/p&gt;</Body>
+<Tags>python,geometry,shapely</Tags>
+</question>
+<answer>
+<Body>&lt;p&gt;I found a solution that works for the specific case given:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; pp2 = pp.buffer(0)&amp;gt;&amp;gt;&amp;gt; pp2.is_validTrue&amp;gt;&amp;gt;&amp;gt; pp2.exterior.coords[:][(0.0, 0.0), (0.0, 3.0), (3.0, 3.0), (3.0, 0.0), (2.0, 0.0), (0.0, 0.0)]&amp;gt;&amp;gt;&amp;gt; pp2.interiors[0].coords[:][(2.0, 1.0), (2.0, 2.0), (1.0, 2.0), (1.0, 1.0), (2.0, 1.0)]&lt;/code&gt;&lt;/pre&gt;</Body>
+</answer>
+</qroot>

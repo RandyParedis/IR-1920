@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>Real time audio application</Title>
+<Body>&lt;p&gt;I designed an audio visualizer plugin which plots a real time rendering of an input waveform and some analysis of the input audio data (for example a spectrogram).The analysis engine settings can be modified by the user using some knobs on the interface.The data collected from the audio thread is transferred to the event thread (to update the waveform view and the analysis view) by using a lock-free circular buffer.&lt;/p&gt;&lt;p&gt;So my question is, when I pass the parameters values from the interface to re-configure the audio engine, should I send a synchronous notification or an asynchronous one ? It seems to be common to use asynchronous one but I can&#x27;t find why.If somebody could explain me, it would be very helpful.&lt;/p&gt;&lt;p&gt;Thank you.&lt;/p&gt;</Body>
+<Tags>c++,xcode,macos,audio,juce</Tags>
+</question>
+</qroot>

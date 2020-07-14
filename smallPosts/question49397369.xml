@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qroot>
+<question>
+<Title>installing pygraphviz on Python3.6 (win10, anaconda)</Title>
+<Body>&lt;p&gt;I have problems installing pygraphviz, I tried several ways but none succeeded&lt;/p&gt;&lt;p&gt;1.&gt;pip install pygraphviz&lt;/p&gt;&lt;p&gt;Running setup.py bdist_wheel for pygraphviz ... error  Failed building wheel for pygraphviz  Running setup.py install for pygraphviz ... error&lt;/p&gt;&lt;p&gt;2.&gt;pip install pygraphviz-1.3.1-cp34-none-win_amd64.whl&lt;/p&gt;&lt;p&gt;pygraphviz-1.3.1-cp34-none-win_amd64.whl is not a supported wheel on this platform.&lt;/p&gt;&lt;p&gt;3.&gt;pip install pygraphviz-1.4rc1.tar.gz&lt;/p&gt;&lt;p&gt;Running setup.py bdist_wheel for pygraphviz ... error  Failed building wheel for pygraphviz  Running setup.py install for pygraphviz ... error&lt;/p&gt;&lt;p&gt;4.&gt;python setup.py install --include-path=/usr/local/Cellar/graphviz/2.38.0/include/graphviz --library-path=/usr/local/Cellar/graphviz/2.38.0/lib&lt;/p&gt;&lt;p&gt;&#x27;graphviz/cgraph.h&#x27;: No such file or directoryerror: command &#x27;C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\VC\Tools\MSVC\14.13.26128\bin\HostX86\x64\cl.exe&#x27; failed with exit status 2&lt;/p&gt;</Body>
+<Tags>python-3.6,pygraphviz</Tags>
+</question>
+</qroot>

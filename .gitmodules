@@ -1,3 +1,0 @@
-[submodule "packages/ir-tools"]
-	path = packages/ir-tools
-	url = https://github.com/gtsherman/ir-tools.git

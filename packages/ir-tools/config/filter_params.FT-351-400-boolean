@@ -1,0 +1,11 @@
+{
+"queries"          :  "./topics/topics.351-400.manual.json",
+"stopper"          :  "./data/stoplist.all",
+"train-index"      :  "/Users/mefron/ir/indexes/FT.train",
+"test-index"       :  "/Users/mefron/ir/indexes/FT.test",
+"train-qrels"      :  "./qrels/qrels.FT.351-400.train",
+"test-qrels"       :  "./qrels/qrels.FT.351-400.test",
+"scorer-name"      :  "edu.gslis.docscoring.ScorerDummy",
+"optimizer-name"   :  "edu.gslis.filtering.threshold.ThresholdFinderDummy",
+"run-name"         :  "boolean"
+}

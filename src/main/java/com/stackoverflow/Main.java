@@ -2,6 +2,7 @@ package com.stackoverflow;
 
 import com.stackoverflow.helper.ProgressBar;
 import com.stackoverflow.searching.InfoCustom;
+import edu.gslis.lucene.main.config.QueryConfig;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.search.Query;
@@ -10,6 +11,8 @@ import com.stackoverflow.searching.RelevanceMarker;
 import com.stackoverflow.searching.SearchEngine;
 import com.stackoverflow.searching.MyCustomAnalyzer;
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.search.similarities.BM25Similarity;
+import org.retrievable.lucene.searching.expansion.Rocchio;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -76,7 +79,7 @@ public class Main {
             System.exit(1);
         }
 
-        SearchEngine engine = new SearchEngine(loc, analyzer, new BM25Similarity());
+        SearchEngine engine = new SearchEngine(loc, analyzer, new BM25Similarity(1.2f, 0.75f));
         engine.index();
 
         // Load all queries
@@ -95,38 +98,29 @@ public class Main {
 //        }
 
 
-        List<Query> queries = queryLoader.getQueries("data/suggestionsQuery.txt", SUGGESTIONS,
-                (String q) -> q.substring(3));
+        List<QueryConfig> queries = queryLoader.readQueries("data/suggestionsQuery.txt", SUGGESTIONS);
 
-        System.out.println("Testing Engine...");
+        Rocchio expander = new Rocchio();
+
+        System.out.println("Searching...");
         ProgressBar pb = new ProgressBar(0, queries.size());
         pb.print();
         // Write all matches to file in the same format as the manual labeling happened
-        // TODO: do things with matched documents
         List<String> labels = new ArrayList<>();
-        for(int qid = 0; qid < queries.size(); ++qid) {
-            // Find the matching documents
-            Query query = queries.get(qid);
-//            System.out.println("Query " + qid + ": " + query.toString());
+        for (QueryConfig query : queries) {
+            expander.expandQuery(engine.getSearcher(), query, engine.getReader().numDocs(), 200);
             Map<Double, Document> documents = engine.search(query);
-//            System.out.println("Query " + query.toString());
-
 
             // Store for file writing
             List<String> ids = new ArrayList<>();
-            for(Map.Entry<Double, Document> pair: documents.entrySet()) {
+            for (Map.Entry<Double, Document> pair : documents.entrySet()) {
                 ids.add(SearchEngine.questionID(pair.getValue().get("name")) + "," + pair.getKey());
             }
-            String results =  String.format("%02d", qid);
 
-            // Special ids:
-            if(qid == queries.size() - 2) { // 98 is Python
-                results = "98";
-            } else if(qid == queries.size() - 1) { // 99 is CPP
-                results = "99";
-            }
-            results += ":" + String.join(";", ids);
+            String results = String.format("%02d", Integer.parseInt(query.getNumber())) + ":" +
+                    String.join(";", ids);
             labels.add(results);
+
             pb.next();
             pb.print();
         }
@@ -134,8 +128,5 @@ public class Main {
         BufferedWriter writer = new BufferedWriter(new FileWriter("data/labels.txt"));
         writer.write(String.join("\n", labels));
         writer.close();
-//
-//        // TODO: Mark as relevant and generate plot data
-//        RelevanceMarker relevanceMarker = new RelevanceMarker();
     }
 }

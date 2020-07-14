@@ -1,0 +1,22 @@
+indexPath: testdata/trectest.lucene
+corpus: 
+   path: testdata/trectest/
+   filter: "*.tgz"
+   type: trectext
+fields:
+   - name: docno
+     source: element
+     element: DOCNO
+     type: string
+   - name: epoch
+     source: element
+     element: EPOCH
+     type: long
+   - name: headline
+     source: element
+     element: HEADLINE
+     type: text
+   - name: text
+     source: element
+     element: TEXT
+     type: text

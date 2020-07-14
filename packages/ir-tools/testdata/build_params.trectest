@@ -1,0 +1,15 @@
+<parameters>
+   <index>testdata/trectest.indri</index>
+   <corpus>
+      <path>testdata/tmp/trectest/</path>
+      <class>trectext</class>
+   </corpus>
+  <metadata>
+    <forward>epoch</forward>
+    <backward>epoch</backward>
+  </metadata>
+  <field>
+   <name>epoch</name>
+   <numeric>true</numeric>
+  </field>
+</parameters>

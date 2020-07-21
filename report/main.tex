@@ -295,7 +295,7 @@ Using the averaged PR- and ROC-curves to visualize the results, we can conclude 
 \begin{figure}[htp]
     \centering
     \includegraphics[width=\textwidth]{images/StandardAnalyzer}
-    \caption{Results initial Benchmark Performance.}
+    \caption{Results initial benchmark performance.}
     \label{fig:initBP}
 \end{figure}
 
@@ -307,13 +307,13 @@ Different similarity measurements have an impact on the performance of the syste
 \begin{figure}[htp]
 	\centering
 	\includegraphics[width=\textwidth]{images/Boolean-Standard}
-	\caption{An overview of the standard Analyzer using a Boolean Similarity measurement}
+	\caption{An overview of the standard analyzer using a Boolean Similarity measurement}
 	\label{fig:bool}
 \end{figure}
 \begin{figure}[htp]
 	\centering
 	\includegraphics[width=\textwidth]{images/Tfidf-standard}
-	\caption{An overview of the standard Analyzer using a Tf-Idf Similarity measurement}
+	\caption{An overview of the standard analyzer using a Tf-Idf Similarity measurement}
 	\label{fig:tfidf}
 \end{figure}
 
@@ -386,32 +386,44 @@ A final result of our benchmarking study can be found in figure \ref{fig:synonym
 Note that $n$-grams are not included in this result.
 
 \section{Rocchio Algorithm}\label{sec:rocchio}
-Next, we wanted to apply the \textsf{Rocchio} algorithm for pseudo-relevance feedback. It's principle is simple: we search for a query, mark some documents as ``\textit{relevant}'' and change the angle of our query vector so it is located in the center of the cluster of relevant documents\footnote{Note that this method assumes all relevant documents are located in the same cluster.}.
+One possible optimization can come from the \textsf{Rocchio} algorithm for pseudo-relevance feedback. It's principle is simple: each document is located in an $n$-dimensional space, we search for a query (in the same space), mark some documents as ``\textit{relevant}'' and change the angle of our query vector so it is located in the center of the cluster of relevant documents. Note that this method assumes all relevant documents are located in the same cluster.
 
-Unfortunately, we hit a brick wall. And we hit it hard. In theory, there is no problem. We apply the Rocchio formula as given below to our original query $Q_o$:
+To apply the algorithm, the following formula can be used to alter our original query $\overrightarrow{Q_o}$:
 $$\overrightarrow{Q_n} = \alpha \overrightarrow{Q_o} + \beta \frac{1}{|D_R|} \sum_{\overrightarrow{Q_j} \in D_R}{\overrightarrow{Q_j}} + \gamma \frac{1}{|D_{NR}|} \sum_{\overrightarrow{Q_k} \in D_{NR}}{\overrightarrow{Q_k}}$$
-Let's ignore the scale factors $\alpha$, $\beta$ and $\gamma$ for now. In section \ref{sec:bstudy}, we described a way to easily and uniformly determine if a document was ``\textit{correct}'' (read: \textit{relevant}) or not. So we have a query $q$, a set of relevant documents $D_R$ and a set of irrelevant documents $D_{NR}$ (which can be obtained from the simple truth that $D_R + D_{NR} = D$, where $D$ represents the set of all documents). Because we remembered the frequency vectors (see section \ref{sec:fv}), we can easily transform all these variables into their corresponding vectors and apply the formula.
+In section \ref{sec:bstudy}, we described a way to easily and uniformly determine if a document was ``\textit{correct}'' (read: \textit{relevant}) or not. So we have a query $q$, a set of relevant documents $D_R$ and a set of irrelevant documents $D_{NR}$ (which can be obtained from the simple truth that $D_R + D_{NR} = D$, where $D$ represents the set of all documents). Because we remembered the frequency vectors (see section \ref{sec:fv}), we can easily transform all these variables into their corresponding vectors and apply the formula.
 
-As you might recall, we described in the beginning of section \ref{sec:query} that Lucene does not work nicely with manipulating the VSM and com.stackoverflow.searching by queries. Yet, we decided not to create a custom system for com.stackoverflow.searching the documents, due to the sheer size of our data. This decision sort of came back to haunt us.
+Unfortunately, while we tried to come up with a viable algorithm to compute $\overrightarrow{Q_n}$ from the information Lucene provided on the query, we failed in doing so. Instead, we pointed our attention to already-existing library for computing pseudo-relevance feedback \cite{rocchio} and its dependency \cite{glis}. The last activity in either of these repositories dates from 2017, hence a lot of functions and features follow an outdated Lucene version, compared to our project. Therefore, instead of adding these repositories as submodules, they were added by copying the files. This way, we could update the dependencies to work with our code. Additionally, we changed our build system from a single Java-command to Maven.
 
-Because we did not develop such a system and thus do not have an optimized method for com.stackoverflow.searching (and sorting) our documents, we have to map our custom feature vectors onto a Lucene boolean query string. Lucene's query syntax (found in \cite{lucene}) provides a way to add a \textit{boost} to each term in the query. Hence, for each term in our resulting query vector $\overrightarrow{Q_n}$, we give it a boost of its absolute value and negate it if the original value in $\overrightarrow{Q_n}$ was negative.
+% @Joost: Misschien de uitleg over ROC vroeger al vermelden en met dat standpunt verder werken?
+Exercising \textsf{Rocchio} for the \texttt{StandardAnalyzer} yields the results shown in figure \ref{fig:rocchio-standard}. Compared to figures \ref{fig:initBP}, \ref{fig:bool} and \ref{fig:tfidf}, we can see clearly that the AUC is increased, resulting in a better ROC curve. Unfortunately, for our use-case, the ROC (and AUC) are not the best measures to use, seeing as they only show the quality of the order compared to a random order. Ideally, we'd want as many relevant documents as possible in the top-k, hence optimizing the PR curve. Therefore, the \textsf{Rocchio} algorithm combined with the standard analyzer performs worse than when using our custom analyzer.
 
-For instance, if $\overrightarrow{Q_n}$ states that the term ``\texttt{python}'' has a score of 5.6 and ``\texttt{abstract}'' has a score of -9.123, our resulting query string would be ``\texttt{python\string^5.6 -abstract\string^9.123}''.
+\begin{figure}[htp]
+	\centering
+	\includegraphics[width=\textwidth]{images/rocchio-standard}
+	\caption{The standard analyzer combined with the \textsf{Rocchio} algorithm for pseudo-relevance feedback.}
+	\label{fig:rocchio-standard}
+\end{figure}
 
-Now, for each word in our vocabulary (which counts approximately $20\,000$ words), we have a term in our query string\footnote{Since we drop all terms that would have a \textit{boost} of 0, this is slightly less than our entire vocabulary, but the difference is nullable.}. Also, Lucene cannot handle boolean queries that count over $1\,024$ words (by default), so having almost 20 times that size is difficult.
-
-We can solve this issue by saying that Lucene must ignore the maximal clause count as follows:
-\begin{lstlisting}[language=Java]
-BooleanQuery.setMaxClauseCount(Integer.MAX_VALUE);
-\end{lstlisting}
-
-In hindsight, Lucene put that number by default to $1\,024$ for a good reason. As soon as this value is exceeded, it takes notably longer\footnote{In fact, the process was sooner killed, due to ``hanging'' than it finishing for a single query.} to execute a simple search, so this is not the solution we were aiming for.
-
-On top of that, notice how we must apply a mathematical formula to vectors of size $20\,000$. This formula takes an incredibly long time to compute, causing our benchmarking to be estimated to take 80 hours to run (if we were to limit the query generation to a mere 500 terms, which is a massive oversight in itself). And this is even ignoring the fact that we wanted to test it out for different values of $\alpha$, $\beta$ and $\gamma$.
-
-Long story short, the way we have approached Rocchio is not the way to go. An optimization would be to set both $\beta$ and $\gamma$ to 0, but then we technically don't do anything. Another solution would be to limit our dataset to very few documents, but here the issues remain the same (with still an estimate of a couple of days).
-
-Due to time constrains and the lacking documentation of Lucene on this front, we believe Rocchio (or other kinds of pseudo-relevance feedback) not to be possible with the current setup of our system.
+%As you might recall, we described in the beginning of section \ref{sec:query} that Lucene does not work nicely with manipulating the VSM and com.stackoverflow.searching by queries. Yet, we decided not to create a custom system for com.stackoverflow.searching the documents, due to the sheer size of our data. This decision sort of came back to haunt us.
+%
+%Because we did not develop such a system and thus do not have an optimized method for com.stackoverflow.searching (and sorting) our documents, we have to map our custom feature vectors onto a Lucene boolean query string. Lucene's query syntax (found in \cite{lucene}) provides a way to add a \textit{boost} to each term in the query. Hence, for each term in our resulting query vector $\overrightarrow{Q_n}$, we give it a boost of its absolute value and negate it if the original value in $\overrightarrow{Q_n}$ was negative.
+%
+%For instance, if $\overrightarrow{Q_n}$ states that the term ``\texttt{python}'' has a score of 5.6 and ``\texttt{abstract}'' has a score of -9.123, our resulting query string would be ``\texttt{python\string^5.6 -abstract\string^9.123}''.
+%
+%Now, for each word in our vocabulary (which counts approximately $20\,000$ words), we have a term in our query string\footnote{Since we drop all terms that would have a \textit{boost} of 0, this is slightly less than our entire vocabulary, but the difference is nullable.}. Also, Lucene cannot handle boolean queries that count over $1\,024$ words (by default), so having almost 20 times that size is difficult.
+%
+%We can solve this issue by saying that Lucene must ignore the maximal clause count as follows:
+%\begin{lstlisting}[language=Java]
+%BooleanQuery.setMaxClauseCount(Integer.MAX_VALUE);
+%\end{lstlisting}
+%
+%In hindsight, Lucene put that number by default to $1\,024$ for a good reason. As soon as this value is exceeded, it takes notably longer\footnote{In fact, the process was sooner killed, due to ``hanging'' than it finishing for a single query.} to execute a simple search, so this is not the solution we were aiming for.
+%
+%On top of that, notice how we must apply a mathematical formula to vectors of size $20\,000$. This formula takes an incredibly long time to compute, causing our benchmarking to be estimated to take 80 hours to run (if we were to limit the query generation to a mere 500 terms, which is a massive oversight in itself). And this is even ignoring the fact that we wanted to test it out for different values of $\alpha$, $\beta$ and $\gamma$.
+%
+%Long story short, the way we have approached Rocchio is not the way to go. An optimization would be to set both $\beta$ and $\gamma$ to 0, but then we technically don't do anything. Another solution would be to limit our dataset to very few documents, but here the issues remain the same (with still an estimate of a couple of days).
+%
+%Due to time constrains and the lacking documentation of Lucene on this front, we believe Rocchio (or other kinds of pseudo-relevance feedback) not to be possible with the current setup of our system.
 
 \clearpage
 \bibliographystyle{abbrv}

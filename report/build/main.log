@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2020.2.26)  21 JUL 2020 10:04
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2020.2.26)  21 JUL 2020 09:13
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -327,8 +327,8 @@ Package epstopdf Info: Source file: <images/plots.eps>
 Package epstopdf Info: Output file is already uptodate.
 
 
-pdfTeX warning: /usr/bin/pdflatex (file ./images/plots-eps-converted-to.pdf): P
-DF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
+pdfTeX warning: pdflatex (file ./images/plots-eps-converted-to.pdf): PDF inclus
+ion: found PDF version <1.7>, but at most version <1.5> allowed
 <images/plots-eps-converted-to.pdf, id=42, 358.33875pt x 206.7725pt>
 File: images/plots-eps-converted-to.pdf Graphic file (type pdf)
 <use images/plots-eps-converted-to.pdf>
@@ -391,69 +391,69 @@ File: images/customAna-synonym.png Graphic file (type png)
 <use images/customAna-synonym.png>
 Package pdftex.def Info: images/customAna-synonym.png  used on input line 377.
 (pdftex.def)             Requested size: 360.0pt x 270.01141pt.
- [20 <./images/customAna-synonym.png>] [21]
-<images/rocchio-standard.png, id=108, 462.528pt x 346.896pt>
-File: images/rocchio-standard.png Graphic file (type png)
-<use images/rocchio-standard.png>
-Package pdftex.def Info: images/rocchio-standard.png  used on input line 402.
-(pdftex.def)             Requested size: 360.0pt x 270.01141pt.
-
-[22 <./images/rocchio-standard.png>] (./main.bbl
-Underfull \hbox (badness 2318) in paragraph at lines 19--22
-[]\OT1/cmr/m/n/10.95 gtsherman Roc-chio repos-i-tory.  $\OT1/cmtt/m/n/10.95 htt
-ps : / / github . com / gtsherman /
+ [20 <./images/customAna-synonym.png>]
+Overfull \hbox (60.17513pt too wide) in paragraph at lines 395--396
+\OT1/cmr/m/n/10.95 Lucene does not work nicely with ma-nip-u-lat-ing the VSM an
+d com.stackoverflow.searching
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 24--26
-[]\OT1/cmr/m/n/10.95 Hapax Legomenon.  $\OT1/cmtt/m/n/10.95 https : / / en . wi
+Overfull \hbox (59.49692pt too wide) in paragraph at lines 395--396
+\OT1/cmr/m/n/10.95 by queries. Yet, we de-cided not to cre-ate a cus-tom sys-te
+m for com.stackoverflow.searching
+ []
+
+[21] [22] (./main.bbl
+Underfull \hbox (badness 10000) in paragraph at lines 14--16
+[]\OT1/cmr/m/n/10.95 Hapax legomenon.  $\OT1/cmtt/m/n/10.95 https : / / en . wi
 kipedia . org / wiki / Hapax \
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 28--31
+Underfull \hbox (badness 10000) in paragraph at lines 18--21
 []\OT1/cmr/m/n/10.95 Lucene Ba-sic Con-cepts.  $\OT1/cmtt/m/n/10.95 http : / / 
 www . lucenetutorial . com /
  []
 
 
-Underfull \hbox (badness 3148) in paragraph at lines 33--36
+Underfull \hbox (badness 3148) in paragraph at lines 23--26
 []\OT1/cmr/m/n/10.95 Offline database of syn-onyms/the-saurus.  $\OT1/cmtt/m/n/
 10.95 https : / / github . com /
  []
 
 ) [23
 
-] (./main.aux) ) 
+] (build/main.aux) ) 
 Here is how much of TeX's memory you used:
- 5443 strings out of 494805
- 75196 string characters out of 6178000
- 250829 words of memory out of 5000000
- 8680 multiletter control sequences out of 15000+600000
- 13373 words of font info for 48 fonts, out of 8000000 for 9000
+ 5442 strings out of 494805
+ 75124 string characters out of 6178000
+ 250811 words of memory out of 5000000
+ 8678 multiletter control sequences out of 15000+600000
+ 13718 words of font info for 49 fonts, out of 8000000 for 9000
  81 hyphenation exceptions out of 8191
  41i,14n,42p,849b,1523s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/c
-mbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.
-pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></
-usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/sh
-are/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/tex
-live/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/te
-xmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dis
-t/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts
-/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/type1/p
-ublic/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/am
-sfonts/cm/cmr9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/c
-m/cmsl10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss
-10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb
-></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/
-share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/
-texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/share/texliv
-e/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb>
-Output written on main.pdf (23 pages, 576041 bytes).
+</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/
+cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmb
+x12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pf
+b></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></us
+r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share
+/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texliv
+e/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf
+-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/f
+onts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/typ
+e1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/publi
+c/amsfonts/cm/cmr9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfon
+ts/cm/cmsl10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/
+cmss10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10
+.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></
+usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/sh
+are/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb></usr/share/tex
+live/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/share/texlive/t
+exmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb>
+Output written on build/main.pdf (23 pages, 565997 bytes).
 PDF statistics:
- 174 PDF objects out of 1000 (max. 8388607)
- 109 compressed objects within 2 object streams
+ 176 PDF objects out of 1000 (max. 8388607)
+ 112 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
- 51 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 46 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -2,6 +2,7 @@ package org.retrievable.lucene.searching.expansion;
 
 import java.io.IOException;
 
+import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
@@ -39,7 +40,8 @@ public class Rocchio {
 		this.b = b;
 	}
 	
-	public void expandQuery(IndexSearcher index, QueryConfig query, int fbDocs, int fbTerms) throws IOException {
+	public void expandQuery(IndexSearcher index, QueryConfig query, int fbDocs, int fbTerms)
+			throws IOException {
 		ScoreDoc[] initialResults = Searcher.search(index, query, fbDocs);
 		
 		FeatureVector summedTermVec = new FeatureVector(null);

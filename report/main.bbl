@@ -10,8 +10,18 @@
 \newblock \url{https://en.wikipedia.org/wiki/Apache\_Lucene}.
 \newblock Accessed: 2019-12-18.
 
+\bibitem{glis}
+{GLIS} ir-tools repository.
+\newblock \url{https://github.com/uiucGSLIS/ir-tools}.
+\newblock Accessed: 2020-06-05.
+
+\bibitem{rocchio}
+gtsherman {Rocchio} repository.
+\newblock \url{https://github.com/gtsherman/lucene}.
+\newblock Accessed: 2020-06-05.
+
 \bibitem{hapax}
-{Hapax legomenon}.
+{Hapax Legomenon}.
 \newblock \url{https://en.wikipedia.org/wiki/Hapax\_legomenon}.
 
 \bibitem{lucene-tutorial}

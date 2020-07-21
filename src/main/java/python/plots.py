@@ -98,7 +98,7 @@ def plot_pr_curve(ax, y_true, y_pred):
     ax.set_ylabel('Precision')
     ax.set_ylim([0.0, 1.05])
     ax.set_xlim([0.0, 1.0])
-    ax.set_title('Precision-Recall Curve: AP={0:0.2f}'.format(average_precision))
+    ax.set_title('Precision-Recall Curve')
 
 
 def plot_roc_curve(ax, y_true, y_score):
@@ -111,11 +111,11 @@ def plot_roc_curve(ax, y_true, y_score):
     fpr_rf, tpr_rf, _ = roc_curve(y_true, y_score)
 
     ax.plot([0, 1], [0, 1], 'k--')
-    ax.plot(fpr_rf, tpr_rf, label='RF')
+    ax.plot(fpr_rf, tpr_rf)
     ax.set_xlabel('False positive rate')
     ax.set_ylabel('True positive rate')
     ax.set_title('ROC Curve')
-    ax.legend(loc='best')
+    # ax.legend(loc='best')
 
 
 def pr_at_k(rels, expected_count, k):
@@ -194,9 +194,9 @@ if __name__ == '__main__':
     print("Weighted Recall@%i    =" % args.k, wrk)
     print("Weighted Accuracy@%i    =" % args.k, wak)
 
-    fig2, (ax1, ax2) = plt.subplots(1, 2)
-    fig2.suptitle(args.title, fontsize=16)
-    plot_pr_curve(ax1, y_exp, y_pred)
-    plot_roc_curve(ax2, y_exp, y_score)
-    plt.subplots_adjust(wspace=0.3)
-    plt.show()
+    # fig2, (ax1, ax2) = plt.subplots(1, 2)
+    # fig2.suptitle(args.title, fontsize=16)
+    # plot_pr_curve(ax1, y_exp, y_pred)
+    # plot_roc_curve(ax2, y_exp, y_score)
+    # plt.subplots_adjust(wspace=0.3)
+    # plt.show()

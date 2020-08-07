@@ -12,6 +12,9 @@ import com.stackoverflow.searching.SearchEngine;
 import com.stackoverflow.searching.MyCustomAnalyzer;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.search.similarities.BM25Similarity;
+import org.apache.lucene.search.similarities.BooleanSimilarity;
+import org.apache.lucene.search.similarities.TFIDFSimilarity;
+import org.apache.lucene.search.similarities.ClassicSimilarity;
 import org.retrievable.lucene.searching.expansion.Rocchio;
 
 import java.io.BufferedWriter;

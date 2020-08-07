@@ -6,6 +6,7 @@
 \usepackage{amsmath}
 \usepackage{url}
 \usepackage[english]{babel} % Valid line breaking
+\usepackage{subfig}
  
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
@@ -244,39 +245,28 @@ To evaluate the retrieval performance of Lucene, the PR- and the ROC-curve will 
     F &= \frac{FP}{FP+TN}
 \end{align*}
 
+Unfortunately, for our use-case, the ROC (and AUC) are not the best measures to use, seeing as they only show the quality of the order compared to a random order. In this document retrieval system, the top-$k$ is the most important part of the returned documents. To measure the quality of this top list, we will calculate the \textsf{Precision@k}, \textsf{Recall@k} and \textsf{Accuracy@k} values. Formulas for these numbers are given as follows, using $R$ is the total relevant documents with $r \subseteq R$ documents in the top-$k$ and $t$ are the TN documents in that top-$k$:
+
+\begin{align*}
+P@k &= \frac{r}{k}&
+R@k &= \frac{r}{R}&
+A@k &= \frac{r}{r+t}
+\end{align*}
+
 \subsection{Manual Labeling}
-Contrary to what it's name might suggest, we did not select a number of documents which we labeled by hand for a specific query. This seemed to bring us too far away from the project scope and therefore we focused on finding an acceptable algorithm to solve this issue. We were mainly inspired by this part of the assignment:
+First, we randomly choose 500 documents out of the complete data set. Then, 35 different queries are manually created based on the content of these documents. The queries are `human real life' created such that the use case is matching the reality. Some examples of the queries are: \textit{``How to read and write to a file''} and \textit{``Beautifulsoup web scrapers''}. Next to these queries, there are also two test queries to check if the algorithm works, namely the queries \textit{``Python''} and \textit{``C++''}.
 
-\begin{displayquote}
-    \textsl{One acceptable approach is to use the titles of the questions as the query, and only index the remaining parts of the documents. In this way a ground truth can be generated rather easily.}
-\end{displayquote}
-
-We tried different methods for achieving our goal and, at long last, we stranded on the method described below.
-
-First things first, we have a system that can determine the score of all documents, given a set of queries. Unfortunately, this system alone is not enough in determining the amount of True Positives ($TP$), False Negatives ($FN$), False Positives ($FP$) and True Negatives ($TN$). We need a way to consistently label documents as either ``\textit{correct}'' or ``\textit{incorrect}''. And this can be done by exploiting the use of \textit{tags}.
-
-\subsubsection{Tags as Queries}
-Each question in our dataset has a group of \textit{tags} associated to it. These \textit{tags} generally mark the topics or problem domains to which the questions apply, therefore we can state that, if we search for any group of tags, all documents that have these tags can be marked as ``\textit{correct}''.
-
-For instance, a question that concerns ``\texttt{efficient string comparison in python}'', with tags ``\texttt{string-comparison}'' and ``\texttt{python}'' must be a document that is returned when looking for ``\texttt{python}'', ``\texttt{string-comparison}'', or ``\texttt{python string-comparison}''\footnote{Please denote that ``\texttt{string-comparison}'' is used as a tag for readability of this report, but internally, in our code, this is one of the tags we won't process (see further).}.
-
-Now, how do we go about doing this? On indexing time, we will keep some sort of a query cache\footnote{It is slightly more efficient to do this at indexing time, but it is perfectly doable to do this afterwards, in the actual performance checking.}. This cache is a list of strings that we can use as queries for benchmark purposes. For every question we have in our dataset, we create a new entry in this cache, concerning all unique possible combinations of the set of \textit{tags} for this question. For instance, the tags ``\texttt{python}'', ``\texttt{c}'' and ``\texttt{java}'' become the entries \{``\texttt{c}'', ``\texttt{java}'', ``\texttt{python}'', ``\texttt{c python}'', ``\texttt{java python}'', ``\texttt{c java}'', ``\texttt{c java python}''\} (notice the alphabetical ordering).
-
-Because we know there are a lot of queries that will be created with this method, we will not concern ourselves with tags that contain anything but alphabetical characters and discard those entries entirely.
-
-Of course, this also implies that we will remove the \textit{tags} from the fields we search on, because this would not make too much sense\footnote{Some experimentation has shown that, in practice, this is not necessary, because the results will be roughly the same.}.
+Each document is deeply looked into and manually mapped to which query/queries should linked to this document.
 
 \subsection{Performance Scoring}
-And then comes the scoring phase. For all of these queries, we will determine both the scores and its relevance of all documents as discussed above. This gives us two general information files.
+And then comes the scoring phase. For all of these queries, we will determine the scores of all documents. This gives us two general information files.
 
-The first one is a results file that states for each question how good it performed on which queries. Secondly, there is a relevance file where each query maps to a list of question ids. These ids represent the questions that were marks ``\textit{correct}'' for the corresponding query.
+The first one is a results file that states for each question how good it performed on which queries. Secondly, there is a relevance file where each query maps to a list of question ids. These ids represent the questions that were marked as relevant/correct document for the corresponding query.
 
-A \textsf{Hapax Legomenon} (or a \textsf{hapax} for short) is a word or a concept that only occurs only once in a given context (see \cite{hapax}). Within our context, we can state that a \textit{tag} is a \textsf{hapax} if there is only one document that uses it. Or, in layman's terms, a \textit{tag} (or a set thereof) that is only used by a single question. These do not give an accurate representation of our dataset, so we remove them on the whole. Similarly, we believe that a \textit{tag} that's only used by two questions does not provide enough information for our data.
-
-From the $20\,710$ different \textit{tag} combinations that were used as queries, we will only look at the $2\,099$ queries that were able to mark more than two questions as being ``\textit{correct}''.
+A \textsf{Hapax Legomenon} (or a \textsf{hapax} for short) is a word or a concept that only occurs only once in a given context (see \cite{hapax}). Within our context, we can state that a query could a \textsf{hapax} if there is only one document that uses it and will match. Or, in layman's terms, a query (or a set thereof) that is only used by a single question. These do not give an accurate representation of our dataset, so we made the queries such that it has at least 2 words. Similarly, we believe that a query will only match to only one document is not an accurate choice, so we removed these queries. As a result we only have queries that will match to at least 2 documents.
 
 \subsubsection{PR and ROC}
-For each query in this set of $2\,099$ unique \textit{tag} combinations, we can now determine the top-$k$ precision, recall and fallout (as is shown in the lecture slides), which allows us to create the Precision-Recall (PR) Curve and the ROC-Curve for each query.
+For each manual created query, we can now determine the top-$k$ precision, recall and fallout (as is shown in the lecture slides), which allows us to create the Precision-Recall (PR) Curve and the ROC-Curve for each query.
 
 Because this will yield a lot of curves, most of which without any significant features, we have decided to represent the PR and ROC as an upper bound (i.e. the curve that is generally higher than all values). Note that this may give a skewed view of our results, but it seemed the most doable option. We tried using (weighed) averages, minimals, differences..., but unfortunately all of these resulted in plots with strange artifacts. An example of such a plot is shown in figure \ref{fig:artifact}.
 
@@ -287,104 +277,167 @@ Because this will yield a lot of curves, most of which without any significant f
 	\label{fig:artifact}
 \end{figure}
 
+\subsection{\textsf{Precision@k} and \textsf{Recall@k}}
+For document retrieval, the top-$k$ returned documents are really interesting. Usually, a user types in the query and they only look at the first 10, 20 results (read: the top-$k$). So the top results are really important and should (ideally) all consist out of relevant documents. The \textsf{precision@k} is a way of measuring how good the top-$k$ is. It calculates the percentage of the relevant documents in the top listed documents.
+
+Beside, the \textsf{recall@k} is also calculated: how many documents are there in the top-$k$ out of the relevant, correct documents. Unfortunately it doesn't give that much extra information for the performance of our system (similar for the \textsf{accuracy@k}), but it is calculated for its completeness. 
+
 \subsubsection{Initial Score}
 Using the \texttt{StandardAnalyzer} of Lucene\footnote{Which does a lot behind the scenes, including (but not limited to) removing stopwords and lowercase transformations}, the scores are computed as described above. This gives us an idea how well Lucene initially performs.
 
-Using the averaged PR- and ROC-curves to visualize the results, we can conclude from Figure \ref{fig:initBP}, Lucene is doing an ok job for the task at hand, but nothing spectacular.
+Using the averaged PR- and ROC-curves to visualize the results, we can conclude from Figure \ref{fig:initBP}, Lucene is doing a good job for the task at hand.
 
 \begin{figure}[htp]
     \centering
-    \includegraphics[width=\textwidth]{images/StandardAnalyzer}
+    \includegraphics[width=\textwidth]{images/2ndTerm/Standard}
     \caption{Results initial benchmark performance.}
     \label{fig:initBP}
 \end{figure}
 
+Next to these curves, the \textsf{Precision@k} and \textsf{Recall@k} are even more important to have an idea about the top results. Note: for the entire project, we have taken $k=20$.
+
+\begin{table}[htp]
+	\centering
+	\begin{tabular}{|r|l|}
+		\hline
+		Weighted \textsf{Precision@20} & 0.327056277056277 \\ \hline
+		Weighted \textsf{Recall@20} & 0.24085364440294335 \\ \hline
+		Weighted \textsf{Accuracy@20} & 0.6367911543988225 \\ \hline
+	\end{tabular}
+	\caption{Results top-20 for the initial benchmark performance.}
+	\label{tbl:atk-init}
+\end{table}
+
 \subsection{Scoring Models}\label{sec:scmodels}
 To check whether the scoring models have any influence on the performance, the different \texttt{Similarity} measures have been used: \texttt{TFIDFSimilarity}\footnote{\texttt{org.apache.lucene.search.similarities.TFIDFSimilarity}} and \texttt{BooleanSimilarity}\footnote{\texttt{org.apache.lucene.search.similarities.BooleanSimilarity}}. 
 
-Different similarity measurements have an impact on the performance of the system. Figure \ref{fig:bool} gives an overview of the boolean similairty where the terms score is equal to their query boost. The other measurement is the Tf-Idf similiartity; this scores the documents based on the cosine similarity in a VSM as described in section \ref{sec:ss}. The Tf-Idf has a much better results in the PR-curve than the Boolean Similarity, for that reason we've chosen to use the Tf-Idf Similarity measure.
-
-\begin{figure}[htp]
-	\centering
-	\includegraphics[width=\textwidth]{images/Boolean-Standard}
-	\caption{An overview of the standard analyzer using a Boolean Similarity measurement}
-	\label{fig:bool}
-\end{figure}
-\begin{figure}[htp]
-	\centering
-	\includegraphics[width=\textwidth]{images/Tfidf-standard}
-	\caption{An overview of the standard analyzer using a Tf-Idf Similarity measurement}
-	\label{fig:tfidf}
-\end{figure}
+Different similarity measurements have an impact on the performance of the system. The results give an overview of the boolean similairty where the terms score is equal to their query boost. The other measurement is the Tf-Idf similiartity; this scores the documents based on the cosine similarity in a VSM as described in section \ref{sec:ss}. The Tf-Idf and the Boolean similarity have exactly the same curves as the initial benchmark (see figure \ref{fig:initBP} and the top-$k$ results in table \ref{tbl:atk-init}). We have chosen to continue the project with the Tf-Idf similiarity measure.
 
 \section{Optimizations}\label{sec:optimizations}
-As was clear from figure \ref{fig:initBP}, we can do better. This is why we will try to optimize our algorithms, in the hope of obtaining better results. In order to achieve this goal, we will reimplement the \texttt{StandardAnalyzer} as a basis for our \texttt{MyCustomAnalyzer} and work from there.
+As was clear from figure \ref{fig:initBP} and table \ref{tbl:atk-init}, we can do better. This is why we will try to optimize our algorithms, in the hope of obtaining better results. In order to achieve this goal, we will reimplement the \texttt{StandardAnalyzer} as a basis for our \texttt{MyCustomAnalyzer} and work from there.
 
 \subsection{Removing Special Characters and Whitespace}
 As discussed in depth in section \ref{sec:query}, we will transform our fields so all specialities are discarded. If we base ourselves on the \texttt{StandardAnalyzer} and on the transformations we want to apply, as per section \ref{sec:query}, all that's left to do in order to have a valid transformation is to remove all non-alphanumerical characters and additional whitespace from our text.
 
 This is done via adding a \texttt{PatternReplaceFilter}\footnote{\texttt{org.apache.lucene.analysis.pattern.PatternReplaceFilter}} and a \texttt{TrimFilter}\footnote{\texttt{org.apache.lucene.analysis.miscellaneous.TrimFilter}} in our \texttt{Analyzer}.
 
-In figure \ref{fig:alphanumeric}, you can find that there was no significant difference compared to the original plot (figure \ref{fig:initBP}).
+In figure \ref{fig:alphanumeric}, you can find that there was no significant difference compared to the original plot (figure \ref{fig:initBP}) and to the \textsf{Precision@k} value.
 \begin{figure}[htp]
     \centering
-    \includegraphics[width=\textwidth]{images/customAna-trim}
+    \includegraphics[width=\textwidth]{images/2ndTerm/Trim}
     \caption{Results Benchmark Performance with Initial Filters.}
     \label{fig:alphanumeric}
 \end{figure}
+
+\begin{table}[htp]
+	\centering
+	\begin{tabular}{|r|l|}
+		\hline
+		Weighted \textsf{Precision@20} & 0.327056277056277 \\ \hline
+		Weighted \textsf{Recall@20} & 0.24085364440294335 \\ \hline
+		Weighted \textsf{Accuracy@20} & 0.6367911543988225 \\ \hline
+	\end{tabular}
+	\caption{Results top-20 with Initial Filters.}
+	\label{tbl:atk-trim}
+\end{table}
 
 \subsubsection{Word Delimiter}\label{sec:word-delimiter}
 The \texttt{StandardTokenizer} will be extended with a \texttt{WordDelimiterGraphFilter}\footnote{\texttt{org.apache.lucene.analysis.miscellaneous.WordDelimiterGraphFilter}}. This will split the words into multiple subwords and performs optional transformations on subword groups. \cite{lucene}
 
 For example, if someone wants to search for ``\texttt{Macbook}'', but the user types ``\texttt{Mac Book}''. The WordDelimiter will catch this query because the word ``\texttt{Macbook}'' will internally saved as \{``\texttt{Mac}'', ``\texttt{Book}'', ``\texttt{Macbook}''\}. This way, we can cope with different cases of compound words.
 
-At first, it sounds like a good idea, but, unfortunately, it doesn't have a huge impact on the performance. It even results in the same PR- and ROC-cuves as Figure \ref{fig:alphanumeric}! We believe this is because this kind of filter does not apply for our current set of queries.
+At first, it sounds like a good idea, but, unfortunately, it doesn't have a huge impact on the performance. It even results in the same PR- and ROC-cuves as Figure \ref{fig:alphanumeric} and the same for Table \ref{tbl:atk-trim}! We believe this is because this kind of filter does not apply for our current set of queries.
 
 \subsubsection{Stemming}\label{sec:stemming}
-Next, stemming\footnote{\texttt{org.apache.lucene.analysis.PorterStemFilter}} has been added to the analyzer such that multiple variants of a word are mapped to the same word (i.e. plurals are mapped to its singular). Strangely enough, there is no performance increase on this front, as you may be able to deduce from figure \ref{fig:stemming}. (Yes, it looks once more like the very same plot, possibly because of the way we generate the plots.)
+Next, stemming\footnote{\texttt{org.apache.lucene.analysis.PorterStemFilter}} has been added to the analyzer such that multiple variants of a word are mapped to the same word (i.e. plurals are mapped to its singular). There is a performance increase on this front, as you may be able to deduce from figure \ref{fig:stemming}. (Yes, it looks once more like the very same plot, possibly because of the way we generate the plots.) More importantly there is a positive impact on the Precision@k, which is increased after applying the stemming (Table \ref{tbl:atk-p}).
 
 \begin{figure}[htp]
     \centering
-    \includegraphics[width=\textwidth]{images/customAna-stem}
+    \includegraphics[width=\textwidth]{images/2ndTerm/Porter+Trim+WordDelimiter}
     \caption{Results Analyzer extended with Stemming}
     \label{fig:stemming}
 \end{figure}
 
+\begin{table}[htp]
+	\centering
+	\begin{tabular}{|r|l|}
+		\hline
+		Weighted \textsf{Precision@20} & 0.3775088547815821 \\ \hline
+		Weighted \textsf{Recall@20} & 0.22292070811981587 \\ \hline
+		Weighted \textsf{Accuracy@20} & 0.6506418868487834 \\ \hline
+	\end{tabular}
+	\caption{Results top-20 Analyzer extended with Stemming.}
+	\label{tbl:atk-p}
+\end{table}
+
 \subsubsection{$n$-grams}\label{sec:ngrams}
-Now, let's see what happens if we divide the words into tuples of length $n$. This is called $n$-gram filtering\footnote{\texttt{org.apache.lucene.analysis.ngram.NGramTokenFilter}}. We tried 6 different values for $n = \{2, 3, 4, 5, 6, 8\}$.
+Now, let's see what happens if we divide the words into tuples of length $n$. This is called $n$-gram filtering\footnote{\texttt{org.apache.lucene.analysis.ngram.NGramTokenFilter}}. We tried 7 different values for $n = \{2, 3, 4, 5, 6, 7, 8\}$.
 
-For all $n$, the ROC curve is almost identical to the previous ones, but it's the PR curve that's giving an interesting result. In figure \ref{fig:ngram4}, you will find an example of such a plot (for $n = 4$). We have no idea if this result is due to how we've built our queries, or if it comes from the way we're using the data. Our best guess would be that $n$-grams are technically only interesting to use if you were to allow wildcards and the queries on which we test don't use them.
-
-The empty plots you see are, in fact, PR-curves that have a precision close to 0, no matter the value for the recall.
-
-It is clear we get better results without the usage of $n$-grams, which is why we will not include them in our optimizations.
+For all $n$, the ROC curves are all different and some have a good opportunity to be extended in our custom analyzer. Especially $n=8$ has a potential ROC curve for all returned documents. Beside, the \textsf{Precision@k} has the conclusion - which is more important to be considered for the custom analyzer. For the top-$k$ results the \textsf{Precision@k} has increased a lot, namely to almost $0.42$. Because of this huge improvement, we will include the $n$-grams (for $n=8$) in our optimizations.
 
 \begin{figure}[htp]
-    \centering
-    \includegraphics[width=\textwidth]{images/customAna-n4}
-    \caption{An overview of the extended Analyzer for $n$-gram filtering, where $n = 4$.}
-    \label{fig:ngram4}
+	\centering
+	\includegraphics[width=\textwidth]{images/2ndTerm/ExclSyn_Ngram8}
+	\caption{Results Analyzer extended with $n$-grams (for $n=8$)}
+	\label{fig:ngram}
 \end{figure}
+
+\begin{table}[htp]
+	\centering
+	\begin{tabular}{|r|l|}
+		\hline
+		Weighted \textsf{Precision@20} & 0.417955060812204 \\ \hline
+		Weighted \textsf{Recall@20} & 0.233950930066487 \\ \hline
+		Weighted \textsf{Accuracy@20} & 0.680485720858392 \\ \hline
+	\end{tabular}
+	\caption{Results top-20 Analyzer extended with $n$-grams (for $n=8$).}
+	\label{tbl:atk-n}
+\end{table}
 
 \subsection{Manual Thesaurus-Based Query Expansion}\label{sec:synonyms}
 A thesaurus is a list of synonyms. For each term in our dictionary, we may create such a list to associate the words with. Theoretically, this should increase our general recall, but may decrease precision, especially when we're talking about homonyms and such.
 
 As a last improvement, we create such a filter\footnote{\texttt{org.apache.lucene.analysis.synonym.SynonymFilter}} and add it to the analyzer. This way, for each word we see, a set of synonyms will be associated with it, using a \texttt{SynonymMap}\footnote{\texttt{org.apache.lucene.analysis.synonym.SynonymMap}}. Use used an offline dictionary of thesaurus, \cite{synonyms}, which is built with approximately $169\,000$ English words and is two-directional.
 
-To our surprise there was a slight increase in performance (approximately 3\% in terms of AUC), meaning that the some synonyms were actually needed to score better. This is shown in figure \ref{fig:synonyms}.
+To our surprise there was an enormous decrease in performance (approximately 12.7\% in terms of \textsf{Precision@k}), meaning that the synonyms get in the way of the analyzer and scores only worse. This  is shown in figure \ref{fig:synonyms} and table \ref{tbl:atk-ns}. That's why we decided to not extend the analyzer with the synonym filter.
 \begin{figure}[htp]
 	\centering
-	\includegraphics[width=\textwidth]{images/customAna-synonym}
+	\includegraphics[width=\textwidth]{images/2ndTerm/ExclNgram_afterSynonym}
 	\caption{An overview of the extended Analyzer for manual thesaurus-based query expansion.}
 	\label{fig:synonyms}
 \end{figure}
 
+\begin{table}[htp]
+	\centering
+	\begin{tabular}{|r|l|}
+		\hline
+		Weighted \textsf{Precision@20} & 0.29145803456949 \\ \hline
+		Weighted \textsf{Recall@20} & 0.41720735195784 \\ \hline
+		Weighted \textsf{Accuracy@20} & 0.505901510762118 \\ \hline
+	\end{tabular}
+	\caption{Results top-20 Analyzer extended with manual thesaurus-based query expansion.}
+	\label{tbl:atk-ns}
+\end{table}
+
 
 \subsection{Final Results}
-A final result of our benchmarking study can be found in figure \ref{fig:synonyms}, where everything comes together: lower case conversion, trimming, removing of non-alphanumeric values, word delimiters, stemming, and thesaurus-based manual query-expansion.
+A final result of our benchmarking study can be found in figure \ref{fig:ngram} and table \ref{tbl:atk-n}, where everything comes together: lower case conversion, trimming, removing of non-alphanumeric values, word delimiters, stemming, and $n$-grams (for $n=8$).
 
-Note that $n$-grams are not included in this result.
+Note that manual thesaurus-based query expansion is not included in this result.
 
+\subsubsection{Summary \textsf{Precision@k}}
+The \textsf{Precision@k} values were decisive in creating the optimal custom analyzer. By adding the stemming, the results were better in the top-$k$. By combining it with the $n$-grams, the results were astonishing. 
+
+To give an idea about the impact, we have put all the values next to each other in a histogram (figure \ref{fig:prk}). It is clearly to see that `C N7' and `C N8' are the best scoring custom analyzers (focusing at the \textsf{Precision@k}).
+
+\begin{figure}[htp]
+	\centering
+	\includegraphics[width=\textwidth]{images/Hist-at-k}
+	\caption{An overview of the impact to the custom analyzers of the \textsf{Precision@k} and \textsf{Recall@k}. Where the `S' stands for Standard Analyzer, the `C' for Custom, `P' for adding Porter stemming (also trimming and word delimiter), `S' for adding Synonyms, the `N' for $n$-grams (this is including Porter, excl. synonyms) and the final `C' is the total Custom with all the elements active.}
+	\label{fig:prk}
+\end{figure}
+
+\newpage
 \section{Rocchio Algorithm}\label{sec:rocchio}
 One possible optimization can come from the \textsf{Rocchio} algorithm for pseudo-relevance feedback. It's principle is simple: each document is located in an $n$-dimensional space, we search for a query (in the same space), mark some documents as ``\textit{relevant}'' and change the angle of our query vector so it is located in the center of the cluster of relevant documents. Note that this method assumes all relevant documents are located in the same cluster.
 
@@ -394,8 +447,7 @@ In section \ref{sec:bstudy}, we described a way to easily and uniformly determin
 
 Unfortunately, while we tried to come up with a viable algorithm to compute $\overrightarrow{Q_n}$ from the information Lucene provided on the query, we failed in doing so. Instead, we pointed our attention to already-existing library for computing pseudo-relevance feedback \cite{rocchio} and its dependency \cite{glis}. The last activity in either of these repositories dates from 2017, hence a lot of functions and features follow an outdated Lucene version, compared to our project. Therefore, instead of adding these repositories as submodules, they were added by copying the files. This way, we could update the dependencies to work with our code. Additionally, we changed our build system from a single Java-command to Maven.
 
-% @Joost: Misschien de uitleg over ROC vroeger al vermelden en met dat standpunt verder werken?
-Exercising \textsf{Rocchio} for the \texttt{StandardAnalyzer} yields the results shown in figure \ref{fig:rocchio-standard}. Compared to figures \ref{fig:initBP}, \ref{fig:bool} and \ref{fig:tfidf}, we can see clearly that the AUC is increased, resulting in a better ROC curve. Unfortunately, for our use-case, the ROC (and AUC) are not the best measures to use, seeing as they only show the quality of the order compared to a random order. Ideally, we'd want as many relevant documents as possible in the top-k, hence optimizing the PR curve. Therefore, the \textsf{Rocchio} algorithm combined with the standard analyzer performs worse than when using our custom analyzer.
+Exercising \textsf{Rocchio} for the \texttt{StandardAnalyzer} yields the results shown in figure \ref{fig:rocchio-standard}. Compared to figure \ref{fig:initBP}, we can see clearly that the AUC is increased, resulting in a better ROC curve. However, the \textsf{Precision@k} value is decreased by approximately $16.4\%$ which isn't a good result.  Therefore, the \textsf{Rocchio} algorithm combined with the standard analyzer performs worse than when using our custom analyzer.
 
 \begin{figure}[htp]
 	\centering
@@ -404,26 +456,31 @@ Exercising \textsf{Rocchio} for the \texttt{StandardAnalyzer} yields the results
 	\label{fig:rocchio-standard}
 \end{figure}
 
-%As you might recall, we described in the beginning of section \ref{sec:query} that Lucene does not work nicely with manipulating the VSM and com.stackoverflow.searching by queries. Yet, we decided not to create a custom system for com.stackoverflow.searching the documents, due to the sheer size of our data. This decision sort of came back to haunt us.
-%
-%Because we did not develop such a system and thus do not have an optimized method for com.stackoverflow.searching (and sorting) our documents, we have to map our custom feature vectors onto a Lucene boolean query string. Lucene's query syntax (found in \cite{lucene}) provides a way to add a \textit{boost} to each term in the query. Hence, for each term in our resulting query vector $\overrightarrow{Q_n}$, we give it a boost of its absolute value and negate it if the original value in $\overrightarrow{Q_n}$ was negative.
-%
-%For instance, if $\overrightarrow{Q_n}$ states that the term ``\texttt{python}'' has a score of 5.6 and ``\texttt{abstract}'' has a score of -9.123, our resulting query string would be ``\texttt{python\string^5.6 -abstract\string^9.123}''.
-%
-%Now, for each word in our vocabulary (which counts approximately $20\,000$ words), we have a term in our query string\footnote{Since we drop all terms that would have a \textit{boost} of 0, this is slightly less than our entire vocabulary, but the difference is nullable.}. Also, Lucene cannot handle boolean queries that count over $1\,024$ words (by default), so having almost 20 times that size is difficult.
-%
-%We can solve this issue by saying that Lucene must ignore the maximal clause count as follows:
-%\begin{lstlisting}[language=Java]
-%BooleanQuery.setMaxClauseCount(Integer.MAX_VALUE);
-%\end{lstlisting}
-%
-%In hindsight, Lucene put that number by default to $1\,024$ for a good reason. As soon as this value is exceeded, it takes notably longer\footnote{In fact, the process was sooner killed, due to ``hanging'' than it finishing for a single query.} to execute a simple search, so this is not the solution we were aiming for.
-%
-%On top of that, notice how we must apply a mathematical formula to vectors of size $20\,000$. This formula takes an incredibly long time to compute, causing our benchmarking to be estimated to take 80 hours to run (if we were to limit the query generation to a mere 500 terms, which is a massive oversight in itself). And this is even ignoring the fact that we wanted to test it out for different values of $\alpha$, $\beta$ and $\gamma$.
-%
-%Long story short, the way we have approached Rocchio is not the way to go. An optimization would be to set both $\beta$ and $\gamma$ to 0, but then we technically don't do anything. Another solution would be to limit our dataset to very few documents, but here the issues remain the same (with still an estimate of a couple of days).
-%
-%Due to time constrains and the lacking documentation of Lucene on this front, we believe Rocchio (or other kinds of pseudo-relevance feedback) not to be possible with the current setup of our system.
+\begin{table}[htp]
+	\centering
+	\begin{tabular}{|r|l|}
+		\hline
+		Weighted \textsf{Precision@20} & 0.2542857142857142 \\ \hline
+		Weighted \textsf{Recall@20} & 0.6373501077545152 \\ \hline
+		Weighted \textsf{Accuracy@20} & 0.0.10271136159409343 \\ \hline
+	\end{tabular}
+	\caption{Results top-20 standard analyzer combined with the \textsf{Rocchio} algorithm for pseudo-relevance feedback.}
+	\label{tbl:atk-rocc}
+\end{table}
+
+\subsection{Optimizations}
+As described above, the \textsf{Rocchio} algorithm is parameterized with an $\alpha$, $\beta$ and $\gamma$ value. In the implemented algorithm of the used library \cite{rocchio}, there are only 2 parameters for \textsf{Rocchio} ($\alpha$ and $\beta$) and 2 other parameters for the BM25-similarity measure. We have used a Gridsearch to find the optimal $\alpha$ and $\beta$. To visualize this, the precision@k, recall@k and accuracy@k values are showed in a heatmap for the different parameter values.
+
+\begin{figure}[htp]
+	\centering
+	\subfloat[Precision@k]{\label{a}\includegraphics[width=.5\linewidth]{images/Heatmap_pr}}\hfill
+	\subfloat[Recall@k]{\label{b}\includegraphics[width=.5\linewidth]{images/Heatmap_rec}}\par 
+	\subfloat[Accuracy@k]{\label{c}\includegraphics[width=.5\linewidth]{images/Heatmap_acc}}
+	\caption{Heatmap}
+	\label{fig:heatmap}
+\end{figure}
+
+We mentioned that for this use case - with the 500 manually labeled documents - the best parameters must be set to $\alpha = 1.0$ and $\beta = 0.0$. The relevance feedback algorithm isn't working in its ideal environment, because of the small use case. Although, for a bigger use case - with lots of more documents - the \textsf{Rocchio} algorithm will perform much better. As a result, the $\beta$ parameter will also have an impact to the document retrieval (in contrast to our use case). Unfortunately, the optimal Rocchio parameters will also perform with an extreme worse \textsf{Precision@k} namely equal to $0.15428$. 
 
 \clearpage
 \bibliographystyle{abbrv}

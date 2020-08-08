@@ -40,7 +40,7 @@
 	\small{\textit{M INF \  2019-2020}}
 }
 \newcommand{\team}{
-	\=Johannes Akkermans, \\\>Randy Paredis
+	\=Johannes Akkermans%, \\\>Randy Paredis
 }
 
 \begin{document}
@@ -269,6 +269,8 @@ A \textsf{Hapax Legomenon} (or a \textsf{hapax} for short) is a word or a concep
 For each manual created query, we can now determine the top-$k$ precision, recall and fallout (as is shown in the lecture slides), which allows us to create the Precision-Recall (PR) Curve and the ROC-Curve for each query.
 
 Because this will yield a lot of curves, most of which without any significant features, we have decided to represent the PR and ROC as an upper bound (i.e. the curve that is generally higher than all values). Note that this may give a skewed view of our results, but it seemed the most doable option. We tried using (weighed) averages, minimals, differences..., but unfortunately all of these resulted in plots with strange artifacts. An example of such a plot is shown in figure \ref{fig:artifact}.
+
+As described in section \ref{sec:bstudy} the ROC and AUC are not the best measures for the performance analyses in our use-case, but it is still interesting enough to have a look at the over all scoring.
 
 \begin{figure}[htp]
 	\centering

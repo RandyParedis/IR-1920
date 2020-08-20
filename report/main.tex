@@ -59,7 +59,11 @@
 \vspace*{1em}
 
 \begin{abstract}
-    Lucene is a powerful Java-tool that allows for easy information retrieval of large datasets. The goal of this project was to apply Lucene on the StackOverflow data and study its feasability. Additionally, we will try to improve the overall performance of the retrieval by applying some techniques we've seen in class.
+	\noindent
+    Lucene is a powerful Java-tool that allows for easy information retrieval of large datasets. The goal of this project was to apply Lucene on the StackOverflow data and study its feasability. Additionally, we will try to improve the overall performance of the retrieval by applying some techniques we've seen in class.\\
+    
+    \noindent
+    Link to the GitHub repository: \url{https://github.com/RandyParedis/IR-1920}
 \end{abstract}
 
 \newpage
@@ -351,7 +355,7 @@ For example, if someone wants to search for ``\texttt{Macbook}'', but the user t
 At first, it sounds like a good idea, but, unfortunately, it doesn't have a huge impact on the performance. It even results in the same PR- and ROC-cuves as Figure \ref{fig:alphanumeric} and the same for Table \ref{tbl:atk-trim}! We believe this is because this kind of filter does not apply for our current set of queries.
 
 \subsubsection{Stemming}\label{sec:stemming}
-Next, stemming\footnote{\texttt{org.apache.lucene.analysis.PorterStemFilter}} has been added to the analyzer such that multiple variants of a word are mapped to the same word (i.e. plurals are mapped to its singular). There is a performance increase on this front, as you may be able to deduce from figure \ref{fig:stemming}. (Yes, it looks once more like the very same plot, possibly because of the way we generate the plots.) More importantly there is a positive impact on the Precision@k, which is increased after applying the stemming (Table \ref{tbl:atk-p}).
+Next, stemming\footnote{\texttt{org.apache.lucene.analysis.PorterStemFilter}} has been added to the analyzer such that multiple variants of a word are mapped to the same word (i.e. plurals are mapped to its singular). There is a performance increase on this front, as you may be able to deduce from figure \ref{fig:stemming}. (Yes, it looks once more like the very same plot, possibly because of the way we generate the plots.) More importantly there is a positive impact on the \textsf{Precision@k}, which is increased after applying the stemming (Table \ref{tbl:atk-p}).
 
 \begin{figure}[htp]
     \centering
@@ -402,6 +406,7 @@ A thesaurus is a list of synonyms. For each term in our dictionary, we may creat
 As a last improvement, we create such a filter\footnote{\texttt{org.apache.lucene.analysis.synonym.SynonymFilter}} and add it to the analyzer. This way, for each word we see, a set of synonyms will be associated with it, using a \texttt{SynonymMap}\footnote{\texttt{org.apache.lucene.analysis.synonym.SynonymMap}}. Use used an offline dictionary of thesaurus, \cite{synonyms}, which is built with approximately $169\,000$ English words and is two-directional.
 
 To our surprise there was an enormous decrease in performance (approximately 12.7\% in terms of \textsf{Precision@k}), meaning that the synonyms get in the way of the analyzer and scores only worse. This  is shown in figure \ref{fig:synonyms} and table \ref{tbl:atk-ns}. That's why we decided to not extend the analyzer with the synonym filter.
+
 \begin{figure}[htp]
 	\centering
 	\includegraphics[width=\textwidth]{images/2ndTerm/ExclNgram_afterSynonym}
@@ -471,7 +476,7 @@ Exercising \textsf{Rocchio} for the \texttt{StandardAnalyzer} yields the results
 \end{table}
 
 \subsection{Optimizations}
-As described above, the \textsf{Rocchio} algorithm is parameterized with an $\alpha$, $\beta$ and $\gamma$ value. In the implemented algorithm of the used library \cite{rocchio}, there are only 2 parameters for \textsf{Rocchio} ($\alpha$ and $\beta$) and 2 other parameters for the BM25-similarity measure. We have used a Gridsearch to find the optimal $\alpha$ and $\beta$. To visualize this, the precision@k, recall@k and accuracy@k values are showed in a heatmap for the different parameter values.
+As described above, the \textsf{Rocchio} algorithm is parameterized with an $\alpha$, $\beta$ and $\gamma$ value. In the implemented algorithm of the used library \cite{rocchio}, there are only 2 parameters for \textsf{Rocchio} ($\alpha$ and $\beta$) and 2 other parameters for the BM25-similarity measure. We have used a Gridsearch to find the optimal $\alpha$ and $\beta$. To visualize this, the \textsf{Precision@k}, \textsf{Recall@k} and \textsf{Accuracy@k} values are showed in a heatmap for the different parameter values.
 
 \begin{figure}[htp]
 	\centering
